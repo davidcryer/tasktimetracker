@@ -23,6 +23,8 @@ public class CurrentTasksUiWrapper extends UiWrapper<CurrentTasksUi, CurrentTask
 
     @Override
     protected CurrentTasksUi.Listener uiListener() {
-        return null;
+        return new CurrentTasksUi.Listener() {
+
+        };
     }
 }
