@@ -4,8 +4,10 @@ import com.davidcryer.tasktimetracker.common.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.Time;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Session {
+    private final UUID id;
     private Date start;
     private Date finish;
 
@@ -31,6 +33,7 @@ public class Session {
                     }
                 }, "start cannot be less than finish")
         );
+        this.id = UUID.randomUUID();
         this.start = start;
         this.finish = finish;
     }
@@ -59,5 +62,9 @@ public class Session {
         }
         final Date finish = this.finish == null ? new Date() : this.finish;
         return Time.difference(start, finish);
+    }
+
+    public UUID id() {
+        return id;
     }
 }

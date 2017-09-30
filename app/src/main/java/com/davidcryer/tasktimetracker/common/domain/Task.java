@@ -2,8 +2,10 @@ package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ArgsInspector;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class Task {
     private final List<Session> sessionHistory = new LinkedList<>();
@@ -52,5 +54,15 @@ public class Task {
             expended += session.duration();
         }
         return expended;
+    }
+
+    public boolean deleteSession(final UUID sessionId) {
+        for (final Iterator<Session> itr = sessionHistory.iterator(); itr.hasNext();) {
+            if (itr.next().id().equals(sessionId)) {
+                itr.remove();
+                return true;
+            }
+        }
+        return false;
     }
 }

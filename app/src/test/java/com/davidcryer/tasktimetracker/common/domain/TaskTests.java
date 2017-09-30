@@ -71,6 +71,21 @@ public class TaskTests {
         Assert.assertTrue(task.getExpendedTime() >= 20L && task.getExpendedTime() < 30L);
     }
 
+    @Test
+    public void deleteSession() {
+        final Session session = new Session();
+        session.start();
+        final Task task = new Task(session);
+        task.stop();
+        Assert.assertTrue(task.deleteSession(session.id()));
+    }
+
+    @Test
+    public void deleteSession_nonMatchingId() {
+        final Task task = new Task();
+        Assert.assertFalse(task.deleteSession(null));
+    }
+
     public static class InitTests {
 
         @Test
