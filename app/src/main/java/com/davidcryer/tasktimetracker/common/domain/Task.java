@@ -93,7 +93,7 @@ public class Task {
     }
 
     public static class Writer {
-        private Task task;
+        private final Task task;
         private String title;
         private boolean titleChanged;
         private String note;
