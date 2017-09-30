@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.davidc.uiwrapper.UiWrapper;
 
-
 public class TaskHistoryUiWrapper extends UiWrapper<TaskHistoryUi, TaskHistoryUi.Listener, TaskHistoryUiModel> {
 
     private TaskHistoryUiWrapper(@NonNull final TaskHistoryUiModel uiModel) {
