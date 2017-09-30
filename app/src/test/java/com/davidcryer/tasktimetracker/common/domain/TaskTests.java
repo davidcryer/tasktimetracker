@@ -131,5 +131,13 @@ public class TaskTests {
             task.writer().note("New note").commit();
             Assert.assertEquals(task.note(), "New note");
         }
+
+        @Test
+        public void changeTitleAndNote() {
+            final Task task = new Task();
+            task.writer().title("New title").note("New note").commit();
+            Assert.assertEquals(task.title(), "New title");
+            Assert.assertEquals(task.note(), "New note");
+        }
     }
 }
