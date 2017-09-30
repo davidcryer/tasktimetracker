@@ -12,7 +12,7 @@ public class TaskTests {
 
     @Before
     public void setup() {
-        task = new Task();
+        task = new Task(null, null);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class TaskTests {
 
     @Test
     public void deleteSession_nonMatchingId() {
-        final Task task = new Task();
+        final Task task = new Task(null, null);
         Assert.assertFalse(task.deleteSession(null));
     }
 
@@ -90,7 +90,6 @@ public class TaskTests {
 
         @Test
         public void nullOngoingSession() {
-            new Task();
             new Task(null, null, null);
         }
 
@@ -120,21 +119,21 @@ public class TaskTests {
 
         @Test
         public void changeTitle() {
-            final Task task = new Task();
+            final Task task = new Task("Old title", null);
             task.writer().title("New title").commit();
             Assert.assertEquals(task.title(), "New title");
         }
 
         @Test
         public void changeNote() {
-            final Task task = new Task();
+            final Task task = new Task(null, "Old note");
             task.writer().note("New note").commit();
             Assert.assertEquals(task.note(), "New note");
         }
 
         @Test
         public void changeTitleAndNote() {
-            final Task task = new Task();
+            final Task task = new Task("Old title", "Old note");
             task.writer().title("New title").note("New note").commit();
             Assert.assertEquals(task.title(), "New title");
             Assert.assertEquals(task.note(), "New note");

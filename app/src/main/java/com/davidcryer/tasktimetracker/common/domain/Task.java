@@ -15,8 +15,8 @@ public class Task {
     private final List<Session> sessionHistory = new LinkedList<>();
     private Session ongoingSession;
 
-    public Task() {
-        this(null, null, null);
+    public Task(final String title, final String note) {
+        this(title, note, null);
     }
 
     public Task(final String title, final String note, final Session ongoingSession) throws IllegalArgsException {
