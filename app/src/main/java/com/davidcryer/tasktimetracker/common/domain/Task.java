@@ -4,34 +4,34 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Task {
-    private Contribution ongoing;
-    private final List<Contribution> contributionHistory = new LinkedList<>();
+    private final List<Session> sessionHistory = new LinkedList<>();
+    private Session ongoingSession;
 
     public void start() throws AlreadyStartedException {
         if (isOngoing()) {
             throw new AlreadyStartedException();
         }
-        ongoing = new Contribution();
-        ongoing.start();
+        ongoingSession = new Session();
+        ongoingSession.start();
     }
 
     public void stop() throws AlreadyStoppedException {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
-        ongoing.stop();
-        contributionHistory.add(ongoing);
-        ongoing = null;
+        ongoingSession.stop();
+        sessionHistory.add(ongoingSession);
+        ongoingSession = null;
     }
 
     public boolean isOngoing() {
-        return ongoing != null && ongoing.isOngoing();
+        return ongoingSession != null && ongoingSession.isOngoing();
     }
 
     public long getExpendedTime() {
-        long expended = ongoing == null ? 0L : ongoing.duration();
-        for (final Contribution contribution : contributionHistory) {
-            expended += contribution.duration();
+        long expended = ongoingSession == null ? 0L : ongoingSession.duration();
+        for (final Session session : sessionHistory) {
+            expended += session.duration();
         }
         return expended;
     }
