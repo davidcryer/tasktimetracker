@@ -75,7 +75,7 @@ public class TaskTests {
     public void deleteSession() {
         final Session session = new Session();
         session.start();
-        final Task task = new Task(session);
+        final Task task = new Task(null, null, session);
         task.stop();
         Assert.assertTrue(task.deleteSession(session.id()));
     }
@@ -91,20 +91,20 @@ public class TaskTests {
         @Test
         public void nullOngoingSession() {
             new Task();
-            new Task(null);
+            new Task(null, null, null);
         }
 
         @Test
         public void ongoingSession_isOngoing() {
             final Session session = new Session();
             session.start();
-            new Task(session);
+            new Task(null, null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
         public void ongoingSession_notStarted() {
             final Session session = new Session();
-            new Task(session);
+            new Task(null, null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
@@ -112,7 +112,24 @@ public class TaskTests {
             final Session session = new Session();
             session.start();
             session.stop();
-            new Task(session);
+            new Task(null, null, session);
+        }
+    }
+
+    public static class WriterTests {
+
+        @Test
+        public void changeTitle() {
+            final Task task = new Task();
+            task.writer().title("New title").commit();
+            Assert.assertEquals(task.title(), "New title");
+        }
+
+        @Test
+        public void changeNote() {
+            final Task task = new Task();
+            task.writer().note("New note").commit();
+            Assert.assertEquals(task.note(), "New note");
         }
     }
 }
