@@ -61,6 +61,7 @@ public class SessionTests {
 
         @Test
         public void startNull_finishNull() {
+            new Session();
             new Session(null, null);
         }
 

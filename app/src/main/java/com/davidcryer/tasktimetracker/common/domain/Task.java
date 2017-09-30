@@ -1,6 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ArgsInspector;
+import com.davidcryer.tasktimetracker.common.IllegalArgsException;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ public class Task {
         this(null);
     }
 
-    public Task(final Session ongoingSession) {
+    public Task(final Session ongoingSession) throws IllegalArgsException {
         ArgsInspector.inspect(
                 ArgsInspector.check(new ArgsInspector.ArgCriteria() {
                     @Override

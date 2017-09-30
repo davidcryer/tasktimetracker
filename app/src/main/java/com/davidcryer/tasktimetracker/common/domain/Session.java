@@ -1,6 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ArgsInspector;
+import com.davidcryer.tasktimetracker.common.IllegalArgsException;
 import com.davidcryer.tasktimetracker.common.Time;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ public class Session {
         this(null, null);
     }
 
-    public Session(final Date start, final Date finish) {
+    public Session(final Date start, final Date finish) throws IllegalArgsException {
         ArgsInspector.inspect(
                 ArgsInspector.check(new ArgsInspector.ArgCriteria() {
                     @Override

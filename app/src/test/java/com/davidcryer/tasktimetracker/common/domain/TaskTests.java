@@ -90,6 +90,7 @@ public class TaskTests {
 
         @Test
         public void nullOngoingSession() {
+            new Task();
             new Task(null);
         }
 
