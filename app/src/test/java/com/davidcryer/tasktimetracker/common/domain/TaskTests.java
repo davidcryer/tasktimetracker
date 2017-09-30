@@ -1,5 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -67,5 +69,34 @@ public class TaskTests {
         Thread.sleep(10L);
         task.stop();
         Assert.assertTrue(task.getExpendedTime() >= 20L && task.getExpendedTime() < 30L);
+    }
+
+    public static class InitTests {
+
+        @Test
+        public void nullOngoingSession() {
+            new Task(null);
+        }
+
+        @Test
+        public void ongoingSession_isOngoing() {
+            final Session session = new Session();
+            session.start();
+            new Task(session);
+        }
+
+        @Test(expected = IllegalArgsException.class)
+        public void ongoingSession_notStarted() {
+            final Session session = new Session();
+            new Task(session);
+        }
+
+        @Test(expected = IllegalArgsException.class)
+        public void ongoingSession_finished() {
+            final Session session = new Session();
+            session.start();
+            session.stop();
+            new Task(session);
+        }
     }
 }

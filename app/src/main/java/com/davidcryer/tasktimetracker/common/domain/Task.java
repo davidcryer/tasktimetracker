@@ -1,11 +1,29 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.ArgsInspector;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Task {
     private final List<Session> sessionHistory = new LinkedList<>();
     private Session ongoingSession;
+
+    public Task() {
+        this(null);
+    }
+
+    public Task(final Session ongoingSession) {
+        ArgsInspector.inspect(
+                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+                    @Override
+                    public boolean passed() {
+                        return ongoingSession == null || ongoingSession.isOngoing();
+                    }
+                }, "ongoingSession cannot be finished")
+        );
+        this.ongoingSession = ongoingSession;
+    }
 
     public void start() throws AlreadyStartedException {
         if (isOngoing()) {
