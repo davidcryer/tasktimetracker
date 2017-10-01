@@ -67,6 +67,22 @@ public class StoryTests {
         Assert.assertFalse(story.deleteTask(task.id()));
     }
 
+    @Test
+    public void expendedTime() throws Exception {
+        final Story story = new Story("", null);
+        final Task task1 = new Task("", null);
+        final Task task2 = new Task("", null);
+        story.addTask(task1);
+        story.addTask(task2);
+        task1.start();
+        task2.start();
+        Thread.sleep(10L);
+        task1.stop();
+        task2.stop();
+        final Long expendedTime = story.expendedTime();
+        Assert.assertTrue(expendedTime >= 20L && expendedTime < 30L);
+    }
+
     public static class InitTests {
 
         @Test

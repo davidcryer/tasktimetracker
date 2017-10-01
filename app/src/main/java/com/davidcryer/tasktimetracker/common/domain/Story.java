@@ -80,6 +80,14 @@ public class Story {
         return false;
     }
 
+    public long expendedTime() {
+        long expendedTime = 0L;
+        for (final Task task : tasks) {
+            expendedTime += task.expendedTime();
+        }
+        return expendedTime;
+    }
+
     public Writer writer() {
         return new Writer(this);
     }
