@@ -33,6 +33,40 @@ public class StoryTests {
         Assert.assertTrue(story.tasks().isEmpty());
     }
 
+    @Test
+    public void addTask() {
+        final Story story = new Story("", null);
+        final Task task = new Task("", null);
+        Assert.assertTrue(story.addTask(task));
+        Assert.assertTrue(!story.tasks().isEmpty());
+        Assert.assertTrue(story.tasks().get(0) == task);
+    }
+
+    @Test
+    public void addTask_alreadyAdded() {
+        final Story story = new Story("", null);
+        final Task task = new Task("", null);
+        Assert.assertTrue(story.addTask(task));
+        Assert.assertFalse(story.addTask(task));
+        Assert.assertTrue(story.tasks().size() == 1);
+    }
+
+    @Test
+    public void deleteTask() {
+        final Story story = new Story("", null);
+        final Task task = new Task("", null);
+        story.addTask(task);
+        Assert.assertTrue(story.deleteTask(task.id()));
+        Assert.assertTrue(story.tasks().isEmpty());
+    }
+
+    @Test
+    public void deleteTask_noMatchingTask() {
+        final Story story = new Story("", null);
+        final Task task = new Task("", null);
+        Assert.assertFalse(story.deleteTask(task.id()));
+    }
+
     public static class InitTests {
 
         @Test
@@ -79,48 +113,6 @@ public class StoryTests {
             story.writer().title("New title").note("New note").commit();
             Assert.assertEquals(story.title(), "New title");
             Assert.assertEquals(story.note(), "New note");
-        }
-
-        @Test
-        public void addTask() {
-            final Story story = new Story("", null);
-            final Task task = new Task("", null);
-            story.writer().add(task).commit();
-            Assert.assertTrue(story.tasks().get(0) == task);
-            Assert.assertTrue(story.tasks().size() == 1);
-        }
-
-        @Test
-        public void addTask_alreadyAdded() {
-            final Story story = new Story("", null);
-            final Task task = new Task("", null);
-            story.writer().add(task).add(task).commit();
-            Assert.assertTrue(story.tasks().size() == 1);
-        }
-
-        @Test
-        public void deleteTask_differentWriter() {
-            final Story story = new Story("", null);
-            final Task task = new Task("", null);
-            story.writer().add(task).commit();
-            story.writer().delete(task).commit();
-            Assert.assertTrue(story.tasks().isEmpty());
-        }
-
-        @Test
-        public void deleteTask_sameWriter() {
-            final Story story = new Story("", null);
-            final Task task = new Task("", null);
-            story.writer().add(task).delete(task).commit();
-            Assert.assertTrue(story.tasks().isEmpty());
-        }
-
-        @Test
-        public void deleteTask_withId() {
-            final Story story = new Story("", null);
-            final Task task = new Task("", null);
-            story.writer().add(task).delete(task.id()).commit();
-            Assert.assertTrue(story.tasks().isEmpty());
         }
     }
 }
