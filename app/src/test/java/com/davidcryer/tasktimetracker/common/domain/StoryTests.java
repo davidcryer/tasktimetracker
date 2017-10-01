@@ -19,4 +19,6 @@ public class StoryTests {
         story.writer().note("New note").commit();
         Assert.assertEquals(story.note(), "New note");
     }
+
+    //TODO add task
 }
