@@ -15,7 +15,7 @@ public class Epic {
         return title;
     }
 
-    void title(final String title) {
+    private void title(final String title) {
         this.title = title;
     }
 
@@ -23,7 +23,7 @@ public class Epic {
         return note;
     }
 
-    void note(final String note) {
+    private void note(final String note) {
         this.note = note;
     }
 
