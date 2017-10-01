@@ -14,7 +14,7 @@ public class TaskTests {
 
     @Before
     public void setup() {
-        task = new Task(null, null);
+        task = new Task("", null);
     }
 
     @Test
@@ -77,14 +77,14 @@ public class TaskTests {
     public void deleteSession() {
         final Session session = new Session();
         session.start();
-        final Task task = new Task(UUID.randomUUID(), null, null, session);
+        final Task task = new Task(UUID.randomUUID(), "", null, session);
         task.stop();
         Assert.assertTrue(task.deleteSession(session.id()));
     }
 
     @Test
     public void deleteSession_nonMatchingId() {
-        final Task task = new Task(null, null);
+        final Task task = new Task("", null);
         Assert.assertFalse(task.deleteSession(null));
     }
 
@@ -92,16 +92,21 @@ public class TaskTests {
 
         @Test
         public void nonNullId() {
-            new Task(UUID.randomUUID(), null, null, null);
+            new Task(UUID.randomUUID(), "", null, null);
         }
 
         @Test(expected = IllegalArgsException.class)
         public void nullId() {
-            new Task(null, null, null, null);
+            new Task(null, "", null, null);
         }
 
         @Test
         public void nullOngoingSession() {
+            new Task(UUID.randomUUID(), "", null, null);
+        }
+
+        @Test(expected = IllegalArgsException.class)
+        public void title_null() {
             new Task(UUID.randomUUID(), null, null, null);
         }
 
@@ -109,13 +114,13 @@ public class TaskTests {
         public void ongoingSession_isOngoing() {
             final Session session = new Session();
             session.start();
-            new Task(UUID.randomUUID(), null, null, session);
+            new Task(UUID.randomUUID(), "", null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
         public void ongoingSession_notStarted() {
             final Session session = new Session();
-            new Task(UUID.randomUUID(), null, null, session);
+            new Task(UUID.randomUUID(), "", null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
@@ -123,7 +128,7 @@ public class TaskTests {
             final Session session = new Session();
             session.start();
             session.stop();
-            new Task(UUID.randomUUID(), null, null, session);
+            new Task(UUID.randomUUID(), "", null, session);
         }
     }
 
@@ -136,9 +141,15 @@ public class TaskTests {
             Assert.assertEquals(task.title(), "New title");
         }
 
+        @Test(expected = IllegalArgsException.class)
+        public void changeTitle_illegalTitle() {
+            final Task task = new Task("Old title", null);
+            task.writer().title(null).commit();
+        }
+
         @Test
         public void changeNote() {
-            final Task task = new Task(null, "Old note");
+            final Task task = new Task("", "Old note");
             task.writer().note("New note").commit();
             Assert.assertEquals(task.note(), "New note");
         }

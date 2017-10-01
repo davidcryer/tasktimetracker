@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class Task {
+    private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
+    private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
+    private final static String ILLEGAL_ONGOING_SESSION_MESSAGE = "ongoingSession cannot be finished";
     private final UUID id;
     private String title;
     private String note;
@@ -21,24 +24,38 @@ public class Task {
     }
 
     public Task(final UUID id, final String title, final String note, final Session ongoingSession) throws IllegalArgsException {
-        ArgsInspector.inspect(
-                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-                    @Override
-                    public boolean passed() {
-                        return id != null;
-                    }
-                }, "id cannot be null"),
-                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-                    @Override
-                    public boolean passed() {
-                        return ongoingSession == null || ongoingSession.isOngoing();
-                    }
-                }, "ongoingSession cannot be finished")
-        );
+        ArgsInspector.inspect(idCheck(id), titleCheck(title), ongoingSessionCheck(ongoingSession));
         this.id = id;
         this.title = title;
         this.note = note;
         this.ongoingSession = ongoingSession;
+    }
+
+    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return id != null;
+            }
+        }, ILLEGAL_ID_MESSAGE);
+    }
+
+    private static ArgsInspector.ArgCheck titleCheck(final String title) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return title != null;
+            }
+        }, ILLEGAL_TITLE_MESSAGE);
+    }
+
+    private static ArgsInspector.ArgCheck ongoingSessionCheck(final Session ongoingSession) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return ongoingSession == null || ongoingSession.isOngoing();
+            }
+        }, ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
     public void start() throws AlreadyStartedException {
@@ -116,20 +133,33 @@ public class Task {
         }
 
         public Writer title(final String title) {
-            titleChanged = !ObjectUtils.equalAllowNull(title, this.title);
+            titleChanged = !ObjectUtils.equalAllowNull(title, task.title());
             this.title = title;
             return this;
         }
 
         public Writer note(final String note) {
-            noteChanged = !ObjectUtils.equalAllowNull(note, this.note);
+            noteChanged = !ObjectUtils.equalAllowNull(note, task.note());
             this.note = note;
             return this;
         }
 
-        public void commit() {
+        public void commit() throws IllegalArgsException {
+            inspectInput();
             writeTitle();
             writeNote();
+        }
+
+        private void inspectInput() throws IllegalArgsException {
+            ArgsInspector.inspect(checks());
+        }
+
+        private ArgsInspector.ArgCheck[] checks() {
+            final List<ArgsInspector.ArgCheck> checks = new LinkedList<>();
+            if (titleChanged) {
+                checks.add(Task.titleCheck(title));
+            }
+            return checks.toArray(new ArgsInspector.ArgCheck[checks.size()]);
         }
 
         private void writeTitle() {
