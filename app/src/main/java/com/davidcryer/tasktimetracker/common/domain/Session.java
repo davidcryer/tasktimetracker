@@ -2,7 +2,7 @@ package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.IllegalArgsException;
-import com.davidcryer.tasktimetracker.common.Time;
+import com.davidcryer.tasktimetracker.common.DateUtils;
 
 import java.util.Date;
 import java.util.UUID;
@@ -62,7 +62,7 @@ public class Session {
             return 0L;
         }
         final Date finish = this.finish == null ? new Date() : this.finish;
-        return Time.difference(start, finish);
+        return DateUtils.difference(start, finish);
     }
 
     public UUID id() {
