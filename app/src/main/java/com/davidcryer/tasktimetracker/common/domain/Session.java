@@ -12,11 +12,11 @@ public class Session {
     private Date start;
     private Date finish;
 
-    public Session() {
+    Session() {
         this(null, null);
     }
 
-    public Session(final Date start, final Date finish) throws IllegalArgsException {
+    Session(final Date start, final Date finish) throws IllegalArgsException {
         ArgsInspector.inspect(
                 ArgsInspector.check(new ArgsInspector.ArgCriteria() {
                     @Override
@@ -39,22 +39,30 @@ public class Session {
         this.finish = finish;
     }
 
-    public void start() throws AlreadyStartedException {
+    void start() throws AlreadyStartedException {
         if (isOngoing()) {
             throw new AlreadyStartedException();
         }
         start = new Date();
     }
 
-    public void stop() throws AlreadyStoppedException {
+    void stop() throws AlreadyStoppedException {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
         finish = new Date();
     }
 
-    public boolean isOngoing() {
+    boolean isOngoing() {
         return start != null && finish == null;
+    }
+
+    public Date startTime() {
+        return start == null ? null : new Date(start.getTime());
+    }
+
+    public Date finishTime() {
+        return finish == null ? null : new Date(finish.getTime());
     }
 
     public long duration() {
