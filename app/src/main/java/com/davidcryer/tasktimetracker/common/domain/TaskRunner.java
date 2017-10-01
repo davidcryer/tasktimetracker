@@ -7,8 +7,8 @@ public class TaskRunner {
         this.ongoingTask = ongoingTask;
     }
 
-    public void start(final Task task) {
-        if (task == null) {
+    public void start(final Task task) throws AlreadyStartedException {
+        if (task == null || task == ongoingTask) {
             return;
         }
         stop();
@@ -16,7 +16,7 @@ public class TaskRunner {
         task.start();
     }
 
-    public void stop() {
+    public void stop() throws AlreadyStoppedException {
         if (ongoingTask != null) {
             ongoingTask.stop();
             ongoingTask = null;

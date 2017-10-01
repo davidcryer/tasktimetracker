@@ -55,4 +55,11 @@ public class TaskRunnerTests {
         runner.start(null);
         Assert.assertTrue(firstTask.isOngoing());
     }
+
+    @Test
+    public void start_withSameTask() {
+        final Task firstTask = new Task("", null);
+        runner.start(firstTask);
+        runner.start(firstTask);
+    }
 }
