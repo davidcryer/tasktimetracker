@@ -58,7 +58,7 @@ public class Task {
         }, ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
-    public void start() throws AlreadyStartedException {
+    void start() throws AlreadyStartedException {
         if (isOngoing()) {
             throw new AlreadyStartedException();
         }
@@ -66,7 +66,7 @@ public class Task {
         ongoingSession.start();
     }
 
-    public void stop() throws AlreadyStoppedException {
+    void stop() throws AlreadyStoppedException {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
