@@ -75,11 +75,11 @@ public class TaskTests {
 
     @Test
     public void deleteSession() {
-        final Session session = new Session();
-        session.start();
-        final Task task = new Task(UUID.randomUUID(), "", null, session);
+        final Task task = new Task(UUID.randomUUID(), "", null, null);
+        task.start();
         task.stop();
-        Assert.assertTrue(task.deleteSession(session.id()));
+        Assert.assertTrue(task.sessionHistory().size() == 1);
+        Assert.assertTrue(task.deleteSession(task.sessionHistory().get(0).id()));
     }
 
     @Test
@@ -112,21 +112,13 @@ public class TaskTests {
 
         @Test
         public void ongoingSession_isOngoing() {
-            final Session session = new Session();
-            session.start();
-            new Task(UUID.randomUUID(), "", null, session);
-        }
-
-        @Test(expected = IllegalArgsException.class)
-        public void ongoingSession_notStarted() {
-            final Session session = new Session();
+            final OngoingSession session = new OngoingSession();
             new Task(UUID.randomUUID(), "", null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
         public void ongoingSession_finished() {
-            final Session session = new Session();
-            session.start();
+            final OngoingSession session = new OngoingSession();
             session.stop();
             new Task(UUID.randomUUID(), "", null, session);
         }

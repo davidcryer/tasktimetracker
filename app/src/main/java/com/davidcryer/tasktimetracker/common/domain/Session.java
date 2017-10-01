@@ -8,53 +8,63 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Session {
+    private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
+    private final static String ILLEGAL_START_MESSAGE = "start cannot be null";
+    private final static String ILLEGAL_FINISH_MESSAGE = "finish cannot be null";
+    private final static String ILLEGAL_TIMELINE_MESSAGE = "start cannot be later than finish";
     private final UUID id;
-    private Date start;
-    private Date finish;
-
-    Session() {
-        this(null, null);
-    }
+    private final Date start;
+    private final Date finish;
 
     Session(final Date start, final Date finish) throws IllegalArgsException {
-        ArgsInspector.inspect(
-                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-                    @Override
-                    public boolean passed() {
-                        return (start == null && finish == null) || (start != null && finish != null);
-                    }
-                }, "Either both start and finish must be null or both non-null"),
-                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-                    @Override
-                    public boolean passed() {
-                        if (start == null || finish == null) {
-                            return true;
-                        }
-                        return start.getTime() <= finish.getTime();
-                    }
-                }, "start cannot be less than finish")
-        );
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID(), start, finish);
+    }
+
+    Session(final UUID id, final Date start, final Date finish) {
+        ArgsInspector.inspect(idCheck(id), startCheck(start), finishCheck(finish), timelineCheck(start, finish));
+        this.id = id;
         this.start = start;
         this.finish = finish;
     }
 
-    void start() throws AlreadyStartedException {
-        if (isOngoing()) {
-            throw new AlreadyStartedException();
-        }
-        start = new Date();
+    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return id != null;
+            }
+        }, ILLEGAL_ID_MESSAGE);
     }
 
-    void stop() throws AlreadyStoppedException {
-        if (!isOngoing()) {
-            throw new AlreadyStoppedException();
-        }
-        finish = new Date();
+    private static ArgsInspector.ArgCheck startCheck(final Date start) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return start != null;
+            }
+        }, ILLEGAL_START_MESSAGE);
     }
 
-    boolean isOngoing() {
-        return start != null && finish == null;
+    private static ArgsInspector.ArgCheck finishCheck(final Date finish) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return finish != null;
+            }
+        }, ILLEGAL_FINISH_MESSAGE);
+    }
+
+    private static ArgsInspector.ArgCheck timelineCheck(final Date start, final Date finish) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return start == null || finish == null || start.compareTo(finish) <= 0;
+            }
+        }, ILLEGAL_TIMELINE_MESSAGE);
+    }
+
+    public UUID id() {
+        return id;
     }
 
     public Date startTime() {
@@ -66,14 +76,6 @@ public class Session {
     }
 
     public long duration() {
-        if (start == null) {
-            return 0L;
-        }
-        final Date finish = this.finish == null ? new Date() : this.finish;
         return DateUtils.difference(start, finish);
-    }
-
-    public UUID id() {
-        return id;
     }
 }

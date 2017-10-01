@@ -4,6 +4,7 @@ import com.davidcryer.tasktimetracker.common.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.IllegalArgsException;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,18 +13,18 @@ import java.util.UUID;
 public class Task {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
-    private final static String ILLEGAL_ONGOING_SESSION_MESSAGE = "ongoingSession cannot be finished";
+    private final static String ILLEGAL_ONGOING_SESSION_MESSAGE = "ongoing session cannot be finished";
     private final UUID id;
     private String title;
     private String note;
     private final List<Session> sessionHistory = new LinkedList<>();
-    private Session ongoingSession;
+    private OngoingSession ongoingSession;
 
     public Task(final String title, final String note) {
         this(UUID.randomUUID(), title, note, null);
     }
 
-    public Task(final UUID id, final String title, final String note, final Session ongoingSession) throws IllegalArgsException {
+    public Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession) throws IllegalArgsException {
         ArgsInspector.inspect(idCheck(id), titleCheck(title), ongoingSessionCheck(ongoingSession));
         this.id = id;
         this.title = title;
@@ -49,11 +50,11 @@ public class Task {
         }, ILLEGAL_TITLE_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck ongoingSessionCheck(final Session ongoingSession) {
+    private static ArgsInspector.ArgCheck ongoingSessionCheck(final OngoingSession ongoingSession) {
         return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
             @Override
             public boolean passed() {
-                return ongoingSession == null || ongoingSession.isOngoing();
+                return ongoingSession == null || !ongoingSession.isFinished();
             }
         }, ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
@@ -62,21 +63,19 @@ public class Task {
         if (isOngoing()) {
             throw new AlreadyStartedException();
         }
-        ongoingSession = new Session();
-        ongoingSession.start();
+        ongoingSession = new OngoingSession();
     }
 
     void stop() throws AlreadyStoppedException {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
-        ongoingSession.stop();
-        sessionHistory.add(ongoingSession);
+        sessionHistory.add(ongoingSession.stop());
         ongoingSession = null;
     }
 
     public boolean isOngoing() {
-        return ongoingSession != null && ongoingSession.isOngoing();
+        return ongoingSession != null;
     }
 
     public long expendedTime() {
@@ -95,6 +94,10 @@ public class Task {
             }
         }
         return false;
+    }
+
+    public List<Session> sessionHistory() {
+        return new ArrayList<>(sessionHistory);
     }
 
     public UUID id() {
