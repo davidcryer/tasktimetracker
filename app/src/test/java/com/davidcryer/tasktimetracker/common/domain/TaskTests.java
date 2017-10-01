@@ -43,14 +43,14 @@ public class TaskTests {
 
     @Test
     public void expendedTime_beforeStart() {
-        Assert.assertTrue(task.getExpendedTime() == 0L);
+        Assert.assertTrue(task.expendedTime() == 0L);
     }
 
     @Test
     public void expendedTime_afterStart_beforeStop_withDuration() throws Exception {
         task.start();
         Thread.sleep(10L);
-        Assert.assertTrue(task.getExpendedTime() >= 10L && task.getExpendedTime() < 15L);
+        Assert.assertTrue(task.expendedTime() >= 10L && task.expendedTime() < 15L);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TaskTests {
         Thread.sleep(10L);
         task.stop();
         Thread.sleep(10L);
-        Assert.assertTrue(task.getExpendedTime() >= 10L && task.getExpendedTime() < 15L);
+        Assert.assertTrue(task.expendedTime() >= 10L && task.expendedTime() < 15L);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TaskTests {
         task.start();
         Thread.sleep(10L);
         task.stop();
-        Assert.assertTrue(task.getExpendedTime() >= 20L && task.getExpendedTime() < 30L);
+        Assert.assertTrue(task.expendedTime() >= 20L && task.expendedTime() < 30L);
     }
 
     @Test

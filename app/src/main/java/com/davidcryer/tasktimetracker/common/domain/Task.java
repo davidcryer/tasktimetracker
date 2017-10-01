@@ -79,7 +79,7 @@ public class Task {
         return ongoingSession != null && ongoingSession.isOngoing();
     }
 
-    public long getExpendedTime() {
+    public long expendedTime() {
         long expended = ongoingSession == null ? 0L : ongoingSession.duration();
         for (final Session session : sessionHistory) {
             expended += session.duration();
