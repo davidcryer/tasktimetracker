@@ -7,6 +7,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
+
 public class TaskTests {
     private Task task;
 
@@ -75,7 +77,7 @@ public class TaskTests {
     public void deleteSession() {
         final Session session = new Session();
         session.start();
-        final Task task = new Task(null, null, session);
+        final Task task = new Task(UUID.randomUUID(), null, null, session);
         task.stop();
         Assert.assertTrue(task.deleteSession(session.id()));
     }
@@ -89,21 +91,31 @@ public class TaskTests {
     public static class InitTests {
 
         @Test
+        public void nonNullId() {
+            new Task(UUID.randomUUID(), null, null, null);
+        }
+
+        @Test(expected = IllegalArgsException.class)
+        public void nullId() {
+            new Task(null, null, null, null);
+        }
+
+        @Test
         public void nullOngoingSession() {
-            new Task(null, null, null);
+            new Task(UUID.randomUUID(), null, null, null);
         }
 
         @Test
         public void ongoingSession_isOngoing() {
             final Session session = new Session();
             session.start();
-            new Task(null, null, session);
+            new Task(UUID.randomUUID(), null, null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
         public void ongoingSession_notStarted() {
             final Session session = new Session();
-            new Task(null, null, session);
+            new Task(UUID.randomUUID(), null, null, session);
         }
 
         @Test(expected = IllegalArgsException.class)
@@ -111,7 +123,7 @@ public class TaskTests {
             final Session session = new Session();
             session.start();
             session.stop();
-            new Task(null, null, session);
+            new Task(UUID.randomUUID(), null, null, session);
         }
     }
 

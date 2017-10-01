@@ -10,17 +10,24 @@ import java.util.List;
 import java.util.UUID;
 
 public class Task {
+    private final UUID id;
     private String title;
     private String note;
     private final List<Session> sessionHistory = new LinkedList<>();
     private Session ongoingSession;
 
     public Task(final String title, final String note) {
-        this(title, note, null);
+        this(UUID.randomUUID(), title, note, null);
     }
 
-    public Task(final String title, final String note, final Session ongoingSession) throws IllegalArgsException {
+    public Task(final UUID id, final String title, final String note, final Session ongoingSession) throws IllegalArgsException {
         ArgsInspector.inspect(
+                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+                    @Override
+                    public boolean passed() {
+                        return id != null;
+                    }
+                }, "id cannot be null"),
                 ArgsInspector.check(new ArgsInspector.ArgCriteria() {
                     @Override
                     public boolean passed() {
@@ -28,6 +35,7 @@ public class Task {
                     }
                 }, "ongoingSession cannot be finished")
         );
+        this.id = id;
         this.title = title;
         this.note = note;
         this.ongoingSession = ongoingSession;
@@ -70,6 +78,10 @@ public class Task {
             }
         }
         return false;
+    }
+
+    public UUID id() {
+        return id;
     }
 
     public String title() {
