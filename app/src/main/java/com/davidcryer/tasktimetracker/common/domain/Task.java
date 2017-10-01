@@ -17,7 +17,7 @@ public class Task {
     private final UUID id;
     private String title;
     private String note;
-    private final List<Session> sessionHistory = new LinkedList<>();
+    private final List<FinishedSession> finishedSessions = new LinkedList<>();
     private OngoingSession ongoingSession;
 
     public Task(final String title, final String note) {
@@ -70,7 +70,7 @@ public class Task {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
-        sessionHistory.add(ongoingSession.stop());
+        finishedSessions.add(ongoingSession.stop());
         ongoingSession = null;
     }
 
@@ -80,14 +80,14 @@ public class Task {
 
     public long expendedTime() {
         long expended = ongoingSession == null ? 0L : ongoingSession.duration();
-        for (final Session session : sessionHistory) {
-            expended += session.duration();
+        for (final FinishedSession finishedSession : finishedSessions) {
+            expended += finishedSession.duration();
         }
         return expended;
     }
 
     public boolean deleteSession(final UUID sessionId) {
-        for (final Iterator<Session> itr = sessionHistory.iterator(); itr.hasNext();) {
+        for (final Iterator<FinishedSession> itr = finishedSessions.iterator(); itr.hasNext();) {
             if (itr.next().id().equals(sessionId)) {
                 itr.remove();
                 return true;
@@ -96,8 +96,8 @@ public class Task {
         return false;
     }
 
-    public List<Session> sessionHistory() {
-        return new ArrayList<>(sessionHistory);
+    public List<FinishedSession> sessionHistory() {
+        return new ArrayList<>(finishedSessions);
     }
 
     public UUID id() {

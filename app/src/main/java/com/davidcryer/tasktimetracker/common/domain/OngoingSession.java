@@ -28,12 +28,12 @@ public class OngoingSession {
         this.stop = stop;
     }
 
-    Session stop() throws AlreadyStoppedException {
+    FinishedSession stop() throws AlreadyStoppedException {
         if (isFinished()) {
             throw new AlreadyStoppedException();
         }
         stop = new Date();
-        return new Session(start, stop);
+        return new FinishedSession(start, stop);
     }
 
     public boolean isFinished() {

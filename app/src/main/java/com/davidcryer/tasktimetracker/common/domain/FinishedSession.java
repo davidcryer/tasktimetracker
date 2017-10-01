@@ -7,7 +7,7 @@ import com.davidcryer.tasktimetracker.common.DateUtils;
 import java.util.Date;
 import java.util.UUID;
 
-public class Session {
+public class FinishedSession {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_START_MESSAGE = "start cannot be null";
     private final static String ILLEGAL_FINISH_MESSAGE = "finish cannot be null";
@@ -16,11 +16,11 @@ public class Session {
     private final Date start;
     private final Date finish;
 
-    Session(final Date start, final Date finish) throws IllegalArgsException {
+    FinishedSession(final Date start, final Date finish) throws IllegalArgsException {
         this(UUID.randomUUID(), start, finish);
     }
 
-    Session(final UUID id, final Date start, final Date finish) {
+    FinishedSession(final UUID id, final Date start, final Date finish) {
         ArgsInspector.inspect(idCheck(id), startCheck(start), finishCheck(finish), timelineCheck(start, finish));
         this.id = id;
         this.start = start;
