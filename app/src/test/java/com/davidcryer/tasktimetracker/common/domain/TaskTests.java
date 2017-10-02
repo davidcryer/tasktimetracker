@@ -78,8 +78,8 @@ public class TaskTests {
         final Task task = new Task(UUID.randomUUID(), "", null, null);
         task.start();
         task.stop();
-        Assert.assertTrue(task.sessionHistory().size() == 1);
-        Assert.assertTrue(task.deleteSession(task.sessionHistory().get(0).id()));
+        Assert.assertTrue(task.finishedSessions().size() == 1);
+        Assert.assertTrue(task.deleteSession(task.finishedSessions().get(0).id()));
     }
 
     @Test

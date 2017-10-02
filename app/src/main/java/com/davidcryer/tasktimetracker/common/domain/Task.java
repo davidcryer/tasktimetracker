@@ -17,19 +17,24 @@ public class Task {
     private final UUID id;
     private String title;
     private String note;
-    private final List<FinishedSession> finishedSessions = new LinkedList<>();
     private OngoingSession ongoingSession;
+    private List<FinishedSession> finishedSessions;
 
     public Task(final String title, final String note) {
         this(UUID.randomUUID(), title, note, null);
     }
 
     public Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession) throws IllegalArgsException {
+        this(id, title, note, ongoingSession, null);
+    }
+
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalArgsException {
         ArgsInspector.inspect(idCheck(id), titleCheck(title), ongoingSessionCheck(ongoingSession));
         this.id = id;
         this.title = title;
         this.note = note;
         this.ongoingSession = ongoingSession;
+        this.finishedSessions = finishedSessions;
     }
 
     private static ArgsInspector.ArgCheck idCheck(final UUID id) {
@@ -70,8 +75,15 @@ public class Task {
         if (!isOngoing()) {
             throw new AlreadyStoppedException();
         }
-        finishedSessions.add(ongoingSession.stop());
+        addFinishedSession(ongoingSession.stop());
         ongoingSession = null;
+    }
+
+    private void addFinishedSession(final FinishedSession session) {
+        if (finishedSessions == null) {
+            finishedSessions = new LinkedList<>();
+        }
+        finishedSessions.add(session);
     }
 
     public boolean isOngoing() {
@@ -79,25 +91,37 @@ public class Task {
     }
 
     public long expendedTime() {
-        long expended = ongoingSession == null ? 0L : ongoingSession.duration();
-        for (final FinishedSession finishedSession : finishedSessions) {
-            expended += finishedSession.duration();
+        return ongoingSessionDuration() + finishedSessionsDuration();
+    }
+
+    private long ongoingSessionDuration() {
+        return ongoingSession == null ? 0L : ongoingSession.duration();
+    }
+
+    private long finishedSessionsDuration() {
+        long expended = 0L;
+        if (finishedSessions != null) {
+            for (final FinishedSession finishedSession : finishedSessions) {
+                expended += finishedSession.duration();
+            }
         }
         return expended;
     }
 
     public boolean deleteSession(final UUID sessionId) {
-        for (final Iterator<FinishedSession> itr = finishedSessions.iterator(); itr.hasNext();) {
-            if (itr.next().id().equals(sessionId)) {
-                itr.remove();
-                return true;
+        if (finishedSessions != null) {
+            for (final Iterator<FinishedSession> itr = finishedSessions.iterator(); itr.hasNext(); ) {
+                if (itr.next().id().equals(sessionId)) {
+                    itr.remove();
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public List<FinishedSession> sessionHistory() {
-        return new ArrayList<>(finishedSessions);
+    public List<FinishedSession> finishedSessions() {
+        return finishedSessions == null ? new ArrayList<FinishedSession>() : new ArrayList<>(finishedSessions);
     }
 
     public UUID id() {
