@@ -3,18 +3,16 @@ package com.davidcryer.tasktimetracker.framework.uiwrapper;
 import android.os.Bundle;
 
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUi;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUiModel;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUiModelFactory;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUiWrapper;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUi;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiModel;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiModelFactory;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiWrapper;
 
 public class UiWrapperFactory {
 
-    UiWrapper<TaskHistoryUi, TaskHistoryUi.Listener, TaskHistoryUiModel> createTaskHistoryUiWrapper(
-            final Bundle savedInstanceState
-    ) {
+    UiWrapper<ManageTasksUi, ManageTasksUi.Listener, ManageTasksUiModel> createManageTasksUiWrapper(final Bundle savedInstanceState) {
         return savedInstanceState == null
-                ? TaskHistoryUiWrapper.newInstance(new TaskHistoryUiModelFactory())
-                : TaskHistoryUiWrapper.savedElseNewInstance(new TaskHistoryUiModelFactory(), savedInstanceState);
+                ? ManageTasksUiWrapper.newInstance(new ManageTasksUiModelFactory())
+                : ManageTasksUiWrapper.savedElseNewInstance(new ManageTasksUiModelFactory(), savedInstanceState);
     }
 }

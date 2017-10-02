@@ -6,31 +6,31 @@ import android.support.annotation.NonNull;
 import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUi;
-import com.davidcryer.tasktimetracker.taskhistory.TaskHistoryUiModel;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUi;
+import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class UiWrapperRepository {
     private final UiWrapperFactory uiWrapperFactory;
-    private final Map<String, UiWrapper<TaskHistoryUi, TaskHistoryUi.Listener, TaskHistoryUiModel>> taskHistoryUiWrapperMap = new HashMap<>();
+    private final Map<String, UiWrapper<ManageTasksUi, ManageTasksUi.Listener, ManageTasksUiModel>> manageTasksUiWrapperMap = new HashMap<>();
 
     public UiWrapperRepository(final UiWrapperFactory uiWrapperFactory) {
         this.uiWrapperFactory = uiWrapperFactory;
     }
 
-    public TaskHistoryUi.Listener bind(final TaskHistoryUi ui, final UiBinder binder) {
-        return binder.bind(ui, taskHistoryUiWrapperMap, new UiBinder.UiWrapperProvider<TaskHistoryUi, TaskHistoryUi.Listener, TaskHistoryUiModel>() {
+    public ManageTasksUi.Listener bind(final ManageTasksUi ui, final UiBinder binder) {
+        return binder.bind(ui, manageTasksUiWrapperMap, new UiBinder.UiWrapperProvider<ManageTasksUi, ManageTasksUi.Listener, ManageTasksUiModel>() {
             @NonNull
             @Override
-            public UiWrapper<TaskHistoryUi, TaskHistoryUi.Listener, TaskHistoryUiModel> uiWrapper(Bundle savedInstanceState) {
-                return uiWrapperFactory.createTaskHistoryUiWrapper(savedInstanceState);
+            public UiWrapper<ManageTasksUi, ManageTasksUi.Listener, ManageTasksUiModel> uiWrapper(Bundle savedInstanceState) {
+                return uiWrapperFactory.createManageTasksUiWrapper(savedInstanceState);
             }
         });
     }
 
-    public void unbind(final TaskHistoryUi ui, final UiUnbinder unbinder) {
-        unbinder.unbind(taskHistoryUiWrapperMap);
+    public void unbind(final ManageTasksUi ui, final UiUnbinder unbinder) {
+        unbinder.unbind(manageTasksUiWrapperMap);
     }
 }
