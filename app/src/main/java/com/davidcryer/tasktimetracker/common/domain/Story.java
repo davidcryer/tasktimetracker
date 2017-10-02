@@ -12,17 +12,16 @@ import java.util.UUID;
 
 public class Story {
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
-    private final static String ILLEGAL_TASKS_MESSAGE = "tasks cannot be null";
     private String title;
     private String note;
-    private final List<Task> tasks;
+    private List<Task> tasks;
 
     public Story(String title, String note) {
-        this(title, note, new LinkedList<Task>());
+        this(title, note, null);
     }
 
     public Story(String title, String note, List<Task> tasks) {
-        ArgsInspector.inspect(titleCheck(title), tasksCheck(tasks));
+        ArgsInspector.inspect(titleCheck(title));
         this.title = title;
         this.note = note;
         this.tasks = tasks;
@@ -35,15 +34,6 @@ public class Story {
                 return title != null;
             }
         }, ILLEGAL_TITLE_MESSAGE);
-    }
-
-    private static ArgsInspector.ArgCheck tasksCheck(final List<Task> tasks) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return tasks != null;
-            }
-        }, ILLEGAL_TASKS_MESSAGE);
     }
 
     public String title() {
@@ -63,18 +53,23 @@ public class Story {
     }
 
     public List<Task> tasks() {
-        return new ArrayList<>(tasks);
+        return tasks == null ? new ArrayList<Task>() : new ArrayList<>(tasks);
     }
 
     public boolean addTask(final Task task) {
+        if (tasks == null) {
+            tasks = new LinkedList<>();
+        }
         return !tasks.contains(task) && tasks.add(task);
     }
 
     public boolean deleteTask(final UUID taskId) {
-        for (final Iterator<Task> itr = tasks.iterator(); itr.hasNext();) {
-            if (itr.next().id().equals(taskId)) {
-                itr.remove();
-                return true;
+        if (tasks != null) {
+            for (final Iterator<Task> itr = tasks.iterator(); itr.hasNext(); ) {
+                if (itr.next().id().equals(taskId)) {
+                    itr.remove();
+                    return true;
+                }
             }
         }
         return false;
@@ -82,8 +77,10 @@ public class Story {
 
     public long expendedTime() {
         long expendedTime = 0L;
-        for (final Task task : tasks) {
-            expendedTime += task.expendedTime();
+        if (tasks != null) {
+            for (final Task task : tasks) {
+                expendedTime += task.expendedTime();
+            }
         }
         return expendedTime;
     }
