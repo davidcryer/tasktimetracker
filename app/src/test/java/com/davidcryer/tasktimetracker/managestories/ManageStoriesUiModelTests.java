@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managetasks;
+package com.davidcryer.tasktimetracker.managestories;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,28 +6,28 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageTasksUiModelTests {
+public class ManageStoriesUiModelTests {
 
     @Test
     public void notPopulated() {
-        final ManageTasksUiModel uiModel = new ManageTasksUiModelImpl(null);
+        final ManageStoriesUiModel uiModel = new ManageStoriesUiModelImpl(null);
         Assert.assertFalse(uiModel.isPopulated());
     }
 
     @Test
     public void isPopulated() {
-        final ManageTasksUiModel uiModel = new ManageTasksUiModelImpl(new ArrayList<UiStory>());
+        final ManageStoriesUiModel uiModel = new ManageStoriesUiModelImpl(new ArrayList<UiStory>());
         Assert.assertTrue(uiModel.isPopulated());
     }
 
     @Test
     public void showStories() {
-        final ManageTasksUiModel uiModel = new ManageTasksUiModelImpl(null);
+        final ManageStoriesUiModel uiModel = new ManageStoriesUiModelImpl(null);
         uiModel.showStories(new ArrayList<UiStory>(), new TestUi());
         Assert.assertTrue(uiModel.isPopulated());
     }
 
-    private static class TestUi implements ManageTasksUi {
+    private static class TestUi implements ManageStoriesUi {
 
         @Override
         public void showStories(List<UiStory> stories) {

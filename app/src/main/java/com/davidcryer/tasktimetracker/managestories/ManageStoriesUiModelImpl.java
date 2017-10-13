@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managetasks;
+package com.davidcryer.tasktimetracker.managestories;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
@@ -8,19 +8,19 @@ import com.davidcryer.tasktimetracker.common.ListUtils;
 import java.util.Arrays;
 import java.util.List;
 
-class ManageTasksUiModelImpl implements ManageTasksUiModel {
+class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     private List<UiStory> stories;
 
-    ManageTasksUiModelImpl(final List<UiStory> stories) {
+    ManageStoriesUiModelImpl(final List<UiStory> stories) {
         this.stories = stories;
     }
 
-    private ManageTasksUiModelImpl(final Parcel parcel) {
+    private ManageStoriesUiModelImpl(final Parcel parcel) {
         stories = Arrays.asList((UiStory[]) parcel.readParcelableArray(UiStory.class.getClassLoader()));
     }
 
     @Override
-    public void onto(@NonNull ManageTasksUi ui) {
+    public void onto(@NonNull ManageStoriesUi ui) {
         ui.showStories(stories);
     }
 
@@ -34,20 +34,20 @@ class ManageTasksUiModelImpl implements ManageTasksUiModel {
         stories = Arrays.asList((UiStory[]) parcel.readParcelableArray(UiStory.class.getClassLoader()));
     }
 
-    public final static Creator<ManageTasksUiModel> CREATOR = new Creator<ManageTasksUiModel>() {
+    public final static Creator<ManageStoriesUiModel> CREATOR = new Creator<ManageStoriesUiModel>() {
         @Override
-        public ManageTasksUiModel createFromParcel(Parcel parcel) {
-            return new ManageTasksUiModelImpl(parcel);
+        public ManageStoriesUiModel createFromParcel(Parcel parcel) {
+            return new ManageStoriesUiModelImpl(parcel);
         }
 
         @Override
-        public ManageTasksUiModel[] newArray(int i) {
-            return new ManageTasksUiModelImpl[i];
+        public ManageStoriesUiModel[] newArray(int i) {
+            return new ManageStoriesUiModelImpl[i];
         }
     };
 
     @Override
-    public void showStories(List<UiStory> stories, ManageTasksUi ui) {
+    public void showStories(List<UiStory> stories, ManageStoriesUi ui) {
         if (ui != null) {
             ui.showStories(ListUtils.emptyIfNull(stories));
         }

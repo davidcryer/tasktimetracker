@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managetasks;
+package com.davidcryer.tasktimetracker.managestories;
 
 import android.os.Parcel;
 import android.os.Parcelable;

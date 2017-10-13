@@ -4,11 +4,10 @@ import android.os.Bundle;
 
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
-import com.davidcryer.tasktimetracker.common.domain.StorySharedPreferences;
-import com.davidcryer.tasktimetracker.managetasks.ManageTasksUi;
-import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiModel;
-import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiModelFactory;
-import com.davidcryer.tasktimetracker.managetasks.ManageTasksUiWrapper;
+import com.davidcryer.tasktimetracker.managestories.ManageStoriesUi;
+import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiModel;
+import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiModelFactory;
+import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiWrapper;
 
 public class UiWrapperFactory {
     private final StoryDatabase storyDatabase;
@@ -17,9 +16,9 @@ public class UiWrapperFactory {
         this.storyDatabase = storyDatabase;
     }
 
-    UiWrapper<ManageTasksUi, ManageTasksUi.Listener, ManageTasksUiModel> createManageTasksUiWrapper(final Bundle savedInstanceState) {
+    UiWrapper<ManageStoriesUi, ManageStoriesUi.Listener, ManageStoriesUiModel> createManageStoriesUiWrapper(final Bundle savedInstanceState) {
         return savedInstanceState == null
-                ? ManageTasksUiWrapper.newInstance(new ManageTasksUiModelFactory(), storyDatabase)
-                : ManageTasksUiWrapper.savedElseNewInstance(new ManageTasksUiModelFactory(), savedInstanceState, storyDatabase);
+                ? ManageStoriesUiWrapper.newInstance(new ManageStoriesUiModelFactory(), storyDatabase)
+                : ManageStoriesUiWrapper.savedElseNewInstance(new ManageStoriesUiModelFactory(), savedInstanceState, storyDatabase);
     }
 }

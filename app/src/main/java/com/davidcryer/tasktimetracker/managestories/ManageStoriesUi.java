@@ -1,8 +1,8 @@
-package com.davidcryer.tasktimetracker.managetasks;
+package com.davidcryer.tasktimetracker.managestories;
 
 import java.util.List;
 
-public interface ManageTasksUi {
+public interface ManageStoriesUi {
     void showStories(List<UiStory> stories);
 
     interface Listener {
