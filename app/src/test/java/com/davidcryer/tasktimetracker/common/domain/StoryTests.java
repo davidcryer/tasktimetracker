@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class StoryTests {
 
@@ -87,7 +88,7 @@ public class StoryTests {
 
         @Test
         public void valid() {
-            new Story("", null, new LinkedList<Task>());
+            new Story(UUID.randomUUID(), "", null, null);
         }
 
         @Test(expected = IllegalArgsException.class)
@@ -96,8 +97,8 @@ public class StoryTests {
         }
 
         @Test(expected = IllegalArgsException.class)
-        public void illegalTasks() {
-            new Story("", null, null);
+        public void illegalId() {
+            new Story(null, "", null, null);
         }
     }
 

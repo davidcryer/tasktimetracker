@@ -11,20 +11,32 @@ import java.util.List;
 import java.util.UUID;
 
 public class Story {
+    private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
+    private final UUID id;
     private String title;
     private String note;
     private List<Task> tasks;
 
     public Story(String title, String note) {
-        this(title, note, null);
+        this(UUID.randomUUID(), title, note, null);
     }
 
-    public Story(String title, String note, List<Task> tasks) {
-        ArgsInspector.inspect(titleCheck(title));
+    public Story(UUID id, String title, String note, List<Task> tasks) {
+        ArgsInspector.inspect(idCheck(id), titleCheck(title));
+        this.id = id;
         this.title = title;
         this.note = note;
         this.tasks = tasks;
+    }
+
+    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
+        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return id != null;
+            }
+        }, ILLEGAL_ID_MESSAGE);
     }
 
     private static ArgsInspector.ArgCheck titleCheck(final String title) {
@@ -34,6 +46,10 @@ public class Story {
                 return title != null;
             }
         }, ILLEGAL_TITLE_MESSAGE);
+    }
+
+    public UUID id() {
+        return id;
     }
 
     public String title() {
