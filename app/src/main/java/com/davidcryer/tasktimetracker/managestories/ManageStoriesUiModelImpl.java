@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
@@ -52,6 +53,33 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
             ui.showStories(ListUtils.emptyIfNull(stories));
         }
         this.stories = stories;
+    }
+
+    @Override
+    public void removeStory(int i, ManageStoriesUi ui) {
+        if (ui != null) {
+            ui.removeStory(i);
+        }
+        stories.remove(i);
+    }
+
+    @Override
+    public void addStory(UiStory story, ManageStoriesUi ui) {
+        if (ui != null) {
+            ui.addStory(story);
+        }
+        if (stories == null) {
+            stories = new LinkedList<>();
+        }
+        stories.add(story);
+    }
+
+    @Override
+    public void insertStory(UiStory story, int i, ManageStoriesUi ui) {
+        if (ui != null) {
+            ui.insertStory(story, i);
+        }
+        stories.set(i, story);
     }
 
     @Override

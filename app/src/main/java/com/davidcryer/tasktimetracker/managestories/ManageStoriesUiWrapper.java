@@ -30,7 +30,31 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
     @Override
     protected ManageStoriesUi.Listener uiListener() {
         return new ManageStoriesUi.Listener() {
+            @Override
+            public void onClickStory(ManageStoriesUi ui, UiStory story) {
+                ui.showManageStoryScreen(story);
+            }
 
+            @Override
+            public void onClickAddStory(ManageStoriesUi ui) {
+                ui.showAddStoryScreen();
+            }
+
+            @Override
+            public void onClickRemoveStory(ManageStoriesUi ui, final UiStory story, final int i) {
+                uiModel().removeStory(i, ui);
+                ui.showUndoStoryRemoval(new Runnable() {
+                    @Override
+                    public void run() {
+                        uiModel().insertStory(story, i, ui());
+                    }
+                });
+            }
+
+            @Override
+            public void onStoryAddedResult(ManageStoriesUi ui, UiStory story) {
+                uiModel().addStory(story, ui);
+            }
         };
     }
 
