@@ -11,6 +11,6 @@ public class TrackerApplication extends Application implements UiWrapperReposito
     @NonNull
     @Override
     public UiWrapperRepository create() {
-        return UiWrapperRepositoryProvider.get();
+        return UiWrapperRepositoryProvider.get(this);
     }
 }
