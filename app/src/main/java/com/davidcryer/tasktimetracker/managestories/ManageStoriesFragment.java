@@ -19,6 +19,36 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
+    public void addStory(UiStory story) {
+
+    }
+
+    @Override
+    public void insertStory(UiStory story, int i) {
+
+    }
+
+    @Override
+    public void removeStory(int i) {
+
+    }
+
+    @Override
+    public void showUndoStoryRemoval(Runnable onUndo) {
+
+    }
+
+    @Override
+    public void showManageStoryScreen(UiStory story) {
+
+    }
+
+    @Override
+    public void showAddStoryScreen() {
+
+    }
+
+    @Override
     protected Listener bind(@NonNull UiWrapperRepository uiWrapperRepository, @NonNull UiBinder binder) {
         return uiWrapperRepository.bind(this, binder);
     }
