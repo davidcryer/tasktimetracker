@@ -13,7 +13,7 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     private List<UiStory> stories;
 
     ManageStoriesUiModelImpl(final List<UiStory> stories) {
-        this.stories = stories;
+        this.stories = stories == null ? null : new LinkedList<>(stories);
     }
 
     private ManageStoriesUiModelImpl(final Parcel parcel) {
