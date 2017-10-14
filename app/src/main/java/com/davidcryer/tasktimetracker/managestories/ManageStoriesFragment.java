@@ -11,8 +11,6 @@ import java.util.List;
 
 public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi {
 
-
-
     @Override
     public void showStories(List<UiStory> stories) {
 
