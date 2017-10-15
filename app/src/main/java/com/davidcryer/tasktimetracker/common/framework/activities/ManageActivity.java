@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.framework.activities;
+package com.davidcryer.tasktimetracker.common.framework.activities;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;

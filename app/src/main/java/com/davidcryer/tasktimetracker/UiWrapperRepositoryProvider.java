@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
 import com.davidcryer.tasktimetracker.common.domain.StorySharedPreferences;
-import com.davidcryer.tasktimetracker.framework.uiwrapper.UiWrapperFactory;
-import com.davidcryer.tasktimetracker.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 import com.google.gson.Gson;
 
 class UiWrapperRepositoryProvider {

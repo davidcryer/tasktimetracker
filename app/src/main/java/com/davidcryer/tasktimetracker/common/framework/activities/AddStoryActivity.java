@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.framework.activities;
+package com.davidcryer.tasktimetracker.common.framework.activities;
 
 import android.app.Activity;
 import android.content.Intent;

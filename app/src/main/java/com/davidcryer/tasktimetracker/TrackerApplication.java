@@ -4,7 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.davidc.uiwrapper.UiWrapperRepositoryFactory;
-import com.davidcryer.tasktimetracker.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 
 public class TrackerApplication extends Application implements UiWrapperRepositoryFactory<UiWrapperRepository> {
 

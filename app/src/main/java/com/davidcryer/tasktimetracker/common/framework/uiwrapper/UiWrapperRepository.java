@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.framework.uiwrapper;
+package com.davidcryer.tasktimetracker.common.framework.uiwrapper;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

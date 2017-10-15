@@ -18,7 +18,7 @@ import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.R;
-import com.davidcryer.tasktimetracker.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 
 import java.util.List;
 
