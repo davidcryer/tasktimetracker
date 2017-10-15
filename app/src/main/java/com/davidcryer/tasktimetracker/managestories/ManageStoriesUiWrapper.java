@@ -36,6 +36,16 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
+            public void onLongClickStory(ManageStoriesUi ui, UiStory story, int i) {
+                ui.showRemoveStory(story, i);
+            }
+
+            @Override
+            public void onClickTask(ManageStoriesUi ui, UiTask task) {
+                ui.showManageTaskScreen(task);
+            }
+
+            @Override
             public void onClickAddStory(ManageStoriesUi ui) {
                 ui.showAddStoryScreen();
             }
