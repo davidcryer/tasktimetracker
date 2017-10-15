@@ -8,11 +8,11 @@ import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactor
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 import com.google.gson.Gson;
 
-class UiWrapperRepositoryProvider {
+class ApplicationDependencyProvider {
 
-    private UiWrapperRepositoryProvider() {}
+    private ApplicationDependencyProvider() {}
 
-    static UiWrapperRepository get(final Context context) {
+    static UiWrapperRepository uiWrapperRepository(final Context context) {
         return new UiWrapperRepository(uiWrapperFactory(context));
     }
 
