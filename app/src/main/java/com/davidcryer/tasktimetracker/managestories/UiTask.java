@@ -8,15 +8,30 @@ import java.util.UUID;
 class UiTask implements Parcelable {
     private final UUID id;
     private final String title;
+    private final UUID storyId;
 
-    UiTask(UUID id, String title) {
+    UiTask(UUID id, String title, UUID storyId) {
         this.id = id;
         this.title = title;
+        this.storyId = storyId;
     }
 
     private UiTask(final Parcel parcel) {
         id = (UUID) parcel.readSerializable();
         title = parcel.readString();
+        storyId = (UUID) parcel.readSerializable();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public UUID getStoryId() {
+        return storyId;
     }
 
     @Override
@@ -28,6 +43,7 @@ class UiTask implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeSerializable(id);
         parcel.writeString(title);
+        parcel.writeSerializable(storyId);
     }
 
     public final static Creator<UiTask> CREATOR = new Creator<UiTask>() {

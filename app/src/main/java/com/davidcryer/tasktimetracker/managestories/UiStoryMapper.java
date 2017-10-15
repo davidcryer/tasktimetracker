@@ -12,8 +12,12 @@ class UiStoryMapper {
     static List<UiStory> from(final List<Story> stories) {
         final List<UiStory> uiStories = new ArrayList<>(stories.size());
         for (final Story story : stories) {
-            uiStories.add(new UiStory(story.id(), story.title(), story.note(), UiTaskMapper.from(story.tasks())));
+            uiStories.add(from(story));
         }
         return uiStories;
+    }
+
+    private static UiStory from(final Story story) {
+        return new UiStory(story.id(), story.title(), story.note(), UiTaskMapper.from(story));
     }
 }

@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.managestories;
 
+import com.davidcryer.tasktimetracker.common.domain.Story;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.ArrayList;
@@ -9,10 +10,10 @@ class UiTaskMapper {
 
     private UiTaskMapper() {}
 
-    static List<UiTask> from(final List<Task> tasks) {
-        final List<UiTask> uiTasks = new ArrayList<>(tasks.size());
-        for (final Task task : tasks) {
-            uiTasks.add(new UiTask(task.id(), task.title()));
+    static List<UiTask> from(final Story story) {
+        final List<UiTask> uiTasks = new ArrayList<>(story.tasks().size());
+        for (final Task task : story.tasks()) {
+            uiTasks.add(new UiTask(task.id(), task.title(), story.id()));
         }
         return uiTasks;
     }
