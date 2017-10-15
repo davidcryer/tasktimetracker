@@ -62,7 +62,7 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
-            public void onStoryAddedResult(ManageStoriesUi ui, UiStory story) {
+            public void onAddStoryResult(ManageStoriesUi ui, UiStory story) {
                 uiModel().addStory(story, ui);
             }
         };

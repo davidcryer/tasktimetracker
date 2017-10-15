@@ -19,6 +19,6 @@ public interface ManageStoriesUi {
         void onClickTask(ManageStoriesUi ui, UiTask task);
         void onClickAddStory(ManageStoriesUi ui);
         void onClickRemoveStory(ManageStoriesUi ui, UiStory story, int i);
-        void onStoryAddedResult(ManageStoriesUi ui, UiStory story);
+        void onAddStoryResult(ManageStoriesUi ui, UiStory story);
     }
 }
