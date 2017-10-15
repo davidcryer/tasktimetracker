@@ -50,7 +50,7 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     @Override
     public void showStories(List<UiStory> stories, ManageStoriesUi ui) {
         if (ui != null) {
-            ui.showStories(ListUtils.emptyIfNull(stories));
+            ui.showStories(ListUtils.newList(stories));
         }
         this.stories = stories;
     }
