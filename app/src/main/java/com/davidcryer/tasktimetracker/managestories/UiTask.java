@@ -8,17 +8,20 @@ import java.util.UUID;
 class UiTask implements Parcelable {
     private final UUID id;
     private final String title;
+    private final String note;
     private final UUID storyId;
 
-    UiTask(UUID id, String title, UUID storyId) {
+    UiTask(UUID id, String title, String note, UUID storyId) {
         this.id = id;
         this.title = title;
+        this.note = note;
         this.storyId = storyId;
     }
 
     private UiTask(final Parcel parcel) {
         id = (UUID) parcel.readSerializable();
         title = parcel.readString();
+        note = parcel.readString();
         storyId = (UUID) parcel.readSerializable();
     }
 
@@ -28,6 +31,10 @@ class UiTask implements Parcelable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public UUID getStoryId() {
@@ -43,6 +50,7 @@ class UiTask implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeSerializable(id);
         parcel.writeString(title);
+        parcel.writeString(note);
         parcel.writeSerializable(storyId);
     }
 

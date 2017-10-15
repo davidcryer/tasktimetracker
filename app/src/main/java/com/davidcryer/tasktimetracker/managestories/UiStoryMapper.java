@@ -1,6 +1,7 @@
 package com.davidcryer.tasktimetracker.managestories;
 
 import com.davidcryer.tasktimetracker.common.domain.Story;
+import com.davidcryer.tasktimetracker.managestory.ManageStoryIntentModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,5 +20,9 @@ class UiStoryMapper {
 
     private static UiStory from(final Story story) {
         return new UiStory(story.id(), story.title(), story.note(), UiTaskMapper.from(story));
+    }
+
+    static ManageStoryIntentModel toManageStoryIntentModel(final UiStory story) {
+        return new ManageStoryIntentModel(story.getId(), story.getTitle(), story.getNote());
     }
 }

@@ -121,17 +121,17 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
 
     @Override
     public void showManageStoryScreen(UiStory story) {
-
+        navigator.toManageStoryScreen(UiStoryMapper.toManageStoryIntentModel(story));
     }
 
     @Override
     public void showManageTaskScreen(UiTask task) {
-
+        navigator.toManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task));
     }
 
     @Override
     public void showAddStoryScreen() {
-
+        navigator.toAddStoryScreen(REQUEST_CODE_ADD_STORY, RETURN_KEY_ADD_STORY);
     }
 
     @Override
