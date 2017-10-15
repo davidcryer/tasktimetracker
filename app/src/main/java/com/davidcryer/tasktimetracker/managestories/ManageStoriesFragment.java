@@ -1,6 +1,7 @@
 package com.davidcryer.tasktimetracker.managestories;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,8 @@ import com.davidcryer.tasktimetracker.framework.uiwrapper.UiWrapperRepository;
 import java.util.List;
 
 public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi {
+    private final static int REQUEST_CODE_ADD_STORY = 100;
+    private final static String RETURN_KEY_ADD_STORY = "story";
     private final StoriesAdapter storiesAdapter;
 
     public ManageStoriesFragment() {
@@ -103,7 +106,7 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     public void showUndoStoryRemoval(final Runnable onUndo) {
         final View root = getView();
         if (root != null) {
-            Snackbar.make(root, "", BaseTransientBottomBar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+            Snackbar.make(root, "Story deleted", BaseTransientBottomBar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (onUndo != null) {
@@ -127,6 +130,24 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     @Override
     public void showAddStoryScreen() {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_ADD_STORY: {
+                onAddStoryResult(data);
+            }
+        }
+    }
+
+    private void onAddStoryResult(final Intent data) {
+        if (data.hasExtra(RETURN_KEY_ADD_STORY)) {
+            if (hasListener()) {
+                listener().onAddStoryResult(this, (UiStory) data.getParcelableExtra(RETURN_KEY_ADD_STORY));
+            }
+        }
     }
 
     @Override
