@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.managestories;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     private final static int REQUEST_CODE_ADD_STORY = 100;
     private final static String RETURN_KEY_ADD_STORY = "story";
     private final StoriesAdapter storiesAdapter;
+    private ManageStoriesNavigator navigator;
 
     public ManageStoriesFragment() {
         storiesAdapter = new StoriesAdapter();
@@ -148,6 +150,18 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
                 listener().onAddStoryResult(this, (UiStory) data.getParcelableExtra(RETURN_KEY_ADD_STORY));
             }
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        navigator = (ManageStoriesNavigator) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        navigator = null;
     }
 
     @Override
