@@ -70,4 +70,13 @@ public class ManageStoryUiWrapper extends UiWrapper<ManageStoryUi, ManageStoryUi
             }
         };
     }
+
+    @Override
+    protected void registerResources() {
+        super.registerResources();
+        if (!uiModel().isPopulatedWithTasks()) {
+            final Story story = storyDatabase.find(uiModel().storyId());
+            uiModel().showTasks(ui(), UiTaskMapper.from(story.tasks()));
+        }
+    }
 }
