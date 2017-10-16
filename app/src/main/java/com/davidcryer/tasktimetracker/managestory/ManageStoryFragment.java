@@ -10,6 +10,8 @@ import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 
+import java.util.List;
+
 public class ManageStoryFragment extends UiFragment<ManageStoryUi.Listener, UiWrapperRepository> implements ManageStoryUi {
     private final static String ARGS_INTENT_MODEL = "intent model";
 
@@ -19,6 +21,11 @@ public class ManageStoryFragment extends UiFragment<ManageStoryUi.Listener, UiWr
         args.putParcelable(ARGS_INTENT_MODEL, intentModel);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void showTasks(List<UiTask> tasks) {
+
     }
 
     @Override

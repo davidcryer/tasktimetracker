@@ -1,6 +1,9 @@
 package com.davidcryer.tasktimetracker.managestory;
 
+import java.util.List;
+
 public interface ManageStoryUi {
+    void showTasks(List<UiTask> tasks);
     void showManageLayout(UiStory story);
     void showEditLayout(UiStory story);
     void showManageTask(UiTask task, int i);
