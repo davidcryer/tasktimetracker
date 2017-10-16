@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,13 +18,6 @@ class UiStory implements Parcelable {
         this.title = title;
         this.note = note;
         this.tasks = tasks == null ? new ArrayList<UiTask>() : new ArrayList<>(tasks);
-    }
-
-    private UiStory(final Parcel parcel) {
-        id = (UUID) parcel.readSerializable();
-        title = parcel.readString();
-        note = parcel.readString();
-        tasks = Arrays.asList((UiTask[]) parcel.readParcelableArray(UiTask.class.getClassLoader()));
     }
 
     public UUID getId() {
@@ -44,28 +36,36 @@ class UiStory implements Parcelable {
         return new ArrayList<>(tasks);
     }
 
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeSerializable(id);
-        parcel.writeString(title);
-        parcel.writeString(note);
-        parcel.writeParcelableArray(tasks.toArray(new UiTask[tasks.size()]), PARCELABLE_WRITE_RETURN_VALUE);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(id);
+        dest.writeString(title);
+        dest.writeString(note);
+        dest.writeTypedList(tasks);
     }
 
-    public final static Creator<UiStory> CREATOR = new Creator<UiStory>() {
+    private UiStory(Parcel in) {
+        id = (UUID) in.readSerializable();
+        title = in.readString();
+        note = in.readString();
+        tasks = in.createTypedArrayList(UiTask.CREATOR);
+    }
+
+    public static final Creator<UiStory> CREATOR = new Creator<UiStory>() {
         @Override
-        public UiStory createFromParcel(Parcel parcel) {
-            return new UiStory(parcel);
+        public UiStory createFromParcel(Parcel source) {
+            return new UiStory(source);
         }
 
         @Override
-        public UiStory[] newArray(int i) {
-            return new UiStory[i];
+        public UiStory[] newArray(int size) {
+            return new UiStory[size];
         }
     };
 }

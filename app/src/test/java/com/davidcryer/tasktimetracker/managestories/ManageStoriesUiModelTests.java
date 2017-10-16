@@ -101,12 +101,22 @@ public class ManageStoriesUiModelTests {
         }
 
         @Override
+        public void showRemoveStory(UiStory story, int i) {
+
+        }
+
+        @Override
         public void showUndoStoryRemoval(Runnable onUndo) {
 
         }
 
         @Override
         public void showManageStoryScreen(UiStory story) {
+
+        }
+
+        @Override
+        public void showManageTaskScreen(UiTask task) {
 
         }
 

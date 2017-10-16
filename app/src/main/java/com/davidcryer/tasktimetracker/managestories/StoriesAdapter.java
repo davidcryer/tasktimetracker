@@ -62,7 +62,7 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
             @Override
             public void onClick(UiTask task) {
                 if (onClickStoryListener != null) {
-                    onClickStoryListener.onClick(task);
+                    onClickStoryListener.onClick(task, story);
                 }
             }
         });
@@ -147,8 +147,9 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
         }
     }
 
-    interface OnClickStoryListener extends TasksAdapter.OnClickTaskListener {
+    interface OnClickStoryListener {
         void onClick(UiStory story);
+        void onClick(UiTask task, UiStory story);
         void onLongClick(UiStory story, int i);
     }
 }

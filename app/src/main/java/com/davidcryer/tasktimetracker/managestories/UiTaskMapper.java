@@ -6,6 +6,7 @@ import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 class UiTaskMapper {
 
@@ -14,12 +15,12 @@ class UiTaskMapper {
     static List<UiTask> from(final Story story) {
         final List<UiTask> uiTasks = new ArrayList<>(story.tasks().size());
         for (final Task task : story.tasks()) {
-            uiTasks.add(new UiTask(task.id(), task.title(), task.note(), story.id()));
+            uiTasks.add(new UiTask(task.id(), task.title(), task.note()));
         }
         return uiTasks;
     }
 
-    static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task) {
-        return new ManageTaskIntentModel(task.getId(), task.getTitle(), task.getNote(), task.getStoryId());
+    static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task, final UUID storyId) {
+        return new ManageTaskIntentModel(task.getId(), task.getTitle(), task.getNote(), storyId);
     }
 }

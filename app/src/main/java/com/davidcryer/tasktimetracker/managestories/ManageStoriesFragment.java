@@ -19,6 +19,8 @@ import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.managestory.ManageStoryIntentModel;
+import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 
@@ -46,9 +48,9 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
             }
 
             @Override
-            public void onClick(UiTask task) {
+            public void onClick(UiTask task, UiStory story) {
                 if (hasListener()) {
-                    listener().onClickTask(ManageStoriesFragment.this, task);
+                    listener().onClickTask(ManageStoriesFragment.this, task, story);
                 }
             }
         });
@@ -87,7 +89,7 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
         new AlertDialog.Builder(getContext())
                 .setTitle("Remove story")
                 .setMessage(String.format("Remove story %1$s?", story.getTitle()))
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (hasListener()) {
@@ -96,7 +98,7 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
                         dialogInterface.dismiss();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -105,28 +107,39 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void showUndoStoryRemoval(final Runnable onUndo) {
+    public void showUndoStoryRemoval(final Runnable onUndo, final Runnable onDismiss) {
         final View root = getView();
         if (root != null) {
-            Snackbar.make(root, "Story deleted", BaseTransientBottomBar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (onUndo != null) {
-                        onUndo.run();
-                    }
-                }
-            });
+            Snackbar.make(root, "Story deleted", BaseTransientBottomBar.LENGTH_LONG)
+                    .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (onUndo != null) {
+                                    onUndo.run();
+                                }
+                            }
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION && onDismiss != null) {
+                                    onDismiss.run();
+                                }
+                            }
+                    })
+                    .show();
         }
     }
 
     @Override
-    public void showManageStoryScreen(UiStory story) {
-        navigator.toManageStoryScreen(UiStoryMapper.toManageStoryIntentModel(story));
+    public void showManageStoryScreen(ManageStoryIntentModel intentModel) {
+        navigator.toManageStoryScreen(intentModel);
     }
 
     @Override
-    public void showManageTaskScreen(UiTask task) {
-        navigator.toManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task));
+    public void showManageTaskScreen(ManageTaskIntentModel intentModel) {
+        navigator.toManageTaskScreen(intentModel);
     }
 
     @Override

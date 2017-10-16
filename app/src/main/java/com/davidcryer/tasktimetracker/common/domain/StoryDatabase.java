@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StoryDatabase {
-    void save(final Story story);
-    void save(final List<Story> stories);
+    void save(Story story);
+    void save(List<Story> stories);
     List<Story> findAll();
-    void delete(final UUID storyId);
+    Story find(UUID id);
+    void delete(UUID storyId);
 }

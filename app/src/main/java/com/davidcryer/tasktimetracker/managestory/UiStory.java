@@ -5,12 +5,12 @@ import android.os.Parcelable;
 
 import java.util.UUID;
 
-public class ManageStoryIntentModel implements Parcelable {
+class UiStory implements Parcelable {
     private final UUID id;
     private final String title;
     private final String note;
 
-    public ManageStoryIntentModel(UUID id, String title, String note) {
+    UiStory(UUID id, String title, String note) {
         this.id = id;
         this.title = title;
         this.note = note;
@@ -40,21 +40,21 @@ public class ManageStoryIntentModel implements Parcelable {
         dest.writeString(note);
     }
 
-    private ManageStoryIntentModel(Parcel in) {
+    private UiStory(Parcel in) {
         id = (UUID) in.readSerializable();
         title = in.readString();
         note = in.readString();
     }
 
-    public static final Creator<ManageStoryIntentModel> CREATOR = new Creator<ManageStoryIntentModel>() {
+    public static final Creator<UiStory> CREATOR = new Creator<UiStory>() {
         @Override
-        public ManageStoryIntentModel createFromParcel(Parcel source) {
-            return new ManageStoryIntentModel(source);
+        public UiStory createFromParcel(Parcel source) {
+            return new UiStory(source);
         }
 
         @Override
-        public ManageStoryIntentModel[] newArray(int size) {
-            return new ManageStoryIntentModel[size];
+        public UiStory[] newArray(int size) {
+            return new UiStory[size];
         }
     };
 }

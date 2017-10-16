@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,10 +13,6 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
 
     ManageStoriesUiModelImpl(final List<UiStory> stories) {
         this.stories = stories == null ? null : new LinkedList<>(stories);
-    }
-
-    private ManageStoriesUiModelImpl(final Parcel parcel) {
-        stories = Arrays.asList((UiStory[]) parcel.readParcelableArray(UiStory.class.getClassLoader()));
     }
 
     @Override
@@ -31,19 +26,23 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        stories = Arrays.asList((UiStory[]) parcel.readParcelableArray(UiStory.class.getClassLoader()));
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(stories);
     }
 
-    public final static Creator<ManageStoriesUiModel> CREATOR = new Creator<ManageStoriesUiModel>() {
+    private ManageStoriesUiModelImpl(Parcel in) {
+        stories = in.createTypedArrayList(UiStory.CREATOR);
+    }
+
+    public static final Creator<ManageStoriesUiModelImpl> CREATOR = new Creator<ManageStoriesUiModelImpl>() {
         @Override
-        public ManageStoriesUiModel createFromParcel(Parcel parcel) {
-            return new ManageStoriesUiModelImpl(parcel);
+        public ManageStoriesUiModelImpl createFromParcel(Parcel source) {
+            return new ManageStoriesUiModelImpl(source);
         }
 
         @Override
-        public ManageStoriesUiModel[] newArray(int i) {
-            return new ManageStoriesUiModelImpl[i];
+        public ManageStoriesUiModelImpl[] newArray(int size) {
+            return new ManageStoriesUiModelImpl[size];
         }
     };
 

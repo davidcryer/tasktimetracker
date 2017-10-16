@@ -19,8 +19,8 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
     }
 
     public static ManageStoriesUiWrapper savedElseNewInstance(
+            @NonNull final Bundle savedInstanceState,
             final ManageStoriesUiModelFactory modelFactory,
-            final Bundle savedInstanceState,
             final StoryDatabase storyDatabase
     ) {
         final ManageStoriesUiModel savedModel = savedUiModel(savedInstanceState);
@@ -32,7 +32,7 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
         return new ManageStoriesUi.Listener() {
             @Override
             public void onClickStory(ManageStoriesUi ui, UiStory story) {
-                ui.showManageStoryScreen(story);
+                ui.showManageStoryScreen(UiStoryMapper.toManageStoryIntentModel(story));
             }
 
             @Override
@@ -41,8 +41,8 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
-            public void onClickTask(ManageStoriesUi ui, UiTask task) {
-                ui.showManageTaskScreen(task);
+            public void onClickTask(ManageStoriesUi ui, UiTask task, UiStory story) {
+                ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task, story.getId()));
             }
 
             @Override
@@ -57,6 +57,11 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
                     @Override
                     public void run() {
                         uiModel().insertStory(story, i, ui());
+                    }
+                }, new Runnable() {
+                    @Override
+                    public void run() {
+                        storyDatabase.delete(story.getId());
                     }
                 });
             }
