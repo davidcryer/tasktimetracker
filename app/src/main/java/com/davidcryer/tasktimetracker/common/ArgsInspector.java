@@ -44,6 +44,15 @@ public class ArgsInspector {
         return new ArgCheck(criteria.passed(), failureMessage);
     }
 
+    public static ArgCheck nonNullCheck(final Object var, final String varName) {
+        return check(new ArgCriteria() {
+            @Override
+            public boolean passed() {
+                return var != null;
+            }
+        }, String.format("%1$s must not be null", varName));
+    }
+
     public static class ArgCheck {
         private final boolean passed;
         private final String failureMessage;

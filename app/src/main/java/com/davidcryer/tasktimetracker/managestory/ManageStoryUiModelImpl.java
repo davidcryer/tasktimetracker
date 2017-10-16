@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.davidcryer.tasktimetracker.common.ArgsInspector;
+
 import java.util.List;
+import java.util.UUID;
 
 class ManageStoryUiModelImpl implements ManageStoryUiModel {
     enum State {MANAGE, EDIT}
@@ -13,10 +16,19 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
     private List<UiTask> tasks;
     private SaveError saveError;
 
-    ManageStoryUiModelImpl(State state, UiStory story, List<UiTask> tasks) {
+    ManageStoryUiModelImpl(@NonNull State state, @NonNull UiStory story, List<UiTask> tasks) {
+        ArgsInspector.inspect(stateCheck(state), storyCheck(story));
         this.state = state;
         this.story = story;
         this.tasks = tasks;
+    }
+
+    private static ArgsInspector.ArgCheck stateCheck(final State state) {
+        return ArgsInspector.nonNullCheck(state, "state");
+    }
+
+    private static ArgsInspector.ArgCheck storyCheck(final UiStory story) {
+        return ArgsInspector.nonNullCheck(story, "story");
     }
 
     @Override
@@ -35,33 +47,17 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
     }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public boolean isPopulatedWithTasks() {
+        return tasks != null;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(state == null ? -1 : state.ordinal());
-        dest.writeParcelable(story, flags);
-    }
-
-    private ManageStoryUiModelImpl(Parcel in) {
-        int tmpState = in.readInt();
-        state = tmpState == -1 ? null : State.values()[tmpState];
-        story = in.readParcelable(UiStory.class.getClassLoader());
-    }
-
-    public static final Creator<ManageStoryUiModelImpl> CREATOR = new Creator<ManageStoryUiModelImpl>() {
-        @Override
-        public ManageStoryUiModelImpl createFromParcel(Parcel source) {
-            return new ManageStoryUiModelImpl(source);
+    public void showTasks(ManageStoryUi ui, List<UiTask> tasks) {
+        if (ui != null) {
+            ui.showTasks(tasks);
         }
-
-        @Override
-        public ManageStoryUiModelImpl[] newArray(int size) {
-            return new ManageStoryUiModelImpl[size];
-        }
-    };
+        this.tasks = tasks;
+    }
 
     @Override
     public void showManageLayout(ManageStoryUi ui) {
@@ -73,6 +69,7 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
 
     @Override
     public void showManageLayout(ManageStoryUi ui, UiStory story) {
+        ArgsInspector.inspect(storyCheck(story));
         if (ui != null) {
             ui.showEditLayout(story);
         }
@@ -117,6 +114,11 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
         saveError = null;
     }
 
+    @Override
+    public UUID storyId() {
+        return story.getId();
+    }
+
     private static class SaveError implements Parcelable {
         private final String title;
         private final String message;
@@ -154,4 +156,36 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
             }
         };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.state.ordinal());
+        dest.writeParcelable(this.story, flags);
+        dest.writeTypedList(this.tasks);
+        dest.writeParcelable(this.saveError, flags);
+    }
+
+    private ManageStoryUiModelImpl(Parcel in) {
+        this.state = State.values()[in.readInt()];
+        this.story = in.readParcelable(UiStory.class.getClassLoader());
+        this.tasks = in.createTypedArrayList(UiTask.CREATOR);
+        this.saveError = in.readParcelable(SaveError.class.getClassLoader());
+    }
+
+    public static final Creator<ManageStoryUiModelImpl> CREATOR = new Creator<ManageStoryUiModelImpl>() {
+        @Override
+        public ManageStoryUiModelImpl createFromParcel(Parcel source) {
+            return new ManageStoryUiModelImpl(source);
+        }
+
+        @Override
+        public ManageStoryUiModelImpl[] newArray(int size) {
+            return new ManageStoryUiModelImpl[size];
+        }
+    };
 }
