@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.managestory;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +10,13 @@ import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 
 public class ManageStoryFragment extends UiFragment<ManageStoryUi.Listener, UiWrapperRepository> implements ManageStoryUi {
     private final static String ARGS_INTENT_MODEL = "intent model";
+    private ManageStoryNavigator navigator;
 
     public static ManageStoryFragment newInstance(final ManageStoryIntentModel intentModel) {
         final ManageStoryFragment fragment = new ManageStoryFragment();
@@ -60,6 +63,22 @@ public class ManageStoryFragment extends UiFragment<ManageStoryUi.Listener, UiWr
     @Override
     public void showEditTask(UiTask task, int i) {
 
+    }
+
+    @Override
+    public void showManageTaskScreen(ManageTaskIntentModel intentModel) {
+        navigator.toManageTaskScreen(intentModel);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        navigator = (ManageStoryNavigator) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override

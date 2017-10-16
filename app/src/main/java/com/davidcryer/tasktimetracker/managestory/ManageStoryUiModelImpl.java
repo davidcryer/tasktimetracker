@@ -86,7 +86,8 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
     }
 
     @Override
-    public void showManageTask(ManageStoryUi ui, UiTask task, int i) {
+    public void showManageTask(ManageStoryUi ui, int i) {
+        final UiTask task = tasks.get(i);
         task.setInEditMode(false);
         if (ui != null) {
             ui.showManageTask(task, i);
@@ -94,7 +95,17 @@ class ManageStoryUiModelImpl implements ManageStoryUiModel {
     }
 
     @Override
-    public void showEditTask(ManageStoryUi ui, UiTask task, int i) {
+    public void showManageTask(ManageStoryUi ui, UiTask task, int i) {
+        tasks.set(i, task);
+        task.setInEditMode(false);
+        if (ui != null) {
+            ui.showManageTask(task, i);
+        }
+    }
+
+    @Override
+    public void showEditTask(ManageStoryUi ui, int i) {
+        final UiTask task = tasks.get(i);
         task.setInEditMode(true);
         if (ui != null) {
             ui.showEditTask(task, i);
