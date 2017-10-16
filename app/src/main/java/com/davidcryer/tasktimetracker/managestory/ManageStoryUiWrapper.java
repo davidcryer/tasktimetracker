@@ -83,6 +83,11 @@ public class ManageStoryUiWrapper extends UiWrapper<ManageStoryUi, ManageStoryUi
                 }
             }
 
+            @Override
+            public void onDismissSaveError() {
+                uiModel().onDismissSaveError();
+            }
+
             private void showSaveError(ManageStoryUi ui, IllegalArgsException iae) {
                 uiModel().showSaveError(ui, SAVE_ERROR_TITLE, iae.getMessage());
             }

@@ -21,5 +21,6 @@ public interface ManageStoryUi {
         void onClickEditTask(ManageStoryUi ui, int i);
         void onClickCancelTaskEdit(ManageStoryUi ui, int i);
         void onClickSaveTask(ManageStoryUi ui, UiTask task, int i);
+        void onDismissSaveError();
     }
 }

@@ -49,10 +49,25 @@ public class ManageStoryFragment extends UiFragment<ManageStoryUi.Listener, UiWr
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                        onDismissSaveErrorDialog(dialogInterface);
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        onDismissSaveErrorDialog(dialogInterface);
                     }
                 })
                 .show();
+    }
+
+    private void onDismissSaveErrorDialog(final DialogInterface dialogInterface) {
+        if (isResumed()) {
+            dialogInterface.dismiss();
+            if (hasListener()) {
+                listener().onDismissSaveError();
+            }
+        }
     }
 
     @Override
