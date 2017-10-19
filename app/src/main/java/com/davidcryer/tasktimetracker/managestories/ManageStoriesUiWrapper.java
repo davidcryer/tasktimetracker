@@ -31,16 +31,6 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
     protected ManageStoriesUi.Listener uiListener() {
         return new ManageStoriesUi.Listener() {
             @Override
-            public void onClickStory(ManageStoriesUi ui, UiStory story) {
-                ui.showManageStoryScreen(UiStoryMapper.toManageStoryIntentModel(story));
-            }
-
-            @Override
-            public void onClickEditStory(ManageStoriesUi ui, UiStory story, int i) {
-                ui.showEditStoryPrompt(story, i);
-            }
-
-            @Override
             public void onClickTask(ManageStoriesUi ui, UiTask task, UiStory story) {
                 ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task, story.getId()));
             }
@@ -48,22 +38,6 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             @Override
             public void onClickAddStory(ManageStoriesUi ui) {
                 ui.showAddStoryScreen();
-            }
-
-            @Override
-            public void onClickRemoveStory(ManageStoriesUi ui, final UiStory story, final int i) {
-                uiModel().removeStory(i, ui);
-                ui.showUndoStoryRemovalSnackbar(new Runnable() {
-                    @Override
-                    public void run() {
-                        uiModel().insertStory(story, i, ui());
-                    }
-                }, new Runnable() {
-                    @Override
-                    public void run() {
-                        storyDatabase.delete(story.getId());
-                    }
-                });
             }
 
             @Override

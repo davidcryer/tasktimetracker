@@ -66,23 +66,6 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
                 }
             }
         });
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onClickStoryListener != null) {
-                    onClickStoryListener.onClick(story);
-                }
-            }
-        });
-        layout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (onClickStoryListener != null) {
-                    onClickStoryListener.onLongClick(story);
-                }
-                return false;
-            }
-        });
     }
 
     @Override
@@ -148,8 +131,6 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     }
 
     interface OnClickStoryListener {
-        void onClick(UiStory story);
         void onClick(UiTask task, UiStory story);
-        void onLongClick(UiStory story);
     }
 }
