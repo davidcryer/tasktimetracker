@@ -101,7 +101,7 @@ public class ManageStoriesUiModelTests {
         }
 
         @Override
-        public void showRemoveStory(UiStory story, int i) {
+        public void showEditStoryPrompt(UiStory story, int i) {
 
         }
 

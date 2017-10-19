@@ -29,6 +29,7 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     private final static String RETURN_KEY_ADD_STORY = "story";
     private final StoriesAdapter storiesAdapter;
     private ManageStoriesNavigator navigator;
+    private AlertDialog editStoryPrompt;
 
     public ManageStoriesFragment() {
         storiesAdapter = new StoriesAdapter();
@@ -41,10 +42,10 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
             }
 
             @Override
-            public void onLongClick(UiStory story, int i) {
-                if (hasListener()) {
-                    listener().onLongClickStory(ManageStoriesFragment.this, story, i);
-                }
+            public void onLongClick(UiStory story) {
+//                if (hasListener()) {
+//                    listener().onClickEditStory(ManageStoriesFragment.this, story);
+//                }
             }
 
             @Override
@@ -85,57 +86,79 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void showRemoveStory(final UiStory story, int i) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Remove story")
-                .setMessage(String.format("Remove story %1$s?", story.getTitle()))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (hasListener()) {
-                            listener().onClickRemoveStory(ManageStoriesFragment.this, story, i);
-                        }
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+    public void showStoryTasks(int i) {
+//        storiesAdapter.showTasks(i);
     }
 
     @Override
-    public void showUndoStoryRemoval(final Runnable onUndo, final Runnable onDismiss) {
-        final View root = getView();
-        if (root != null) {
-            Snackbar.make(root, "Story deleted", BaseTransientBottomBar.LENGTH_LONG)
-                    .setAction("Undo", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (onUndo != null) {
-                                    onUndo.run();
-                                }
-                            }
-                    })
-                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                            @Override
-                            public void onDismissed(Snackbar transientBottomBar, int event) {
-                                super.onDismissed(transientBottomBar, event);
-                                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION && onDismiss != null) {
-                                    onDismiss.run();
-                                }
-                            }
-                    })
-                    .show();
-        }
+    public void hideStoryTasks(int i) {
+//        storiesAdapter.hideTasks(i);
     }
 
-    @Override
-    public void showManageStoryScreen(ManageStoryIntentModel intentModel) {
-        navigator.toManageStoryScreen(intentModel);
-    }
+//    @Override
+//    public void showEditStoryPrompt(final UiStoryEdit story, int i) {
+//        final EditStoryLayout editStoryLayout = LayoutInflater.from(getContext()).inflate(R.layout.component_edit_story);
+//        editStoryLayout.manage(story);
+//        editStoryPrompt = new AlertDialog.Builder(getContext())
+//                .setTitle("Edit story")
+//                .setView(editStoryLayout)
+//                .setMessage(String.format("Remove story %1$s?", story.getTitle()))
+//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        if (hasListener()) {
+//                            listener().onClickSaveStoryEdit(ManageStoriesFragment.this, editStoryLayout.story(), i);
+//                        }
+//                    }
+//                })
+//                .setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        if (hasListener()) {
+//                            listener().onClickRemoveStory(ManageStoriesFragment.this, i);
+//                        }
+//                    }
+//                })
+//                .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        if (hasListener()) {
+//                            listener().onClickCancelStoryEdit(ManageStoriesFragment.this);
+//                        }
+//                    }
+//                }).show();
+//    }
+//
+//    @Override
+//    public void showUndoStoryRemovalSnackbar(final Runnable onUndo, final Runnable onDismiss) {
+//        final View root = getView();
+//        if (root != null) {
+//            Snackbar.make(root, "Story deleted", BaseTransientBottomBar.LENGTH_LONG)
+//                    .setAction("Undo", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                if (onUndo != null) {
+//                                    onUndo.run();
+//                                }
+//                            }
+//                    })
+//                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+//                            @Override
+//                            public void onDismissed(Snackbar transientBottomBar, int event) {
+//                                super.onDismissed(transientBottomBar, event);
+//                                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION && onDismiss != null) {
+//                                    onDismiss.run();
+//                                }
+//                            }
+//                    })
+//                    .show();
+//        }
+//    }
+//
+//    @Override
+//    public void showManageStoryScreen(ManageStoryIntentModel intentModel) {
+//        navigator.toManageStoryScreen(intentModel);
+//    }
 
     @Override
     public void showManageTaskScreen(ManageTaskIntentModel intentModel) {

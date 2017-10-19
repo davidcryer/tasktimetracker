@@ -36,8 +36,8 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
-            public void onLongClickStory(ManageStoriesUi ui, UiStory story, int i) {
-                ui.showRemoveStory(story, i);
+            public void onClickEditStory(ManageStoriesUi ui, UiStory story, int i) {
+                ui.showEditStoryPrompt(story, i);
             }
 
             @Override
@@ -53,7 +53,7 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             @Override
             public void onClickRemoveStory(ManageStoriesUi ui, final UiStory story, final int i) {
                 uiModel().removeStory(i, ui);
-                ui.showUndoStoryRemoval(new Runnable() {
+                ui.showUndoStoryRemovalSnackbar(new Runnable() {
                     @Override
                     public void run() {
                         uiModel().insertStory(story, i, ui());
