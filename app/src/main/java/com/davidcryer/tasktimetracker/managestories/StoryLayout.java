@@ -2,7 +2,6 @@ package com.davidcryer.tasktimetracker.managestories;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,8 +13,9 @@ public class StoryLayout extends LinearLayout {
     private final TextView noteView;
     private final View storyClicker;
 
-    public StoryLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    public StoryLayout(Context context) {
+        super(context);
+        inflate(context, R.layout.item_manage_stories_story, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
         storyClicker = this;

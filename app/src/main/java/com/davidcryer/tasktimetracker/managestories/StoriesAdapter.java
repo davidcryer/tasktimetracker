@@ -1,12 +1,9 @@
 package com.davidcryer.tasktimetracker.managestories;
 
-import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.ArrayList;
@@ -25,6 +22,7 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     }
 
     void stories(final List<UiStory> stories) {
+        invalidateCachedItemCount();
         this.stories = ListUtils.newList(stories);
         notifyDataSetChanged();
     }
@@ -34,33 +32,48 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     }
 
     void add(final UiStory story) {
+        invalidateCachedItemCount();
         stories.add(story);
-        notifyItemInserted(stories.size() - 1);
+        notifyItemInserted(getItemCount() - 1);
     }
 
     void insert(final UiStory story, final int i) {
+        invalidateCachedItemCount();
         stories.add(i, story);
-        notifyItemInserted(i);
+        notifyItemInserted(position(i));
     }
 
     void set(final UiStory story, final int i) {
         stories.set(i, story);
+        notifyItemChanged(position(i));
     }
 
     void remove(final int i) {
+        invalidateCachedItemCount();
         stories.remove(i);
-        notifyItemRemoved(i);
+        notifyItemRemoved(position(i));
+    }
+
+    private int position(final int index) {
+        int pos = 0;
+        for (int i = 0; i < stories.size(); i++) {
+            if (i == index) {
+                return pos;
+            }
+            pos += 1 + stories.get(i).expandedTaskCount();
+        }
+        return -1;
     }
 
     void expandStory(final int i, final int pos) {
         invalidateCachedItemCount();
-        notifyItemRangeInserted(pos, stories.get(i).taskCount());
+        notifyItemRangeInserted(pos + 1, stories.get(i).taskCount());
     }
 
 
     void shrinkStory(final int i, final int pos) {
         invalidateCachedItemCount();
-        notifyItemRangeRemoved(pos, stories.get(i).taskCount());
+        notifyItemRangeRemoved(pos + 1, stories.get(i).taskCount());
     }
 
     private void invalidateCachedItemCount() {
@@ -71,17 +84,13 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_STORY: {
-                return new StoryViewHolder((StoryLayout) layout(parent, R.layout.item_manage_stories_story));
+                return new StoryViewHolder(new StoryLayout(parent.getContext()));
             }
             case VIEW_TYPE_TASK: {
-                return new TaskViewHolder((TaskLayout) layout(parent, R.layout.item_manage_stories_task));
+                return new TaskViewHolder(new TaskLayout(parent.getContext()));
             }
         }
         throw new IllegalStateException(String.format("viewType is not recognised: %1$s", viewType));
-    }
-
-    private static View layout(final ViewGroup group, @LayoutRes final int layoutRes) {
-        return LayoutInflater.from(group.getContext()).inflate(layoutRes, group);
     }
 
     @Override
@@ -163,6 +172,7 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
             if (position < posItr + story.expandedTaskCount()) {
                 return VIEW_TYPE_TASK;
             }
+            posItr += story.expandedTaskCount();
         }
         throw new IllegalStateException("Item neither story nor task");
     }
