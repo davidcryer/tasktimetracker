@@ -5,12 +5,25 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class PrePopulatedStorySharedPreferences extends StorySharedPreferences {
 
     public PrePopulatedStorySharedPreferences(Context context, Gson gson) {
         super(context, gson);
+        deleteAll();
+        saveStories();
+    }
+
+    private void deleteAll() {
+        final List<Story> stories = findAll();
+        for (final Story story : stories) {
+            delete(story.id());
+        }
+    }
+
+    private void saveStories() {
         save(Arrays.asList(
                 new Story(UUID.randomUUID(), "Story_1", "This the the first story", null),
                 new Story(UUID.randomUUID(), "Story_2", "This the the second story", Arrays.asList(
