@@ -1,8 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.ArgsInspector;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.DateUtils;
-import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalOngoingSessionArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.OngoingSessionArgsBuilder;
 
 import java.util.Date;
 
@@ -15,17 +16,14 @@ public class OngoingSession {
         this(new Date(), null);
     }
 
-    OngoingSession(final Date start, final Date stop) throws IllegalArgsException {
-        ArgsInspector.inspect(
-                ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-                    @Override
-                    public boolean passed() {
-                        return start != null;
-                    }
-                }, ILLEGAL_START_MESSAGE)
-        );
+    OngoingSession(final Date start, final Date stop) throws IllegalOngoingSessionArgsException {
+        ArgsInspector.inspect(new OngoingSessionArgsBuilder().start(startArg(start)).args());
         this.start = start;
         this.stop = stop;
+    }
+
+    private static ArgsInspector.Arg startArg(final Date start) {
+        return new ArgsInspector.Arg(start != null, ILLEGAL_START_MESSAGE);
     }
 
     FinishedSession stop() throws AlreadyStoppedException {

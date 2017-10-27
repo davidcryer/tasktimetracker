@@ -1,8 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
+import com.davidcryer.tasktimetracker.common.argvalidation.FinishedSessionArgsBuilder;
 import com.davidcryer.tasktimetracker.common.DateUtils;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalFinishedSessionArgsException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -16,51 +17,31 @@ public class FinishedSession {
     private final Date start;
     private final Date finish;
 
-    FinishedSession(final Date start, final Date finish) throws IllegalArgsException {
+    FinishedSession(final Date start, final Date finish) throws IllegalFinishedSessionArgsException {
         this(UUID.randomUUID(), start, finish);
     }
 
-    FinishedSession(final UUID id, final Date start, final Date finish) {
-        ArgsInspector.inspect(idCheck(id), startCheck(start), finishCheck(finish), timelineCheck(start, finish));
+    FinishedSession(final UUID id, final Date start, final Date finish) throws IllegalFinishedSessionArgsException {
+        ArgsInspector.inspect(new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)).args());
         this.id = id;
         this.start = start;
         this.finish = finish;
     }
 
-    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return id != null;
-            }
-        }, ILLEGAL_ID_MESSAGE);
+    private static ArgsInspector.Arg idArg(final UUID id) {
+        return new ArgsInspector.Arg(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck startCheck(final Date start) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return start != null;
-            }
-        }, ILLEGAL_START_MESSAGE);
+    private static ArgsInspector.Arg startArg(final Date start) {
+        return new ArgsInspector.Arg(start != null, ILLEGAL_START_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck finishCheck(final Date finish) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return finish != null;
-            }
-        }, ILLEGAL_FINISH_MESSAGE);
+    private static ArgsInspector.Arg finishArg(final Date finish) {
+        return new ArgsInspector.Arg(finish != null, ILLEGAL_FINISH_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck timelineCheck(final Date start, final Date finish) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return start == null || finish == null || start.compareTo(finish) <= 0;
-            }
-        }, ILLEGAL_TIMELINE_MESSAGE);
+    private static ArgsInspector.Arg timelineArg(final Date start, final Date finish) {
+        return new ArgsInspector.Arg(start == null || finish == null || start.compareTo(finish) <= 0, ILLEGAL_TIMELINE_MESSAGE);
     }
 
     public UUID id() {

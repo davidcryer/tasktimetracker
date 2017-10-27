@@ -34,6 +34,17 @@ public class StorySharedPreferences implements StoryDatabase {
     }
 
     @Override
+    public Story find(UUID id) {//TODO optimise (probably with cache)
+        final List<Story> stories = findAll();
+        for (final Story story : stories) {
+            if (story.id().equals(id)) {
+                return story;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Story> findAll() {
         final List<Story> stories = new LinkedList<>();
         for (final Object storyJson : sharedPreferences.getAll().values()) {

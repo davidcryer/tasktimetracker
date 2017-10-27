@@ -1,5 +1,7 @@
 package com.davidcryer.tasktimetracker.managestories;
 
+import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,7 +69,7 @@ public class ManageStoriesUiModelTests {
     }
 
     private static UiStory uiStory() {
-        return new UiStory(null, null, null, null);
+        return new UiStory(null, null, null, false, null);
     }
 
     private static class TestUi implements ManageStoriesUi {
@@ -101,27 +103,27 @@ public class ManageStoriesUiModelTests {
         }
 
         @Override
-        public void showEditStoryPrompt(UiStory story, int i) {
+        public void setStory(UiStory story, int i) {
 
         }
 
         @Override
-        public void showUndoStoryRemoval(Runnable onUndo) {
+        public void expandStory(int i, int pos) {
 
         }
 
         @Override
-        public void showManageStoryScreen(UiStory story) {
+        public void shrinkStory(int i, int pos) {
 
         }
 
         @Override
-        public void showManageTaskScreen(UiTask task) {
+        public void showManageTaskScreen(ManageTaskIntentModel intentModel) {
 
         }
 
         @Override
-        public void showAddStoryScreen() {
+        public void showAddStoryPrompt() {
 
         }
     }

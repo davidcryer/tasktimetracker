@@ -9,5 +9,8 @@ public interface ManageStoriesUiModel extends UiModel<ManageStoriesUi> {
     void removeStory(int i, ManageStoriesUi ui);
     void addStory(UiStory story, ManageStoriesUi ui);
     void insertStory(UiStory story, int i, ManageStoriesUi ui);
+    void updateStory(UiStory story, ManageStoriesUi ui);
+    void expandStory(UiStory story, int pos, ManageStoriesUi ui);
+    void shrinkStory(UiStory story, int pos, ManageStoriesUi ui);
     boolean isPopulated();
 }

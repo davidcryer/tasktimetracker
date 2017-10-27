@@ -1,8 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.TaskArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,12 +25,12 @@ public class Task {
         this(UUID.randomUUID(), title, note, null);
     }
 
-    public Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession) throws IllegalArgsException {
+    public Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession) throws IllegalTaskArgsException {
         this(id, title, note, ongoingSession, null);
     }
 
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalArgsException {
-        ArgsInspector.inspect(idCheck(id), titleCheck(title), ongoingSessionCheck(ongoingSession));
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
+        ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args());
         this.id = id;
         this.title = title;
         this.note = note;
@@ -37,31 +38,16 @@ public class Task {
         this.finishedSessions = finishedSessions;
     }
 
-    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return id != null;
-            }
-        }, ILLEGAL_ID_MESSAGE);
+    private static ArgsInspector.Arg idArg(final UUID id) {
+        return new ArgsInspector.Arg(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck titleCheck(final String title) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return title != null;
-            }
-        }, ILLEGAL_TITLE_MESSAGE);
+    private static ArgsInspector.Arg titleArg(final String title) {
+        return new ArgsInspector.Arg(title != null, ILLEGAL_TITLE_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck ongoingSessionCheck(final OngoingSession ongoingSession) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return ongoingSession == null || !ongoingSession.isFinished();
-            }
-        }, ILLEGAL_ONGOING_SESSION_MESSAGE);
+    private static ArgsInspector.Arg ongoingSessionArg(final OngoingSession ongoingSession) {
+        return new ArgsInspector.Arg(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
     void start() throws AlreadyStartedException {
@@ -171,22 +157,22 @@ public class Task {
             return this;
         }
 
-        public void commit() throws IllegalArgsException {
+        public void commit() throws IllegalTaskArgsException {
             inspectInput();
             writeTitle();
             writeNote();
         }
 
-        private void inspectInput() throws IllegalArgsException {
-            ArgsInspector.inspect(checks());
+        private void inspectInput() throws IllegalTaskArgsException {
+            ArgsInspector.inspect(args());
         }
 
-        private ArgsInspector.ArgCheck[] checks() {
-            final List<ArgsInspector.ArgCheck> checks = new LinkedList<>();
+        private IllegalTaskArgsException.Args args() {
+            final TaskArgsBuilder builder = new TaskArgsBuilder();
             if (titleChanged) {
-                checks.add(Task.titleCheck(title));
+                builder.title(Task.titleArg(title));
             }
-            return checks.toArray(new ArgsInspector.ArgCheck[checks.size()]);
+            return builder.args();
         }
 
         private void writeTitle() {

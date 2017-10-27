@@ -1,8 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsException;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
+import com.davidcryer.tasktimetracker.common.argvalidation.StoryArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,40 +13,30 @@ import java.util.UUID;
 
 public class Story {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
-    private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
+    private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null or empty";
     private final UUID id;
     private String title;
     private String note;
     private List<Task> tasks;
 
-    public Story(String title, String note) {
+    public Story(String title, String note) throws IllegalStoryArgsException {
         this(UUID.randomUUID(), title, note, null);
     }
 
-    public Story(UUID id, String title, String note, List<Task> tasks) {
-        ArgsInspector.inspect(idCheck(id), titleCheck(title));
+    Story(UUID id, String title, String note, List<Task> tasks) throws IllegalStoryArgsException {
+        ArgsInspector.inspect(new StoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
         this.id = id;
         this.title = title;
         this.note = note;
         this.tasks = tasks;
     }
 
-    private static ArgsInspector.ArgCheck idCheck(final UUID id) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return id != null;
-            }
-        }, ILLEGAL_ID_MESSAGE);
+    private static ArgsInspector.Arg idArg(final UUID id) {
+        return new ArgsInspector.Arg(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static ArgsInspector.ArgCheck titleCheck(final String title) {
-        return ArgsInspector.check(new ArgsInspector.ArgCriteria() {
-            @Override
-            public boolean passed() {
-                return title != null;
-            }
-        }, ILLEGAL_TITLE_MESSAGE);
+    private static ArgsInspector.Arg titleArg(final String title) {
+        return new ArgsInspector.Arg(title != null && !title.isEmpty(), ILLEGAL_TITLE_MESSAGE);
     }
 
     public UUID id() {
@@ -128,22 +119,22 @@ public class Story {
             return this;
         }
 
-        public void commit() throws IllegalArgsException {
+        public void commit() throws IllegalStoryArgsException {
             inspectInput();
             writeTitle();
             writeNote();
         }
 
-        private void inspectInput() throws IllegalArgsException {
-            ArgsInspector.inspect(checks());
+        private void inspectInput() throws IllegalStoryArgsException {
+            ArgsInspector.inspect(args());
         }
 
-        private ArgsInspector.ArgCheck[] checks() {
-            final List<ArgsInspector.ArgCheck> checks = new ArrayList<>();
+        private IllegalStoryArgsException.Args args() {
+            final StoryArgsBuilder argsBuilder = new StoryArgsBuilder();
             if (titleChanged) {
-                checks.add(Story.titleCheck(title));
+                argsBuilder.title(Story.titleArg(title));
             }
-            return checks.toArray(new ArgsInspector.ArgCheck[checks.size()]);
+            return argsBuilder.args();
         }
 
         private void writeTitle() {

@@ -7,6 +7,7 @@ import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     private List<UiStory> stories;
@@ -79,6 +80,44 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
             ui.insertStory(story, i);
         }
         stories.set(i, story);
+    }
+
+    @Override
+    public void updateStory(UiStory story, ManageStoriesUi ui) {
+        final int storyIndex = indexOf(story.getId());
+        if (ui != null) {
+            ui.setStory(story, storyIndex);
+        }
+        stories.set(storyIndex, story);
+    }
+
+    @Override
+    public void expandStory(UiStory story, int pos, ManageStoriesUi ui) {
+        story.expand();
+        if (ui != null) {
+            ui.expandStory(indexOf(story), pos);
+        }
+    }
+
+    @Override
+    public void shrinkStory(UiStory story, int pos, ManageStoriesUi ui) {
+        story.shrink();
+        if (ui != null) {
+            ui.shrinkStory(indexOf(story), pos);
+        }
+    }
+
+    private int indexOf(UiStory story) {
+        return stories.indexOf(story);
+    }
+
+    private int indexOf(UUID storyId) {
+        for (int i = 0; i < stories.size(); i++) {
+            if (stories.get(i).getId().equals(storyId)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override

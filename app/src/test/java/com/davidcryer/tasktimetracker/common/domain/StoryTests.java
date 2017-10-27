@@ -1,12 +1,11 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.IllegalArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsException;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -91,12 +90,12 @@ public class StoryTests {
             new Story(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = IllegalArgsException.class)
+        @Test(expected = IllegalStoryArgsException.class)
         public void illegalTitle() {
             new Story(null, null);
         }
 
-        @Test(expected = IllegalArgsException.class)
+        @Test(expected = IllegalStoryArgsException.class)
         public void illegalId() {
             new Story(null, "", null, null);
         }
@@ -111,7 +110,7 @@ public class StoryTests {
             Assert.assertEquals(story.title(), "New title");
         }
 
-        @Test(expected = IllegalArgsException.class)
+        @Test(expected = IllegalStoryArgsException.class)
         public void changeTitle_illegalTitle() {
             final Story story = new Story("Old title", null);
             story.writer().title(null).commit();

@@ -3,6 +3,8 @@ package com.davidcryer.tasktimetracker.managestories;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.davidcryer.tasktimetracker.common.ListUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,31 +13,56 @@ class UiStory implements Parcelable {
     private final UUID id;
     private final String title;
     private final String note;
+    private boolean expanded;
     private final List<UiTask> tasks;
 
-    UiStory(UUID id, String title, String note, List<UiTask> tasks) {
+    public UiStory(UUID id, String title, String note, boolean expanded, List<UiTask> tasks) {
         this.id = id;
         this.title = title;
         this.note = note;
-        this.tasks = tasks == null ? new ArrayList<UiTask>() : new ArrayList<>(tasks);
+        this.expanded = expanded;
+        this.tasks = tasks == null ? new ArrayList<UiTask>() : ListUtils.newList(tasks);
     }
 
-    public UUID getId() {
+    UUID getId() {
         return id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
-    public String getNote() {
+    String getNote() {
         return note;
     }
 
-    public List<UiTask> getTasks() {
-        return new ArrayList<>(tasks);
+    boolean isExpanded() {
+        return expanded;
     }
 
+    void expand() {
+        setExpanded(true);
+    }
+
+    void shrink() {
+        setExpanded(false);
+    }
+
+    private void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    int expandedTaskCount() {
+        return isExpanded() ? tasks.size() : 0;
+    }
+
+    int taskCount() {
+        return tasks.size();
+    }
+
+    UiTask task(int i) {
+        return tasks.get(i);
+    }
 
     @Override
     public int describeContents() {

@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.davidc.uiwrapper.UiWrapper;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsException;
+import com.davidcryer.tasktimetracker.common.domain.Story;
 import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
+
+import java.util.UUID;
 
 public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageStoriesUi.Listener, ManageStoriesUiModel> {
     private final StoryDatabase storyDatabase;
@@ -31,18 +35,63 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
     protected ManageStoriesUi.Listener uiListener() {
         return new ManageStoriesUi.Listener() {
             @Override
+            public void onClickStory(ManageStoriesUi ui, UiStory story, int pos) {
+                if (story.isExpanded()) {
+                    uiModel().shrinkStory(story, pos, ui);
+                } else {
+                    uiModel().expandStory(story, pos, ui);
+                }
+            }
+
+            @Override
             public void onClickTask(ManageStoriesUi ui, UiTask task, UiStory story) {
                 ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task, story.getId()));
             }
 
             @Override
             public void onClickAddStory(ManageStoriesUi ui) {
-                ui.showAddStoryScreen();
+                ui.showAddStoryPrompt();
             }
 
             @Override
-            public void onAddStoryResult(ManageStoriesUi ui, UiStory story) {
-                uiModel().addStory(story, ui);
+            public void onClickAddTask(ManageStoriesUi ui, UiStory story) {
+                throw new UnsupportedOperationException("onClickAddTask not supported");
+            }
+
+            @Override
+            public void onAddStory(ManageStoriesUi.InputStoryPrompt prompt, String title, String note) {
+                try {
+                    final Story story = new Story(title, note);
+                    storyDatabase.save(story);
+                    uiModel().addStory(UiStoryMapper.from(story), ui());
+                    prompt.dismiss();
+                } catch (IllegalStoryArgsException iae) {
+                    showErrors(prompt, iae.args());
+                }
+            }
+
+            private void showErrors(final ManageStoriesUi.InputStoryPrompt prompt, final IllegalStoryArgsException.Args args) {
+                if (args.titleIsIllegal()) {
+                    prompt.showTitleError(args.titleError());
+                }
+            }
+
+            @Override
+            public void onEditStory(ManageStoriesUi.InputStoryPrompt prompt, UUID storyId, String title, String note) {
+                try {
+                    final Story story = storyDatabase.find(storyId);
+                    story.writer().title(title).note(note).commit();
+                    storyDatabase.save(story);
+                    uiModel().updateStory(UiStoryMapper.from(story), ui());
+                    prompt.dismiss();
+                } catch (IllegalStoryArgsException iae) {
+                    showErrors(prompt, iae.args());
+                }
+            }
+
+            @Override
+            public void onRemoveStory(ManageStoriesUi.InputStoryPrompt prompt, UUID storyId) {
+
             }
         };
     }

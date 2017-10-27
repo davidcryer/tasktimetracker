@@ -1,7 +1,6 @@
 package com.davidcryer.tasktimetracker.managestories;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,15 +18,20 @@ import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 
-public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi {
-    private final static int REQUEST_CODE_ADD_STORY = 100;
-    private final static String RETURN_KEY_ADD_STORY = "story";
+public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi, ManageStoriesNavigator.Callback {
     private final StoriesAdapter storiesAdapter;
-    private ManageStoriesNavigator navigator;
+    @Nullable private ManageStoriesNavigator navigator;
 
     public ManageStoriesFragment() {
         storiesAdapter = new StoriesAdapter();
         storiesAdapter.onClickStoryListener(new StoriesAdapter.OnClickStoryListener() {
+            @Override
+            public void onClick(UiStory story, int pos) {
+                if (hasListener()) {
+                    listener().onClickStory(ManageStoriesFragment.this, story, pos);
+                }
+            }
+
             @Override
             public void onClick(UiTask task, UiStory story) {
                 if (hasListener()) {
@@ -46,60 +50,58 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void showStories(List<UiStory> stories) {
+    public void showStories(final List<UiStory> stories) {
         storiesAdapter.stories(stories);
     }
 
     @Override
-    public void addStory(UiStory story) {
+    public void addStory(final UiStory story) {
         storiesAdapter.add(story);
     }
 
     @Override
-    public void insertStory(UiStory story, int i) {
+    public void insertStory(final UiStory story, final int i) {
         storiesAdapter.insert(story, i);
     }
 
     @Override
-    public void removeStory(int i) {
+    public void setStory(UiStory story, int i) {
+        storiesAdapter.set(story, i);
+    }
+
+    @Override
+    public void removeStory(final int i) {
         storiesAdapter.remove(i);
     }
 
     @Override
-    public void showStoryTasks(int i) {
-//        storiesAdapter.showTasks(i);
+    public void expandStory(final int i, final int pos) {
+        storiesAdapter.expandStory(i, pos);
     }
 
     @Override
-    public void hideStoryTasks(int i) {
-//        storiesAdapter.hideTasks(i);
+    public void shrinkStory(final int i, final int pos) {
+        storiesAdapter.shrinkStory(i, pos);
     }
 
     @Override
-    public void showManageTaskScreen(ManageTaskIntentModel intentModel) {
-        navigator.toManageTaskScreen(intentModel);
-    }
-
-    @Override
-    public void showAddStoryScreen() {
-        navigator.toAddStoryScreen(REQUEST_CODE_ADD_STORY, RETURN_KEY_ADD_STORY);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_ADD_STORY: {
-                onAddStoryResult(data);
-            }
+    public void showAddStoryPrompt() {
+        if (navigator != null) {
+            navigator.showAddStoryPrompt();
         }
     }
 
-    private void onAddStoryResult(final Intent data) {
-        if (data.hasExtra(RETURN_KEY_ADD_STORY)) {
-            if (hasListener()) {
-                listener().onAddStoryResult(this, (UiStory) data.getParcelableExtra(RETURN_KEY_ADD_STORY));
-            }
+    @Override
+    public void showManageTaskScreen(final ManageTaskIntentModel intentModel) {
+        if (navigator != null) {
+            navigator.toManageTaskScreen(intentModel);
+        }
+    }
+
+    @Override
+    public void onAddStory(InputStoryPrompt prompt, String title, String note) {
+        if (hasListener()) {
+            listener().onAddStory(prompt, title, note);
         }
     }
 
