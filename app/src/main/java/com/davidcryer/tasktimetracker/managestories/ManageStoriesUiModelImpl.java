@@ -18,7 +18,7 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
 
     @Override
     public void onto(@NonNull ManageStoriesUi ui) {
-        ui.showStories(stories);
+        ui.showStories(ListUtils.newList(stories));
     }
 
     @Override
