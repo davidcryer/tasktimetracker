@@ -1,9 +1,11 @@
 package com.davidcryer.tasktimetracker.managestories;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.ArrayList;
@@ -84,13 +86,21 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_STORY: {
-                return new StoryViewHolder(new StoryLayout(parent.getContext()));
+                return new StoryViewHolder(storyLayout(parent));
             }
             case VIEW_TYPE_TASK: {
-                return new TaskViewHolder(new TaskLayout(parent.getContext()));
+                return new TaskViewHolder(taskLayout(parent));
             }
         }
         throw new IllegalStateException(String.format("viewType is not recognised: %1$s", viewType));
+    }
+
+    private static StoryLayout storyLayout(final ViewGroup group) {
+        return (StoryLayout) LayoutInflater.from(group.getContext()).inflate(R.layout.holder_story, group, false);
+    }
+
+    private static TaskLayout taskLayout(final ViewGroup group) {
+        return (TaskLayout) LayoutInflater.from(group.getContext()).inflate(R.layout.holder_task, group, false);
     }
 
     @Override
