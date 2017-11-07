@@ -71,17 +71,19 @@ class UiStory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(id);
-        dest.writeString(title);
-        dest.writeString(note);
-        dest.writeTypedList(tasks);
+        dest.writeSerializable(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.note);
+        dest.writeByte(this.expanded ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(this.tasks);
     }
 
     private UiStory(Parcel in) {
-        id = (UUID) in.readSerializable();
-        title = in.readString();
-        note = in.readString();
-        tasks = in.createTypedArrayList(UiTask.CREATOR);
+        this.id = (UUID) in.readSerializable();
+        this.title = in.readString();
+        this.note = in.readString();
+        this.expanded = in.readByte() != 0;
+        this.tasks = in.createTypedArrayList(UiTask.CREATOR);
     }
 
     public static final Creator<UiStory> CREATOR = new Creator<UiStory>() {
