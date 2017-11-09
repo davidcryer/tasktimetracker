@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
 import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
-import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.managestories.AddStoryDialogFragment;
 import com.davidcryer.tasktimetracker.managestories.AddStoryNavigator;
 import com.davidcryer.tasktimetracker.managestories.ManageStoriesFragment;
@@ -36,11 +35,11 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity imp
 
     @Override
     public void toManageTaskScreen(ManageTaskIntentModel intentModel) {
-        replaceFragment(ManageTaskFragment.newInstance(intentModel), FRAGMENT_TAG_MANAGE_TASK);
+        addFragment(ManageTaskFragment.newInstance(intentModel), FRAGMENT_TAG_MANAGE_TASK);
     }
 
-    private void replaceFragment(final Fragment fragment, final String tag) {
-        FragmentManagerUtils.replace(fragment, tag, R.id.content, null, getSupportFragmentManager());//FIXME should not be using parents R.id.content
+    private void addFragment(final Fragment fragment, final String tag) {
+        FragmentManagerUtils.add(fragment, tag, getContentFragmentViewContainer(), null, getSupportFragmentManager());
     }
 
     @Override
@@ -52,6 +51,6 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity imp
     }
 
     private Fragment findTopFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.content);
+        return getSupportFragmentManager().findFragmentById(getContentFragmentViewContainer());
     }
 }

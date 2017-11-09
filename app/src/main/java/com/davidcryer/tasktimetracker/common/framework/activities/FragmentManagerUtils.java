@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 class FragmentManagerUtils {
 
-    static void replace(
+    static void add(
             final Fragment fragment,
             final String tag,
             @IdRes final int container,
@@ -16,7 +16,7 @@ class FragmentManagerUtils {
     ) {
         if (fragmentManager.findFragmentByTag(tag) == null) {
             fragmentManager.beginTransaction()
-                    .replace(container, fragment, tag)
+                    .add(container, fragment, tag)
                     .addToBackStack(backStackTag)
                     .commit();
         }
