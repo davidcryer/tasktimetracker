@@ -8,6 +8,9 @@ import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsExcep
 import com.davidcryer.tasktimetracker.common.domain.Story;
 import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageStoriesUi.Listener, ManageStoriesUiModel> {
@@ -100,7 +103,18 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showStories(UiStoryMapper.from(storyDatabase.findAll()), ui());
+            uiModel().showStories(UiStoryMapper.from(alphabeticallyOrderedStories()), ui());
         }
+    }
+
+    private List<Story> alphabeticallyOrderedStories() {
+        final List<Story> stories = storyDatabase.findAll();
+        Collections.sort(stories, new Comparator<Story>() {
+            @Override
+            public int compare(Story l, Story r) {
+                return l.title().compareTo(r.title());
+            }
+        });
+        return stories;
     }
 }
