@@ -26,10 +26,10 @@ public class RemoveStoryDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle args = getArguments();
-        if (args == null || !args.containsKey(ARGS_UI_STORY)) {
-            throw new IllegalStateException("Args must be non-null and contain ARGS_UI_STORY key-value pair");
+        final UiStory story = args == null ? null : (UiStory) args.getParcelable(ARGS_UI_STORY);
+        if (story == null) {
+            throw new IllegalStateException("Args must contain UiStory for ARGS_UI_STORY key");
         }
-        final UiStory story = args.getParcelable(ARGS_UI_STORY);
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.prompt_remove_story_title)
                 .setMessage(String.format(getString(R.string.prompt_remove_story_message), story.getTitle()))
