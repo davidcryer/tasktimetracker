@@ -14,6 +14,7 @@ public interface ManageStoriesUi {
     void expandStory(int i, int pos);
     void shrinkStory(int i, int pos);
     void showAddStoryPrompt();
+    void showRemoveStoryPrompt(UiStory story, int i);
     void showManageTaskScreen(ManageTaskIntentModel intentModel);
 
     interface InputStoryPrompt {
@@ -24,11 +25,12 @@ public interface ManageStoriesUi {
 
     interface Listener {
         void onClickStory(ManageStoriesUi ui, UiStory story, int i);
+        void onLongClickStory(ManageStoriesUi ui, UiStory story, int i);
         void onClickTask(ManageStoriesUi ui, UiTask task, UiStory story);
         void onClickAddStory(ManageStoriesUi ui);
         void onClickAddTask(ManageStoriesUi ui, UiStory story);
         void onAddStory(InputStoryPrompt prompt, String title, String note);
         void onEditStory(InputStoryPrompt prompt, UUID storyId, String title, String note);
-        void onRemoveStory(InputStoryPrompt prompt, UUID storyId);
+        void onRemoveStory(ManageStoriesUi ui, UiStory story, int i);
     }
 }

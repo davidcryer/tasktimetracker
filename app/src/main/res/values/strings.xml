@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TaskTimeTracker</string>
+
+    <string name="prompt.remove_story.title">Delete Story</string>
+    <string name="prompt.remove_story.message">Would you like to delete the story %1$s</string>
+    <string name="prompt.button.delete">Delete</string>
 </resources>

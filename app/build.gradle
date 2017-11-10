@@ -17,13 +17,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "deployment"
     productFlavors {
         production {
-
+            dimension "deployment"
         }
         development {
             applicationIdSuffix ".test"
             versionNameSuffix ".test"
+            dimension "deployment"
         }
     }
 }
@@ -36,7 +38,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.davidcryer.uiwrapper:uiwrapper:1.0.6'
+    compile 'com.davidcryer.uiwrapper:uiwrapper:1.0.7'
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'junit:junit:4.12'
 }

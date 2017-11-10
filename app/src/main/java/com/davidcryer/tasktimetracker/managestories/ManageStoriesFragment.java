@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +15,13 @@ import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.R;
+import com.davidcryer.tasktimetracker.common.framework.activities.DialogFragmentFactory;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 
-public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi, ManageStoriesNavigator.Callback {
+public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi, ManageStoriesNavigator.Callback, RemoveStoryListener {
     private final StoriesAdapter storiesAdapter;
     @Nullable private ManageStoriesNavigator navigator;
 
@@ -90,7 +92,24 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     @Override
     public void showAddStoryPrompt() {
         if (navigator != null) {
-            navigator.showAddStoryPrompt();
+            navigator.showAddStoryPrompt(new DialogFragmentFactory() {
+                @Override
+                public DialogFragment create() {
+                    return new AddStoryDialogFragment();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void showRemoveStoryPrompt(final UiStory story, final int i) {
+        if (navigator != null) {
+            navigator.showRemoveStoryPrompt(new DialogFragmentFactory() {
+                @Override
+                public DialogFragment create() {
+                    return RemoveStoryDialogFragment.newInstance(story, i);
+                }
+            });
         }
     }
 
@@ -105,6 +124,13 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     public void onAddStory(InputStoryPrompt prompt, String title, String note) {
         if (hasListener()) {
             listener().onAddStory(prompt, title, note);
+        }
+    }
+
+    @Override
+    public void onClickDelete(UiStory story, int index) {
+        if (hasListener()) {
+            listener().onRemoveStory(this, story, index);
         }
     }
 

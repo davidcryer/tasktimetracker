@@ -47,6 +47,11 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
+            public void onLongClickStory(ManageStoriesUi ui, UiStory story, int i) {
+                ui.showRemoveStoryPrompt(story, i);
+            }
+
+            @Override
             public void onClickTask(ManageStoriesUi ui, UiTask task, UiStory story) {
                 ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task, story.getId()));
             }
@@ -93,8 +98,9 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
-            public void onRemoveStory(ManageStoriesUi.InputStoryPrompt prompt, UUID storyId) {
-
+            public void onRemoveStory(ManageStoriesUi ui, UiStory story, int i) {
+                storyDatabase.delete(story.getId());
+                uiModel().removeStory(story, i, ui());
             }
         };
     }
