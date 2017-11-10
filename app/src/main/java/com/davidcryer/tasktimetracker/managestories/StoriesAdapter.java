@@ -42,21 +42,21 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     void insert(final UiStory story, final int i) {
         invalidateCachedItemCount();
         stories.add(i, story);
-        notifyItemInserted(position(i));
+        notifyItemInserted(storyPosition(i));
     }
 
     void set(final UiStory story, final int i) {
         stories.set(i, story);
-        notifyItemChanged(position(i));
+        notifyItemChanged(storyPosition(i));
     }
 
     void remove(final int i) {
         invalidateCachedItemCount();
-        stories.remove(i);
-        notifyItemRemoved(position(i));
+        final UiStory story = stories.remove(i);
+        notifyItemRangeRemoved(storyPosition(i), story.expandedTaskCount() + 1);
     }
 
-    private int position(final int index) {
+    private int storyPosition(final int index) {
         int pos = 0;
         for (int i = 0; i < stories.size(); i++) {
             if (i == index) {
@@ -64,7 +64,7 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
             }
             pos += 1 + stories.get(i).expandedTaskCount();
         }
-        return -1;
+        return pos;
     }
 
     void expandStory(final int i, final int pos) {
