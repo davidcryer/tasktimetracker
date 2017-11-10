@@ -56,11 +56,12 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     }
 
     @Override
-    public void removeStory(UiStory story, int i, ManageStoriesUi ui) {
+    public void removeStory(UUID storyId, ManageStoriesUi ui) {
+        final int i = indexOf(storyId);
         if (ui != null) {
             ui.removeStory(i);
         }
-        stories.remove(story);
+        stories.remove(i);
     }
 
     @Override

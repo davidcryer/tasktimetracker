@@ -36,6 +36,13 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
             }
 
             @Override
+            public void onLongClick(UiStory story) {
+                if (hasListener()) {
+                    listener().onLongClickStory(ManageStoriesFragment.this, story);
+                }
+            }
+
+            @Override
             public void onClick(UiTask task, UiStory story) {
                 if (hasListener()) {
                     listener().onClickTask(ManageStoriesFragment.this, task, story);
@@ -75,12 +82,12 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void removeStory(final int i) {
+    public void removeStory(int i) {
         storiesAdapter.remove(i);
     }
 
     @Override
-    public void expandStory(final int i, final int pos) {
+    public void expandStory(int i, int pos) {
         storiesAdapter.expandStory(i, pos);
     }
 
@@ -102,12 +109,12 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void showRemoveStoryPrompt(final UiStory story, final int i) {
+    public void showRemoveStoryPrompt(final UiStory story) {
         if (navigator != null) {
             navigator.showRemoveStoryPrompt(new DialogFragmentFactory() {
                 @Override
                 public DialogFragment create() {
-                    return RemoveStoryDialogFragment.newInstance(story, i);
+                    return RemoveStoryDialogFragment.newInstance(story);
                 }
             });
         }
@@ -128,9 +135,9 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
-    public void onClickDelete(UiStory story, int index) {
+    public void onClickDelete(UiStory story) {
         if (hasListener()) {
-            listener().onRemoveStory(this, story, index);
+            listener().onRemoveStory(this, story);
         }
     }
 

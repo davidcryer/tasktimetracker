@@ -127,6 +127,13 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
                     onClickStory(story, holder.getAdapterPosition());
                 }
             });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    onLongClickStory(story);
+                    return true;
+                }
+            });
             return true;
         }
         return false;
@@ -135,6 +142,12 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     private void onClickStory(final UiStory story, final int pos) {
         if (onClickStoryListener != null) {
             onClickStoryListener.onClick(story, pos);
+        }
+    }
+
+    private void onLongClickStory(final UiStory story) {
+        if (onClickStoryListener != null) {
+            onClickStoryListener.onLongClick(story);
         }
     }
 
@@ -232,6 +245,7 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
 
     interface OnClickStoryListener {
         void onClick(UiStory story, int pos);
+        void onLongClick(UiStory story);
         void onClick(UiTask task, UiStory story);
     }
 }

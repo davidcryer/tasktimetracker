@@ -64,7 +64,7 @@ public class ManageStoriesUiModelTests {
         final List<UiStory> initialStories = Collections.singletonList(uiStory());
         final ManageStoriesUiModel uiModel = new ManageStoriesUiModelImpl(initialStories);
         final TestUi ui = new TestUi(initialStories);
-        uiModel.removeStory(0, ui);
+        uiModel.removeStory(initialStories.get(0).getId(), ui);
         Assert.assertTrue(ui.stories != null && ui.stories.isEmpty());
     }
 
@@ -98,8 +98,8 @@ public class ManageStoriesUiModelTests {
         }
 
         @Override
-        public void removeStory(int i) {
-            this.stories.remove(i);
+        public void removeStory(int pos) {
+            this.stories.remove(pos);
         }
 
         @Override
@@ -124,6 +124,11 @@ public class ManageStoriesUiModelTests {
 
         @Override
         public void showAddStoryPrompt() {
+
+        }
+
+        @Override
+        public void showRemoveStoryPrompt(UiStory story) {
 
         }
     }
