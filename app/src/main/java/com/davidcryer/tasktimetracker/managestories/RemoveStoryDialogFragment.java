@@ -18,6 +18,7 @@ public class RemoveStoryDialogFragment extends DialogFragment {
         final RemoveStoryDialogFragment fragment = new RemoveStoryDialogFragment();
         final Bundle args = new Bundle();
         args.putParcelable(ARGS_UI_STORY, story);
+        fragment.setArguments(args);
         return fragment;
     }
 
