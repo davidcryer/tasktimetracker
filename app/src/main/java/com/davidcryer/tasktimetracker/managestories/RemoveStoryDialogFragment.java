@@ -52,7 +52,10 @@ public class RemoveStoryDialogFragment extends DialogFragment {
 
     private void onClickDelete(final UiStory story, final int index) {
         if (navigator != null) {
-            navigator.onClickDelete(story, index);
+            final RemoveStoryListener listener = navigator.listener();
+            if (listener != null) {
+                listener.onClickDelete(story, index);
+            }
         }
     }
 
