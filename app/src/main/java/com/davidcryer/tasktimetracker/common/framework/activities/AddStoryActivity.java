@@ -10,6 +10,7 @@ import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
 import com.davidcryer.tasktimetracker.addstory.AddStoryFragment;
 
 public class AddStoryActivity extends SingleContentContainerWithAppBarActivity {
+    private final static String FRAGMENT_TAG_ADD_STORY = "add story";
     private final static String INTENT_DATA_RETURN_KEY = "data return key";
 
     static void startActivityForResult(final Activity activity, final int requestCode, final String dataReturnKey) {
@@ -23,9 +24,8 @@ public class AddStoryActivity extends SingleContentContainerWithAppBarActivity {
 
     }
 
-    @NonNull
     @Override
-    protected Fragment initialFragment() {
-        return AddStoryFragment.newInstance(getIntent().getStringExtra(INTENT_DATA_RETURN_KEY));
+    protected void addInitialFragment() {
+        addFragment(AddStoryFragment.newInstance(getIntent().getStringExtra(INTENT_DATA_RETURN_KEY)), FRAGMENT_TAG_ADD_STORY);
     }
 }
