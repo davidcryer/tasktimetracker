@@ -65,6 +65,17 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
     }
 
     @Override
+    public void removeTask(UUID taskId, UUID storyId, ManageStoriesUi ui) {
+        final UiStory story = story(storyId);
+        if (story != null) {
+            final int taskIndex = story.taskIndex(taskId);
+            if (story.removeTask(taskId) && ui != null) {
+                ui.removeTask(indexOf(story), taskIndex);
+            }
+        }
+    }
+
+    @Override
     public void addStory(UiStory story, ManageStoriesUi ui) {
         if (ui != null) {
             ui.addStory(story);
@@ -108,17 +119,26 @@ class ManageStoriesUiModelImpl implements ManageStoriesUiModel {
         }
     }
 
-    private int indexOf(UiStory story) {
+    private int indexOf(final UiStory story) {
         return stories.indexOf(story);
     }
 
-    private int indexOf(UUID storyId) {
+    private int indexOf(final UUID storyId) {
         for (int i = 0; i < stories.size(); i++) {
             if (stories.get(i).getId().equals(storyId)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    private UiStory story(final UUID id) {
+        for (final UiStory story : stories) {
+            if (story.getId().equals(id)) {
+                return story;
+            }
+        }
+        return null;
     }
 
     @Override

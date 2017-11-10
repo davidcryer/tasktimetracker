@@ -103,6 +103,11 @@ public class ManageStoriesUiModelTests {
         }
 
         @Override
+        public void removeTask(int storyInd, int taskInd) {
+
+        }
+
+        @Override
         public void setStory(UiStory story, int i) {
 
         }
@@ -129,6 +134,11 @@ public class ManageStoriesUiModelTests {
 
         @Override
         public void showRemoveStoryPrompt(UiStory story) {
+
+        }
+
+        @Override
+        public void showRemoveTaskPrompt(UiTask task, UiStory story) {
 
         }
     }

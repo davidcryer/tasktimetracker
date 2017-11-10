@@ -10,13 +10,15 @@ import android.support.v7.app.AlertDialog;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class RemoveStoryDialogFragment extends DialogFragment {
+public class RemoveTaskDialogFragment extends DialogFragment {
+    private final static String ARGS_UI_TASK = "ui task";
     private final static String ARGS_UI_STORY = "ui story";
-    private RemoveStoryNavigator navigator;
+    private RemoveTaskNavigator navigator;
 
-    public static RemoveStoryDialogFragment newInstance(final UiStory story) {
-        final RemoveStoryDialogFragment fragment = new RemoveStoryDialogFragment();
+    public static RemoveTaskDialogFragment newInstance(final UiTask task, final UiStory story) {
+        final RemoveTaskDialogFragment fragment = new RemoveTaskDialogFragment();
         final Bundle args = new Bundle();
+        args.putParcelable(ARGS_UI_TASK, task);
         args.putParcelable(ARGS_UI_STORY, story);
         fragment.setArguments(args);
         return fragment;
@@ -29,20 +31,21 @@ public class RemoveStoryDialogFragment extends DialogFragment {
         if (args == null) {
             throw new IllegalStateException("Args must not be null");
         }
+        final UiTask task = args.getParcelable(ARGS_UI_TASK);
         final UiStory story = args.getParcelable(ARGS_UI_STORY);
-        if (story == null) {
-            throw new IllegalStateException("Args must contain UiStory for ARGS_UI_STORY key");
+        if (task == null || story == null) {
+            throw new IllegalStateException("Args must contain UiTask for ARGS_UI_TASK key and UiStory for ARGS_UI_STORY key");
         }
         return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.prompt_remove_story_title)
-                .setMessage(String.format(getString(R.string.prompt_remove_story_message), story.getTitle()))
+                .setTitle(R.string.prompt_remove_task_title)
+                .setMessage(String.format(getString(R.string.prompt_remove_task_message), task.getTitle(), story.getTitle()))
                 .setPositiveButton(R.string.prompt_button_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        onClickDelete(story);
+                        onClickDelete(task, story);
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -51,11 +54,11 @@ public class RemoveStoryDialogFragment extends DialogFragment {
                 .show();
     }
 
-    private void onClickDelete(final UiStory story) {
+    private void onClickDelete(final UiTask task, final UiStory story) {
         if (navigator != null) {
-            final RemoveStoryListener listener = navigator.removeStoryListener();
+            final RemoveTaskListener listener = navigator.removeTaskListener();
             if (listener != null) {
-                listener.onClickDelete(story);
+                listener.onClickDelete(task, story);
             }
         }
     }
@@ -63,7 +66,7 @@ public class RemoveStoryDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        navigator = (RemoveStoryNavigator) context;
+        navigator = (RemoveTaskNavigator) context;
     }
 
     @Override

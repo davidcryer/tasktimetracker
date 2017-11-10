@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,6 +63,25 @@ class UiStory implements Parcelable {
 
     UiTask task(int i) {
         return tasks.get(i);
+    }
+
+    int taskIndex(final UUID taskId) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getId().equals(taskId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    boolean removeTask(final UUID taskId) {
+        for (final Iterator<UiTask> itr = tasks.iterator(); itr.hasNext();) {
+            if (itr.next().getId().equals(taskId)) {
+                itr.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -12,14 +12,14 @@ import com.davidcryer.tasktimetracker.R;
 public class StoryLayout extends LinearLayout {
     private final TextView titleView;
     private final TextView noteView;
-    private final View storyClicker;
+    private final View clicker;
 
     public StoryLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.item_manage_stories_story, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
-        storyClicker = this;
+        clicker = this;
     }
 
     public void story(final UiStory story) {
@@ -37,19 +37,19 @@ public class StoryLayout extends LinearLayout {
 
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
-        if (storyClicker == this) {
+        if (clicker == this) {
             super.setOnClickListener(l);
         } else {
-            storyClicker.setOnClickListener(l);
+            clicker.setOnClickListener(l);
         }
     }
 
     @Override
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
-        if (storyClicker == this) {
+        if (clicker == this) {
             super.setOnLongClickListener(l);
         } else {
-            storyClicker.setOnLongClickListener(l);
+            clicker.setOnLongClickListener(l);
         }
     }
 }

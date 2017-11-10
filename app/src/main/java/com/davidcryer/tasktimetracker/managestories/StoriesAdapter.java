@@ -56,6 +56,14 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
         notifyItemRangeRemoved(storyPosition(i), story.expandedTaskCount() + 1);
     }
 
+    void removeTask(final int storyInd, final int taskInd) {
+        final UiStory story = stories.get(storyInd);
+        if (story.isExpanded()) {
+            invalidateCachedItemCount();
+            notifyItemRemoved(storyPosition(storyInd) + 1 + taskInd);
+        }
+    }
+
     private int storyPosition(final int index) {
         int pos = 0;
         for (int i = 0; i < stories.size(); i++) {
@@ -161,6 +169,13 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
                     onClickTask(task, story);
                 }
             });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    onLongClickTask(task, story);
+                    return true;
+                }
+            });
             return true;
         }
         return false;
@@ -169,6 +184,12 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
     private void onClickTask(final UiTask task, final UiStory story) {
         if (onClickStoryListener != null) {
             onClickStoryListener.onClick(task, story);
+        }
+    }
+
+    private void onLongClickTask(final UiTask task, final UiStory story) {
+        if (onClickStoryListener != null) {
+            onClickStoryListener.onLongClick(task, story);
         }
     }
 
@@ -247,5 +268,6 @@ class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
         void onClick(UiStory story, int pos);
         void onLongClick(UiStory story);
         void onClick(UiTask task, UiStory story);
+        void onLongClick(UiTask task, UiStory story);
     }
 }

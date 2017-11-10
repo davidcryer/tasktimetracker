@@ -11,12 +11,16 @@ import com.davidcryer.tasktimetracker.managestories.ManageStoriesNavigator;
 import com.davidcryer.tasktimetracker.managestories.ManageStoriesUi;
 import com.davidcryer.tasktimetracker.managestories.RemoveStoryListener;
 import com.davidcryer.tasktimetracker.managestories.RemoveStoryNavigator;
+import com.davidcryer.tasktimetracker.managestories.RemoveTaskListener;
+import com.davidcryer.tasktimetracker.managestories.RemoveTaskNavigator;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskFragment;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
-public class ManageActivity extends SingleContentContainerWithAppBarActivity implements ManageStoriesNavigator, AddStoryNavigator, RemoveStoryNavigator {
+public class ManageActivity extends SingleContentContainerWithAppBarActivity
+        implements ManageStoriesNavigator, AddStoryNavigator, RemoveStoryNavigator, RemoveTaskNavigator {
     private final static String FRAGMENT_TAG_ADD_STORY_PROMPT = "add story prompt";
     private final static String FRAGMENT_TAG_REMOVE_STORY_PROMPT = "remove story prompt";
+    private final static String FRAGMENT_TAG_REMOVE_TASK_PROMPT = "remove task prompt";
     private final static String FRAGMENT_TAG_MANAGE_TASK = "manage task";
     private final static String FRAGMENT_TAG_MANAGE_STORIES = "manage stories";
 
@@ -44,6 +48,13 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity imp
         }
     }
 
+    @Override
+    public void showRemoveTaskPrompt(DialogFragmentFactory factory) {
+        if (noFragmentExists(FRAGMENT_TAG_REMOVE_TASK_PROMPT)) {
+            show(factory, FRAGMENT_TAG_REMOVE_TASK_PROMPT);
+        }
+    }
+
     private void show(final DialogFragmentFactory factory, final String tag) {
         FragmentManagerUtils.show(factory.create(), tag, this);
     }
@@ -64,8 +75,13 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity imp
     }
 
     @Override
-    public RemoveStoryListener listener() {
+    public RemoveStoryListener removeStoryListener() {
         return (RemoveStoryListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_STORIES);
+    }
+
+    @Override
+    public RemoveTaskListener removeTaskListener() {
+        return (RemoveTaskListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_STORIES);
     }
 
     private Fragment findFragmentByTag(final String tag) {

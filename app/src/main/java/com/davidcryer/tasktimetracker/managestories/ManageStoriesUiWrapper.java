@@ -7,9 +7,11 @@ import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsException;
 import com.davidcryer.tasktimetracker.common.domain.Story;
 import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,6 +59,11 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             }
 
             @Override
+            public void onLongClickTask(ManageStoriesUi ui, UiTask task, UiStory story) {
+                ui.showRemoveTaskPrompt(task, story);
+            }
+
+            @Override
             public void onClickAddStory(ManageStoriesUi ui) {
                 ui.showAddStoryPrompt();
             }
@@ -88,9 +95,11 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             public void onEditStory(ManageStoriesUi.InputStoryPrompt prompt, UUID storyId, String title, String note) {
                 try {
                     final Story story = storyDatabase.find(storyId);
-                    story.writer().title(title).note(note).commit();
-                    storyDatabase.save(story);
-                    uiModel().updateStory(UiStoryMapper.from(story), ui());
+                    if (story != null) {
+                        story.writer().title(title).note(note).commit();
+                        storyDatabase.save(story);
+                        uiModel().updateStory(UiStoryMapper.from(story), ui());
+                    }
                     prompt.dismiss();
                 } catch (IllegalStoryArgsException iae) {
                     showErrors(prompt, iae.args());
@@ -101,6 +110,15 @@ public class ManageStoriesUiWrapper extends UiWrapper<ManageStoriesUi, ManageSto
             public void onRemoveStory(ManageStoriesUi ui, UiStory story) {
                 storyDatabase.delete(story.getId());
                 uiModel().removeStory(story.getId(), ui);
+            }
+
+            @Override
+            public void onRemoveTask(ManageStoriesUi ui, UiTask task, UiStory story) {
+                final Story domainStory = storyDatabase.find(story.getId());
+                if (domainStory.deleteTask(task.getId())) {
+                    storyDatabase.save(domainStory);
+                    uiModel().removeTask(task.getId(), story.getId(), ui);
+                }
             }
         };
     }

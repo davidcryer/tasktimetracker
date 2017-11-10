@@ -8,6 +8,7 @@ import java.util.UUID;
 public interface ManageStoriesUiModel extends UiModel<ManageStoriesUi> {
     void showStories(List<UiStory> stories, ManageStoriesUi ui);
     void removeStory(UUID storyId, ManageStoriesUi ui);
+    void removeTask(UUID taskId, UUID storyId, ManageStoriesUi ui);
     void addStory(UiStory story, ManageStoriesUi ui);
     void insertStory(UiStory story, int i, ManageStoriesUi ui);
     void updateStory(UiStory story, ManageStoriesUi ui);

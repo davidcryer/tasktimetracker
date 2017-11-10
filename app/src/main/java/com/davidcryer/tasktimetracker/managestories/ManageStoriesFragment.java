@@ -21,7 +21,8 @@ import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 
-public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository> implements ManageStoriesUi, ManageStoriesNavigator.Callback, RemoveStoryListener {
+public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, UiWrapperRepository>
+        implements ManageStoriesUi, ManageStoriesNavigator.Callback, RemoveStoryListener, RemoveTaskListener {
     private final StoriesAdapter storiesAdapter;
     @Nullable private ManageStoriesNavigator navigator;
 
@@ -46,6 +47,13 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
             public void onClick(UiTask task, UiStory story) {
                 if (hasListener()) {
                     listener().onClickTask(ManageStoriesFragment.this, task, story);
+                }
+            }
+
+            @Override
+            public void onLongClick(UiTask task, UiStory story) {
+                if (hasListener()) {
+                    listener().onLongClickTask(ManageStoriesFragment.this, task, story);
                 }
             }
         });
@@ -87,6 +95,11 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
+    public void removeTask(int storyInd, int taskInd) {
+        storiesAdapter.removeTask(storyInd, taskInd);
+    }
+
+    @Override
     public void expandStory(int i, int pos) {
         storiesAdapter.expandStory(i, pos);
     }
@@ -121,6 +134,18 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     }
 
     @Override
+    public void showRemoveTaskPrompt(final UiTask task, final UiStory story) {
+        if (navigator != null) {
+            navigator.showRemoveTaskPrompt(new DialogFragmentFactory() {
+                @Override
+                public DialogFragment create() {
+                    return RemoveTaskDialogFragment.newInstance(task, story);
+                }
+            });
+        }
+    }
+
+    @Override
     public void showManageTaskScreen(final ManageTaskIntentModel intentModel) {
         if (navigator != null) {
             navigator.toManageTaskScreen(intentModel);
@@ -138,6 +163,13 @@ public class ManageStoriesFragment extends UiFragment<ManageStoriesUi.Listener, 
     public void onClickDelete(UiStory story) {
         if (hasListener()) {
             listener().onRemoveStory(this, story);
+        }
+    }
+
+    @Override
+    public void onClickDelete(UiTask task, UiStory story) {
+        if (hasListener()) {
+            listener().onRemoveTask(this, task, story);
         }
     }
 

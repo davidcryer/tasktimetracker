@@ -3,5 +3,7 @@
 
     <string name="prompt.remove_story.title">Delete Story</string>
     <string name="prompt.remove_story.message">Would you like to delete the story %1$s</string>
+    <string name="prompt.remove_task.title">Delete Task</string>
+    <string name="prompt.remove_task.message">Would you like to delete the task %1$s for the story %2$s</string>
     <string name="prompt.button.delete">Delete</string>
 </resources>
