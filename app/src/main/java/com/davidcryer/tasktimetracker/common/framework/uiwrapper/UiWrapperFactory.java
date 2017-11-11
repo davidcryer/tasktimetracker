@@ -3,22 +3,22 @@ package com.davidcryer.tasktimetracker.common.framework.uiwrapper;
 import android.os.Bundle;
 
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesUi;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiModel;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiModelFactory;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesUiWrapper;
+import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUi;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUiModel;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUiModelFactory;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUiWrapper;
 
 public class UiWrapperFactory {
-    private final StoryDatabase storyDatabase;
+    private final CategoryDatabase categoryDatabase;
 
-    public UiWrapperFactory(StoryDatabase storyDatabase) {
-        this.storyDatabase = storyDatabase;
+    public UiWrapperFactory(CategoryDatabase categoryDatabase) {
+        this.categoryDatabase = categoryDatabase;
     }
 
-    UiWrapper<ManageStoriesUi, ManageStoriesUi.Listener, ManageStoriesUiModel> createManageStoriesUiWrapper(final Bundle savedInstanceState) {
+    UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> createManageCategoriesUiWrapper(final Bundle savedInstanceState) {
         return savedInstanceState == null
-                ? ManageStoriesUiWrapper.newInstance(new ManageStoriesUiModelFactory(), storyDatabase)
-                : ManageStoriesUiWrapper.savedElseNewInstance(savedInstanceState, new ManageStoriesUiModelFactory(), storyDatabase);
+                ? ManageCategoriesUiWrapper.newInstance(new ManageCategoriesUiModelFactory(), categoryDatabase)
+                : ManageCategoriesUiWrapper.savedElseNewInstance(savedInstanceState, new ManageCategoriesUiModelFactory(), categoryDatabase);
     }
 }

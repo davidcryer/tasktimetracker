@@ -15,7 +15,7 @@ public class TaskLayout extends LinearLayout {
 
     public TaskLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.item_manage_stories_task, this);
+        inflate(context, R.layout.item_manage_categories_task, this);
         titleView = findViewById(R.id.title);
         clicker = this;
     }

@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.managestories;
 
-import com.davidcryer.tasktimetracker.common.domain.Story;
+import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
@@ -12,15 +12,15 @@ class UiTaskMapper {
 
     private UiTaskMapper() {}
 
-    static List<UiTask> from(final Story story) {
-        final List<UiTask> uiTasks = new ArrayList<>(story.tasks().size());
-        for (final Task task : story.tasks()) {
+    static List<UiTask> from(final Category category) {
+        final List<UiTask> uiTasks = new ArrayList<>(category.tasks().size());
+        for (final Task task : category.tasks()) {
             uiTasks.add(new UiTask(task.id(), task.title(), task.note()));
         }
         return uiTasks;
     }
 
-    static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task, final UUID storyId) {
-        return new ManageTaskIntentModel(task.getId(), task.getTitle(), task.getNote(), storyId);
+    static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task, final UUID categoryId) {
+        return new ManageTaskIntentModel(task.getId(), task.getTitle(), task.getNote(), categoryId);
     }
 }

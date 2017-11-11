@@ -9,22 +9,22 @@ import android.widget.TextView;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class StoryLayout extends LinearLayout {
+public class CategoryLayout extends LinearLayout {
     private final TextView titleView;
     private final TextView noteView;
     private final View clicker;
 
-    public StoryLayout(Context context, @Nullable AttributeSet attrs) {
+    public CategoryLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.item_manage_stories_story, this);
+        inflate(context, R.layout.item_manage_categories_category, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
         clicker = this;
     }
 
-    public void story(final UiStory story) {
-        title(story.getTitle());
-        note(story.getNote());
+    public void category(final UiCategory category) {
+        title(category.getTitle());
+        note(category.getNote());
     }
 
     private void title(final String title) {

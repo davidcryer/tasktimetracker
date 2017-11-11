@@ -1,9 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalStoryArgsException;
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
-import com.davidcryer.tasktimetracker.common.argvalidation.StoryArgsBuilder;
+import com.davidcryer.tasktimetracker.common.argvalidation.CategoryArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class Story {
+public class Category {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null or empty";
     private final UUID id;
@@ -19,12 +19,12 @@ public class Story {
     private String note;
     private List<Task> tasks;
 
-    public Story(String title, String note) throws IllegalStoryArgsException {
+    public Category(String title, String note) throws IllegalCategoryArgsException {
         this(UUID.randomUUID(), title, note, null);
     }
 
-    Story(UUID id, String title, String note, List<Task> tasks) throws IllegalStoryArgsException {
-        ArgsInspector.inspect(new StoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
+    Category(UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
+        ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
         this.id = id;
         this.title = title;
         this.note = note;
@@ -97,55 +97,55 @@ public class Story {
     }
 
     public static class Writer {
-        private final Story story;
+        private final Category category;
         private String title;
         private boolean titleChanged;
         private String note;
         private boolean noteChanged;
 
-        private Writer(Story story) {
-            this.story = story;
+        private Writer(Category category) {
+            this.category = category;
         }
 
         public Writer title(final String title) {
-            titleChanged = !ObjectUtils.equalAllowNull(title, story.title());
+            titleChanged = !ObjectUtils.equalAllowNull(title, category.title());
             this.title = title;
             return this;
         }
 
         public Writer note(final String note) {
-            noteChanged = !ObjectUtils.equalAllowNull(note, story.note());
+            noteChanged = !ObjectUtils.equalAllowNull(note, category.note());
             this.note = note;
             return this;
         }
 
-        public void commit() throws IllegalStoryArgsException {
+        public void commit() throws IllegalCategoryArgsException {
             inspectInput();
             writeTitle();
             writeNote();
         }
 
-        private void inspectInput() throws IllegalStoryArgsException {
+        private void inspectInput() throws IllegalCategoryArgsException {
             ArgsInspector.inspect(args());
         }
 
-        private IllegalStoryArgsException.Args args() {
-            final StoryArgsBuilder argsBuilder = new StoryArgsBuilder();
+        private IllegalCategoryArgsException.Args args() {
+            final CategoryArgsBuilder argsBuilder = new CategoryArgsBuilder();
             if (titleChanged) {
-                argsBuilder.title(Story.titleArg(title));
+                argsBuilder.title(Category.titleArg(title));
             }
             return argsBuilder.args();
         }
 
         private void writeTitle() {
             if (titleChanged) {
-                story.title(title);
+                category.title(title);
             }
         }
 
         private void writeNote() {
             if (noteChanged) {
-                story.note(note);
+                category.note(note);
             }
         }
     }

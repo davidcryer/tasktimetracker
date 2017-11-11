@@ -1,9 +1,9 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public class IllegalStoryArgsException extends IllegalArgsException {
+public class IllegalCategoryArgsException extends IllegalArgsException {
     private final Args args;
 
-    private IllegalStoryArgsException(Args args) {
+    private IllegalCategoryArgsException(Args args) {
         super(args.messages());
         this.args = args;
     }
@@ -12,7 +12,7 @@ public class IllegalStoryArgsException extends IllegalArgsException {
         return args;
     }
 
-    public static class Args implements IllegalArgsException.Args<IllegalStoryArgsException> {
+    public static class Args implements IllegalArgsException.Args<IllegalCategoryArgsException> {
         private final String idError;
         private final String titleError;
 
@@ -47,8 +47,8 @@ public class IllegalStoryArgsException extends IllegalArgsException {
         }
 
         @Override
-        public IllegalStoryArgsException exception() {
-            return new IllegalStoryArgsException(this);
+        public IllegalCategoryArgsException exception() {
+            return new IllegalCategoryArgsException(this);
         }
 
         static class Builder {

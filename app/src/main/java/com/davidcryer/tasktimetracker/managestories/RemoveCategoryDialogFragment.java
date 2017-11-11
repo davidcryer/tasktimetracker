@@ -10,14 +10,14 @@ import android.support.v7.app.AlertDialog;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class RemoveStoryDialogFragment extends DialogFragment {
-    private final static String ARGS_UI_STORY = "ui story";
-    private RemoveStoryNavigator navigator;
+public class RemoveCategoryDialogFragment extends DialogFragment {
+    private final static String ARGS_UI_CATEGORY = "ui category";
+    private RemoveCategoryNavigator navigator;
 
-    public static RemoveStoryDialogFragment newInstance(final UiStory story) {
-        final RemoveStoryDialogFragment fragment = new RemoveStoryDialogFragment();
+    public static RemoveCategoryDialogFragment newInstance(final UiCategory category) {
+        final RemoveCategoryDialogFragment fragment = new RemoveCategoryDialogFragment();
         final Bundle args = new Bundle();
-        args.putParcelable(ARGS_UI_STORY, story);
+        args.putParcelable(ARGS_UI_CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -29,17 +29,17 @@ public class RemoveStoryDialogFragment extends DialogFragment {
         if (args == null) {
             throw new IllegalStateException("Args must not be null");
         }
-        final UiStory story = args.getParcelable(ARGS_UI_STORY);
-        if (story == null) {
-            throw new IllegalStateException("Args must contain UiStory for ARGS_UI_STORY key");
+        final UiCategory category = args.getParcelable(ARGS_UI_CATEGORY);
+        if (category == null) {
+            throw new IllegalStateException("Args must contain UiCategory for ARGS_UI_CATEGORY key");
         }
         return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.prompt_remove_story_title)
-                .setMessage(String.format(getString(R.string.prompt_remove_story_message), story.getTitle()))
+                .setTitle(R.string.prompt_remove_category_title)
+                .setMessage(String.format(getString(R.string.prompt_remove_category_message), category.getTitle()))
                 .setPositiveButton(R.string.prompt_button_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        onClickDelete(story);
+                        onClickDelete(category);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -51,11 +51,11 @@ public class RemoveStoryDialogFragment extends DialogFragment {
                 .show();
     }
 
-    private void onClickDelete(final UiStory story) {
+    private void onClickDelete(final UiCategory category) {
         if (navigator != null) {
-            final RemoveStoryListener listener = navigator.removeStoryListener();
+            final RemoveCategoryListener listener = navigator.removeCategoryListener();
             if (listener != null) {
-                listener.onClickDelete(story);
+                listener.onClickDelete(category);
             }
         }
     }
@@ -63,7 +63,7 @@ public class RemoveStoryDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        navigator = (RemoveStoryNavigator) context;
+        navigator = (RemoveCategoryNavigator) context;
     }
 
     @Override

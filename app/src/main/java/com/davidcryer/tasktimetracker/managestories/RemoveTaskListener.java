@@ -1,5 +1,5 @@
 package com.davidcryer.tasktimetracker.managestories;
 
 public interface RemoveTaskListener {
-    void onClickDelete(final UiTask task, final UiStory story);
+    void onClickDelete(final UiTask task, final UiCategory category);
 }

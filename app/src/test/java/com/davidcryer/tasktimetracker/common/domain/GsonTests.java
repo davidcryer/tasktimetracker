@@ -12,20 +12,20 @@ import java.util.UUID;
 public class GsonTests {
 
     @Test
-    public void story_toJson_withoutTasks() {
+    public void category_toJson_withoutTasks() {
         final Gson gson = new Gson();
-        final Story story = new Story("Title", "Note");
-        Assert.assertEquals(gson.toJson(story), (String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\"}", story.title(), story.note())));
+        final Category category = new Category("Title", "Note");
+        Assert.assertEquals(gson.toJson(category), (String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\"}", category.title(), category.note())));
     }
 
     @Test
-    public void story_fromJson_withoutTasks() {
+    public void category_fromJson_withoutTasks() {
         final Gson gson = new Gson();
         final String title = "Title";
         final String note = "Note";
-        final Story story = gson.fromJson(String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\"}", title, note), Story.class);
-        Assert.assertEquals(story.title(), title);
-        Assert.assertEquals(story.note(), note);
+        final Category category = gson.fromJson(String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\"}", title, note), Category.class);
+        Assert.assertEquals(category.title(), title);
+        Assert.assertEquals(category.note(), note);
     }
 
     @Test
@@ -48,24 +48,24 @@ public class GsonTests {
     }
 
     @Test
-    public void story_toJson_withTasks() {
+    public void category_toJson_withTasks() {
         final Gson gson = new Gson();
         final UUID id = UUID.randomUUID();
-        final Story story = new Story(id, "Title", "Note", Arrays.asList(new Task("Task 1", "Hello"), new Task("Task 2", "World!")));
-        final List<Task> tasks = story.tasks();
-        final String jsonCheck = (String.format("{\"id\":\"%1$s\",\"title\":\"%2$s\",\"note\":\"%3$s\",\"tasks\":[%4$s,%5$s]}", id, story.title(), story.note(), gson.toJson(tasks.get(0)), gson.toJson(tasks.get(1))));
-        Assert.assertEquals(gson.toJson(story), jsonCheck);
+        final Category category = new Category(id, "Title", "Note", Arrays.asList(new Task("Task 1", "Hello"), new Task("Task 2", "World!")));
+        final List<Task> tasks = category.tasks();
+        final String jsonCheck = (String.format("{\"id\":\"%1$s\",\"title\":\"%2$s\",\"note\":\"%3$s\",\"tasks\":[%4$s,%5$s]}", id, category.title(), category.note(), gson.toJson(tasks.get(0)), gson.toJson(tasks.get(1))));
+        Assert.assertEquals(gson.toJson(category), jsonCheck);
     }
 
     @Test
-    public void story_fromJson_withTasks() {
+    public void category_fromJson_withTasks() {
         final Gson gson = new Gson();
         final String title = "Title";
         final String note = "Note";
         final String tasks = "{\"id\":\"26c6674f-3d20-4fb2-9a31-a9dc0a5ce2fc\",\"title\":\"Task 1\",\"note\":\"Hello\"},{\"id\":\"0ec5f758-5626-4589-aa2a-5b63504d00ff\",\"title\":\"Task 2\",\"note\":\"World!\"}";
-        final Story story = gson.fromJson(String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\",\"tasks\":[%3$s]}", title, note, tasks), Story.class);
-        Assert.assertEquals(story.title(), title);
-        Assert.assertEquals(story.note(), note);
-        Assert.assertEquals(story.tasks().size(), 2);
+        final Category category = gson.fromJson(String.format("{\"title\":\"%1$s\",\"note\":\"%2$s\",\"tasks\":[%3$s]}", title, note, tasks), Category.class);
+        Assert.assertEquals(category.title(), title);
+        Assert.assertEquals(category.note(), note);
+        Assert.assertEquals(category.tasks().size(), 2);
     }
 }

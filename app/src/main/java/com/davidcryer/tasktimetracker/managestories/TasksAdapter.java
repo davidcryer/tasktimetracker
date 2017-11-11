@@ -35,7 +35,7 @@ class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_manage_stories_task, parent));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_manage_categories_task, parent));
     }
 
     @Override

@@ -5,24 +5,24 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
 import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
-import com.davidcryer.tasktimetracker.managestories.AddStoryNavigator;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesFragment;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesNavigator;
-import com.davidcryer.tasktimetracker.managestories.ManageStoriesUi;
-import com.davidcryer.tasktimetracker.managestories.RemoveStoryListener;
-import com.davidcryer.tasktimetracker.managestories.RemoveStoryNavigator;
+import com.davidcryer.tasktimetracker.managestories.AddCategoryNavigator;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesFragment;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesNavigator;
+import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUi;
+import com.davidcryer.tasktimetracker.managestories.RemoveCategoryListener;
+import com.davidcryer.tasktimetracker.managestories.RemoveCategoryNavigator;
 import com.davidcryer.tasktimetracker.managestories.RemoveTaskListener;
 import com.davidcryer.tasktimetracker.managestories.RemoveTaskNavigator;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskFragment;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 public class ManageActivity extends SingleContentContainerWithAppBarActivity
-        implements ManageStoriesNavigator, AddStoryNavigator, RemoveStoryNavigator, RemoveTaskNavigator {
-    private final static String FRAGMENT_TAG_ADD_STORY_PROMPT = "add story prompt";
-    private final static String FRAGMENT_TAG_REMOVE_STORY_PROMPT = "remove story prompt";
+        implements ManageCategoriesNavigator, AddCategoryNavigator, RemoveCategoryNavigator, RemoveTaskNavigator {
+    private final static String FRAGMENT_TAG_ADD_CATEGORY_PROMPT = "add category prompt";
+    private final static String FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT = "remove category prompt";
     private final static String FRAGMENT_TAG_REMOVE_TASK_PROMPT = "remove task prompt";
     private final static String FRAGMENT_TAG_MANAGE_TASK = "manage task";
-    private final static String FRAGMENT_TAG_MANAGE_STORIES = "manage stories";
+    private final static String FRAGMENT_TAG_MANAGE_CATEGORIES = "manage categories";
 
     @Override
     protected void setupActionBar(@NonNull ActionBar actionBar) {
@@ -31,20 +31,20 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity
 
     @Override
     protected void addInitialFragment() {
-        addFragment(new ManageStoriesFragment(), FRAGMENT_TAG_MANAGE_STORIES);
+        addFragment(new ManageCategoriesFragment(), FRAGMENT_TAG_MANAGE_CATEGORIES);
     }
 
     @Override
-    public void showAddStoryPrompt(DialogFragmentFactory factory) {
-        if (noFragmentExists(FRAGMENT_TAG_ADD_STORY_PROMPT)) {
-            show(factory, FRAGMENT_TAG_ADD_STORY_PROMPT);
+    public void showAddCategoryPrompt(DialogFragmentFactory factory) {
+        if (noFragmentExists(FRAGMENT_TAG_ADD_CATEGORY_PROMPT)) {
+            show(factory, FRAGMENT_TAG_ADD_CATEGORY_PROMPT);
         }
     }
 
     @Override
-    public void showRemoveStoryPrompt(DialogFragmentFactory factory) {
-        if (noFragmentExists(FRAGMENT_TAG_REMOVE_STORY_PROMPT)) {
-            show(factory, FRAGMENT_TAG_REMOVE_STORY_PROMPT);
+    public void showRemoveCategoryPrompt(DialogFragmentFactory factory) {
+        if (noFragmentExists(FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT)) {
+            show(factory, FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT);
         }
     }
 
@@ -67,21 +67,21 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity
     }
 
     @Override
-    public void onClickAdd(ManageStoriesUi.InputStoryPrompt prompt, String title, String note) {
-        final Fragment fragment = findFragmentByTag(FRAGMENT_TAG_MANAGE_STORIES);
+    public void onClickAdd(ManageCategoriesUi.InputCategoryPrompt prompt, String title, String note) {
+        final Fragment fragment = findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
         if (fragment != null) {
-            ((ManageStoriesNavigator.Callback) fragment).onAddStory(prompt, title, note);
+            ((ManageCategoriesNavigator.Callback) fragment).onAddCategory(prompt, title, note);
         }
     }
 
     @Override
-    public RemoveStoryListener removeStoryListener() {
-        return (RemoveStoryListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_STORIES);
+    public RemoveCategoryListener removeCategoryListener() {
+        return (RemoveCategoryListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
     }
 
     @Override
     public RemoveTaskListener removeTaskListener() {
-        return (RemoveTaskListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_STORIES);
+        return (RemoveTaskListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
     }
 
     private Fragment findFragmentByTag(final String tag) {

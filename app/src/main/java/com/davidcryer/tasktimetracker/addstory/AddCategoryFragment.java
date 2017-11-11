@@ -7,13 +7,13 @@ import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 
-public class AddStoryFragment extends UiFragment {
-    private final static String ARGS_STORY_RETURN_KEY = "story return key";
+public class AddCategoryFragment extends UiFragment {
+    private final static String ARGS_CATEGORY_RETURN_KEY = "category return key";
 
-    public static AddStoryFragment newInstance(final String storyReturnKey) {
-        final AddStoryFragment fragment = new AddStoryFragment();
+    public static AddCategoryFragment newInstance(final String categoryReturnKey) {
+        final AddCategoryFragment fragment = new AddCategoryFragment();
         final Bundle args = new Bundle();
-        args.putString(ARGS_STORY_RETURN_KEY, storyReturnKey);
+        args.putString(ARGS_CATEGORY_RETURN_KEY, categoryReturnKey);
         fragment.setArguments(args);
         return fragment;
     }

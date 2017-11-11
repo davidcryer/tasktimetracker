@@ -10,14 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-class UiStory implements Parcelable {
+class UiCategory implements Parcelable {
     private final UUID id;
     private final String title;
     private final String note;
     private boolean expanded;
     private final List<UiTask> tasks;
 
-    public UiStory(UUID id, String title, String note, boolean expanded, List<UiTask> tasks) {
+    public UiCategory(UUID id, String title, String note, boolean expanded, List<UiTask> tasks) {
         this.id = id;
         this.title = title;
         this.note = note;
@@ -98,7 +98,7 @@ class UiStory implements Parcelable {
         dest.writeTypedList(this.tasks);
     }
 
-    private UiStory(Parcel in) {
+    private UiCategory(Parcel in) {
         this.id = (UUID) in.readSerializable();
         this.title = in.readString();
         this.note = in.readString();
@@ -106,15 +106,15 @@ class UiStory implements Parcelable {
         this.tasks = in.createTypedArrayList(UiTask.CREATOR);
     }
 
-    public static final Creator<UiStory> CREATOR = new Creator<UiStory>() {
+    public static final Creator<UiCategory> CREATOR = new Creator<UiCategory>() {
         @Override
-        public UiStory createFromParcel(Parcel source) {
-            return new UiStory(source);
+        public UiCategory createFromParcel(Parcel source) {
+            return new UiCategory(source);
         }
 
         @Override
-        public UiStory[] newArray(int size) {
-            return new UiStory[size];
+        public UiCategory[] newArray(int size) {
+            return new UiCategory[size];
         }
     };
 }

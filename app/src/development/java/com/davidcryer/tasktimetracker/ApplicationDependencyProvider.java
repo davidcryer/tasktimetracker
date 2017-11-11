@@ -2,8 +2,8 @@ package com.davidcryer.tasktimetracker;
 
 import android.content.Context;
 
-import com.davidcryer.tasktimetracker.common.domain.PrePopulatedStorySharedPreferences;
-import com.davidcryer.tasktimetracker.common.domain.StoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.PrePopulatedCategorySharedPreferences;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 import com.google.gson.Gson;
@@ -17,10 +17,10 @@ class ApplicationDependencyProvider {
     }
 
     private static UiWrapperFactory uiWrapperFactory(final Context context) {
-        return new UiWrapperFactory(storyDatabase(context));
+        return new UiWrapperFactory(categoryDatabase(context));
     }
 
-    private static StoryDatabase storyDatabase(final Context context) {
-        return new PrePopulatedStorySharedPreferences(context, new Gson());
+    private static CategoryDatabase categoryDatabase(final Context context) {
+        return new PrePopulatedCategorySharedPreferences(context, new Gson());
     }
 }

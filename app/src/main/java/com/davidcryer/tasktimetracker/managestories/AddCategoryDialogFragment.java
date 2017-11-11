@@ -13,17 +13,17 @@ import android.widget.LinearLayout;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class AddStoryDialogFragment extends DialogFragment implements ManageStoriesUi.InputStoryPrompt {
-    private StoryLayout storyLayout;
-    private AddStoryNavigator listener;
+public class AddCategoryDialogFragment extends DialogFragment implements ManageCategoriesUi.InputCategoryPrompt {
+    private CategoryLayout categoryLayout;
+    private AddCategoryNavigator listener;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        storyLayout = new StoryLayout(getContext());
+        categoryLayout = new CategoryLayout(getContext());
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setView(storyLayout)
-                .setTitle("Add story")
+                .setView(categoryLayout)
+                .setTitle("Add category")
                 .setPositiveButton("Add", null)
                 .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -48,34 +48,34 @@ public class AddStoryDialogFragment extends DialogFragment implements ManageStor
 
     private void onClickAdd() {
         if (listener != null) {
-            listener.onClickAdd(this, storyLayout.title(), storyLayout.note());
+            listener.onClickAdd(this, categoryLayout.title(), categoryLayout.note());
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        storyLayout = null;
+        categoryLayout = null;
     }
 
     @Override
     public void showTitleError(String message) {
-        if (storyLayout != null) {
-            storyLayout.showTitleError(message);
+        if (categoryLayout != null) {
+            categoryLayout.showTitleError(message);
         }
     }
 
     @Override
     public void showNoteError(String message) {
-        if (storyLayout != null) {
-            storyLayout.showNoteError(message);
+        if (categoryLayout != null) {
+            categoryLayout.showNoteError(message);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (AddStoryNavigator) context;
+        listener = (AddCategoryNavigator) context;
     }
 
     @Override
@@ -84,13 +84,13 @@ public class AddStoryDialogFragment extends DialogFragment implements ManageStor
         listener = null;
     }
 
-    private static class StoryLayout extends LinearLayout {
+    private static class CategoryLayout extends LinearLayout {
         private final EditText titleEdit;
         private final EditText noteEdit;
 
-        public StoryLayout(Context context) {
+        public CategoryLayout(Context context) {
             super(context);
-            inflate(context, R.layout.component_story_input, this);
+            inflate(context, R.layout.component_category_input, this);
             titleEdit = findViewById(R.id.title);
             noteEdit = findViewById(R.id.note);
         }

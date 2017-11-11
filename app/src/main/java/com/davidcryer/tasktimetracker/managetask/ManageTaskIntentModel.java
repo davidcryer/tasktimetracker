@@ -9,13 +9,13 @@ public class ManageTaskIntentModel implements Parcelable {
     private final UUID id;
     private final String title;
     private final String note;
-    private final UUID storyId;
+    private final UUID categoryId;
 
-    public ManageTaskIntentModel(UUID id, String title, String note, UUID storyId) {
+    public ManageTaskIntentModel(UUID id, String title, String note, UUID categoryId) {
         this.id = id;
         this.title = title;
         this.note = note;
-        this.storyId = storyId;
+        this.categoryId = categoryId;
     }
 
     @Override
@@ -28,14 +28,14 @@ public class ManageTaskIntentModel implements Parcelable {
         dest.writeSerializable(id);
         dest.writeString(title);
         dest.writeString(note);
-        dest.writeSerializable(storyId);
+        dest.writeSerializable(categoryId);
     }
 
     private ManageTaskIntentModel(Parcel in) {
         id = (UUID) in.readSerializable();
         title = in.readString();
         note = in.readString();
-        storyId = (UUID) in.readSerializable();
+        categoryId = (UUID) in.readSerializable();
     }
 
     public static final Creator<ManageTaskIntentModel> CREATOR = new Creator<ManageTaskIntentModel>() {

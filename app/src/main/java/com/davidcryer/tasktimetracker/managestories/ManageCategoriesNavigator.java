@@ -3,13 +3,13 @@ package com.davidcryer.tasktimetracker.managestories;
 import com.davidcryer.tasktimetracker.common.framework.activities.DialogFragmentFactory;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
-public interface ManageStoriesNavigator {
+public interface ManageCategoriesNavigator {
     void toManageTaskScreen(ManageTaskIntentModel intentModel);
-    void showAddStoryPrompt(DialogFragmentFactory factory);
-    void showRemoveStoryPrompt(DialogFragmentFactory factory);
+    void showAddCategoryPrompt(DialogFragmentFactory factory);
+    void showRemoveCategoryPrompt(DialogFragmentFactory factory);
     void showRemoveTaskPrompt(DialogFragmentFactory factory);
 
     interface Callback {
-        void onAddStory(ManageStoriesUi.InputStoryPrompt prompt, String title, String note);
+        void onAddCategory(ManageCategoriesUi.InputCategoryPrompt prompt, String title, String note);
     }
 }
