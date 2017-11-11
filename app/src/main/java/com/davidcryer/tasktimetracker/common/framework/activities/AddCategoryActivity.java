@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 
 import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
-import com.davidcryer.tasktimetracker.addstory.AddCategoryFragment;
+import com.davidcryer.tasktimetracker.addcategory.AddCategoryFragment;
 
 public class AddCategoryActivity extends SingleContentContainerWithAppBarActivity {
     private final static String FRAGMENT_TAG_ADD_CATEGORY = "add category";
