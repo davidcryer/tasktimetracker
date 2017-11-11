@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 
 import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
-import com.davidcryer.tasktimetracker.managestories.AddCategoryNavigator;
-import com.davidcryer.tasktimetracker.managestories.ManageCategoriesFragment;
-import com.davidcryer.tasktimetracker.managestories.ManageCategoriesNavigator;
-import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUi;
-import com.davidcryer.tasktimetracker.managestories.RemoveCategoryListener;
-import com.davidcryer.tasktimetracker.managestories.RemoveCategoryNavigator;
-import com.davidcryer.tasktimetracker.managestories.RemoveTaskListener;
-import com.davidcryer.tasktimetracker.managestories.RemoveTaskNavigator;
+import com.davidcryer.tasktimetracker.managecategories.AddCategoryNavigator;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesFragment;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesNavigator;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
+import com.davidcryer.tasktimetracker.managecategories.RemoveCategoryListener;
+import com.davidcryer.tasktimetracker.managecategories.RemoveCategoryNavigator;
+import com.davidcryer.tasktimetracker.managecategories.RemoveTaskListener;
+import com.davidcryer.tasktimetracker.managecategories.RemoveTaskNavigator;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskFragment;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 

@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

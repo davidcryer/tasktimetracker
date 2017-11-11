@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import java.util.List;
 

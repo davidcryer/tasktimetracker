@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import com.davidc.uiwrapper.UiModel;
 

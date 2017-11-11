@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import com.davidcryer.tasktimetracker.common.framework.activities.DialogFragmentFactory;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;

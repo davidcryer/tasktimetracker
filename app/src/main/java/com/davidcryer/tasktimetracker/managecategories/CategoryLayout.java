@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -9,23 +9,30 @@ import android.widget.TextView;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class TaskLayout extends LinearLayout {
+public class CategoryLayout extends LinearLayout {
     private final TextView titleView;
+    private final TextView noteView;
     private final View clicker;
 
-    public TaskLayout(Context context, @Nullable AttributeSet attrs) {
+    public CategoryLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.item_manage_categories_task, this);
+        inflate(context, R.layout.item_manage_categories_category, this);
         titleView = findViewById(R.id.title);
+        noteView = findViewById(R.id.note);
         clicker = this;
     }
 
-    public void task(final UiTask task) {
-        title(task.getTitle());
+    public void category(final UiCategory category) {
+        title(category.getTitle());
+        note(category.getNote());
     }
 
     private void title(final String title) {
         titleView.setText(title);
+    }
+
+    private void note(final String note) {
+        noteView.setText(note);
     }
 
     @Override

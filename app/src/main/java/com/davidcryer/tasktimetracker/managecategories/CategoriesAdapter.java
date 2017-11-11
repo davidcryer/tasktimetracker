@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

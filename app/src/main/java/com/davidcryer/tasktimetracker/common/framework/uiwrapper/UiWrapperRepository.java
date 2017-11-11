@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUi;
-import com.davidcryer.tasktimetracker.managestories.ManageCategoriesUiModel;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiModel;
 
 import java.util.HashMap;
 import java.util.Map;

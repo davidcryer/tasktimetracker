@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managestories;
+package com.davidcryer.tasktimetracker.managecategories;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,13 +10,15 @@ import android.support.v7.app.AlertDialog;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class RemoveCategoryDialogFragment extends DialogFragment {
+public class RemoveTaskDialogFragment extends DialogFragment {
+    private final static String ARGS_UI_TASK = "ui task";
     private final static String ARGS_UI_CATEGORY = "ui category";
-    private RemoveCategoryNavigator navigator;
+    private RemoveTaskNavigator navigator;
 
-    public static RemoveCategoryDialogFragment newInstance(final UiCategory category) {
-        final RemoveCategoryDialogFragment fragment = new RemoveCategoryDialogFragment();
+    public static RemoveTaskDialogFragment newInstance(final UiTask task, final UiCategory category) {
+        final RemoveTaskDialogFragment fragment = new RemoveTaskDialogFragment();
         final Bundle args = new Bundle();
+        args.putParcelable(ARGS_UI_TASK, task);
         args.putParcelable(ARGS_UI_CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
@@ -29,20 +31,21 @@ public class RemoveCategoryDialogFragment extends DialogFragment {
         if (args == null) {
             throw new IllegalStateException("Args must not be null");
         }
+        final UiTask task = args.getParcelable(ARGS_UI_TASK);
         final UiCategory category = args.getParcelable(ARGS_UI_CATEGORY);
-        if (category == null) {
-            throw new IllegalStateException("Args must contain UiCategory for ARGS_UI_CATEGORY key");
+        if (task == null || category == null) {
+            throw new IllegalStateException("Args must contain UiTask for ARGS_UI_TASK key and UiCategory for ARGS_UI_CATEGORY key");
         }
         return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.prompt_remove_category_title)
-                .setMessage(String.format(getString(R.string.prompt_remove_category_message), category.getTitle()))
+                .setTitle(R.string.prompt_remove_task_title)
+                .setMessage(String.format(getString(R.string.prompt_remove_task_message), task.getTitle(), category.getTitle()))
                 .setPositiveButton(R.string.prompt_button_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        onClickDelete(category);
+                        onClickDelete(task, category);
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -51,11 +54,11 @@ public class RemoveCategoryDialogFragment extends DialogFragment {
                 .show();
     }
 
-    private void onClickDelete(final UiCategory category) {
+    private void onClickDelete(final UiTask task, final UiCategory category) {
         if (navigator != null) {
-            final RemoveCategoryListener listener = navigator.removeCategoryListener();
+            final RemoveTaskListener listener = navigator.removeTaskListener();
             if (listener != null) {
-                listener.onClickDelete(category);
+                listener.onClickDelete(task, category);
             }
         }
     }
@@ -63,7 +66,7 @@ public class RemoveCategoryDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        navigator = (RemoveCategoryNavigator) context;
+        navigator = (RemoveTaskNavigator) context;
     }
 
     @Override
