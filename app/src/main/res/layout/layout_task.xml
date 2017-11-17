@@ -7,7 +7,7 @@
     android:paddingEnd="32dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:foreground="@drawable/grey_on_white_selector">
+    android:background="@drawable/grey_on_white_selector">
 
     <TextView
         android:id="@+id/title"
