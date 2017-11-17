@@ -16,7 +16,7 @@ public class CategoryLayout extends LinearLayout {
 
     public CategoryLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.item_manage_categories_category, this);
+        inflate(context, R.layout.layout_category, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
         clicker = this;
