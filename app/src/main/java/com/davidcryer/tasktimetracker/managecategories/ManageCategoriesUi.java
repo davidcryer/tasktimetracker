@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ManageCategoriesUi {
-    void showCategories(List<UiCategory> categories);
+    void showCategories(List<UiCategory> categories);//TODO change to show list of items - categories or tasks
     void addCategory(UiCategory category);
     void insertCategory(UiCategory category, int i);
     void setCategory(UiCategory category, int i);
