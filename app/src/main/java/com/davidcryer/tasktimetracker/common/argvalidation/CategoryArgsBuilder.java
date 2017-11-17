@@ -7,14 +7,14 @@ public class CategoryArgsBuilder {
         illegalArgsBuilder = new IllegalCategoryArgsException.Args.Builder();
     }
 
-    public CategoryArgsBuilder id(final ArgsInspector.Arg idArg) {
+    public CategoryArgsBuilder id(final Arg idArg) {
         if (!idArg.passed()) {
             illegalArgsBuilder.idError(idArg.errorMessage());
         }
         return this;
     }
 
-    public CategoryArgsBuilder title(final ArgsInspector.Arg titleArg) {
+    public CategoryArgsBuilder title(final Arg titleArg) {
         if (!titleArg.passed()) {
             illegalArgsBuilder.titleError(titleArg.errorMessage());
         }

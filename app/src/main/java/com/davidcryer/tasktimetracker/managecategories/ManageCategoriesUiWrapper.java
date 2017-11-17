@@ -118,6 +118,16 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                     uiModel().removeTask(task.getId(), category.getId(), ui);
                 }
             }
+
+            @Override
+            public void onFilterRemoved(ManageCategoriesUi ui) {
+                uiModel().removeFilter(ui);
+            }
+
+            @Override
+            public void onFilterSelected(ManageCategoriesUi ui, int i) {
+                uiModel().updateFilter(i, ui);
+            }
         };
     }
 

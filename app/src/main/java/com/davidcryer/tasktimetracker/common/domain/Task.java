@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
@@ -38,16 +39,16 @@ public class Task {
         this.finishedSessions = finishedSessions;
     }
 
-    private static ArgsInspector.Arg idArg(final UUID id) {
-        return new ArgsInspector.Arg(id != null, ILLEGAL_ID_MESSAGE);
+    private static Arg idArg(final UUID id) {
+        return new Arg(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static ArgsInspector.Arg titleArg(final String title) {
-        return new ArgsInspector.Arg(title != null, ILLEGAL_TITLE_MESSAGE);
+    private static Arg titleArg(final String title) {
+        return new Arg(title != null, ILLEGAL_TITLE_MESSAGE);
     }
 
-    private static ArgsInspector.Arg ongoingSessionArg(final OngoingSession ongoingSession) {
-        return new ArgsInspector.Arg(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
+    private static Arg ongoingSessionArg(final OngoingSession ongoingSession) {
+        return new Arg(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
     void start() throws AlreadyStartedException {

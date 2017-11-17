@@ -26,7 +26,7 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity
 
     @Override
     protected void setupActionBar(@NonNull ActionBar actionBar) {
-
+        actionBar.setTitle("");
     }
 
     @Override

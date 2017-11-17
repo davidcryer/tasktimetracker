@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.argvalidation.FinishedSessionArgsBuilder;
 import com.davidcryer.tasktimetracker.common.DateUtils;
@@ -28,20 +29,20 @@ public class FinishedSession {
         this.finish = finish;
     }
 
-    private static ArgsInspector.Arg idArg(final UUID id) {
-        return new ArgsInspector.Arg(id != null, ILLEGAL_ID_MESSAGE);
+    private static Arg idArg(final UUID id) {
+        return new Arg(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static ArgsInspector.Arg startArg(final Date start) {
-        return new ArgsInspector.Arg(start != null, ILLEGAL_START_MESSAGE);
+    private static Arg startArg(final Date start) {
+        return new Arg(start != null, ILLEGAL_START_MESSAGE);
     }
 
-    private static ArgsInspector.Arg finishArg(final Date finish) {
-        return new ArgsInspector.Arg(finish != null, ILLEGAL_FINISH_MESSAGE);
+    private static Arg finishArg(final Date finish) {
+        return new Arg(finish != null, ILLEGAL_FINISH_MESSAGE);
     }
 
-    private static ArgsInspector.Arg timelineArg(final Date start, final Date finish) {
-        return new ArgsInspector.Arg(start == null || finish == null || start.compareTo(finish) <= 0, ILLEGAL_TIMELINE_MESSAGE);
+    private static Arg timelineArg(final Date start, final Date finish) {
+        return new Arg(start == null || finish == null || start.compareTo(finish) <= 0, ILLEGAL_TIMELINE_MESSAGE);
     }
 
     public UUID id() {

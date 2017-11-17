@@ -8,8 +8,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
@@ -24,6 +27,8 @@ import java.util.List;
 public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.Listener, UiWrapperRepository>
         implements ManageCategoriesUi, ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener {
     private final CategoriesAdapter categoriesAdapter;
+    private CategoriesFilter categoriesFilter;
+    private Spinner filterSpinner;
     @Nullable private ManageCategoriesNavigator navigator;
 
     public ManageCategoriesFragment() {
@@ -59,6 +64,39 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         });
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        navigator = (ManageCategoriesNavigator) context;
+        categoriesFilter = new CategoriesFilter(context, new CategoriesFilter.OnFilterChangeListener() {
+            @Override
+            public void onFilterRemoved() {
+                if (hasListener()) {
+                    listener().onFilterRemoved(ManageCategoriesFragment.this);
+                }
+            }
+
+            @Override
+            public void onFilterSelected(int i) {
+                if (hasListener()) {
+                    listener().onFilterSelected(ManageCategoriesFragment.this, i);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        navigator = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +105,19 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(categoriesAdapter);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.manage_categories, menu);
+        filterSpinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        filterSpinner = null;
     }
 
     @Override
@@ -107,6 +158,16 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     @Override
     public void shrinkCategory(final int i, final int pos) {
         categoriesAdapter.shrinkCategory(i, pos);
+    }
+
+    @Override
+    public void showFilterOptions(List<String> options) {
+        categoriesFilter.populate(options, filterSpinner);
+    }
+
+    @Override
+    public void showFilterOptions(List<String> options, int selected) {
+        categoriesFilter.populate(options, selected, filterSpinner);
     }
 
     @Override
@@ -171,18 +232,6 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         if (hasListener()) {
             listener().onRemoveTask(this, task, category);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        navigator = (ManageCategoriesNavigator) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        navigator = null;
     }
 
     @Override

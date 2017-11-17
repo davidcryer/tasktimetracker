@@ -14,5 +14,7 @@ public interface ManageCategoriesUiModel extends UiModel<ManageCategoriesUi> {
     void updateCategory(UiCategory category, ManageCategoriesUi ui);
     void expandCategory(UiCategory category, int pos, ManageCategoriesUi ui);
     void shrinkCategory(UiCategory category, int pos, ManageCategoriesUi ui);
+    void removeFilter(ManageCategoriesUi ui);
+    void updateFilter(int selected, ManageCategoriesUi ui);
     boolean isPopulated();
 }

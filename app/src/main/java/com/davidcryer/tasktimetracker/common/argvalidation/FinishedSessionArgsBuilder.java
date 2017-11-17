@@ -7,28 +7,28 @@ public class FinishedSessionArgsBuilder {
         builder = new IllegalFinishedSessionArgsException.Args.Builder();
     }
 
-    public FinishedSessionArgsBuilder id(final ArgsInspector.Arg arg) {
+    public FinishedSessionArgsBuilder id(final Arg arg) {
         if (arg.passed()) {
             builder.idError(arg.errorMessage());
         }
         return this;
     }
 
-    public FinishedSessionArgsBuilder start(final ArgsInspector.Arg arg) {
+    public FinishedSessionArgsBuilder start(final Arg arg) {
         if (arg.passed()) {
             builder.startError(arg.errorMessage());
         }
         return this;
     }
 
-    public FinishedSessionArgsBuilder finish(final ArgsInspector.Arg arg) {
+    public FinishedSessionArgsBuilder finish(final Arg arg) {
         if (arg.passed()) {
             builder.finishError(arg.errorMessage());
         }
         return this;
     }
 
-    public FinishedSessionArgsBuilder timeline(final ArgsInspector.Arg arg) {
+    public FinishedSessionArgsBuilder timeline(final Arg arg) {
         if (arg.passed()) {
             builder.timelineError(arg.errorMessage());
         }

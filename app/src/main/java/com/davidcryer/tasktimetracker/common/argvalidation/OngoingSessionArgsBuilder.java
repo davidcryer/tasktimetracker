@@ -7,7 +7,7 @@ public class OngoingSessionArgsBuilder {
         illegalArgsBuilder = new IllegalOngoingSessionArgsException.Args.Builder();
     }
 
-    public OngoingSessionArgsBuilder start(final ArgsInspector.Arg arg) {
+    public OngoingSessionArgsBuilder start(final Arg arg) {
         if (!arg.passed()) {
             illegalArgsBuilder.startError(arg.errorMessage());
         }

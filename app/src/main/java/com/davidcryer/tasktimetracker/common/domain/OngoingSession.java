@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.DateUtils;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalOngoingSessionArgsException;
@@ -22,8 +23,8 @@ public class OngoingSession {
         this.stop = stop;
     }
 
-    private static ArgsInspector.Arg startArg(final Date start) {
-        return new ArgsInspector.Arg(start != null, ILLEGAL_START_MESSAGE);
+    private static Arg startArg(final Date start) {
+        return new Arg(start != null, ILLEGAL_START_MESSAGE);
     }
 
     FinishedSession stop() throws AlreadyStoppedException {

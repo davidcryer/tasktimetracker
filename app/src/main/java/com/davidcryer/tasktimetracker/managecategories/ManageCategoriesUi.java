@@ -14,6 +14,8 @@ public interface ManageCategoriesUi {
     void removeTask(int categoryInd, int taskInd);
     void expandCategory(int i, int pos);
     void shrinkCategory(int i, int pos);
+    void showFilterOptions(List<String> options );
+    void showFilterOptions(List<String> options, int selected);
     void showAddCategoryPrompt();
     void showRemoveCategoryPrompt(UiCategory category);
     void showRemoveTaskPrompt(UiTask task, UiCategory category);
@@ -36,5 +38,7 @@ public interface ManageCategoriesUi {
         void onEditCategory(InputCategoryPrompt prompt, UUID categoryId, String title, String note);
         void onRemoveCategory(ManageCategoriesUi ui, UiCategory category);
         void onRemoveTask(ManageCategoriesUi ui, UiTask task, UiCategory category);
+        void onFilterRemoved(ManageCategoriesUi ui);
+        void onFilterSelected(ManageCategoriesUi ui, int i);
     }
 }
