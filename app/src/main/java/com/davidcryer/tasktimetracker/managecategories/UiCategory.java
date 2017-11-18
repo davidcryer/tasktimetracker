@@ -74,6 +74,10 @@ class UiCategory implements Parcelable {
         return -1;
     }
 
+    void addTask(final UiTask task) {
+        tasks.add(task);
+    }
+
     boolean removeTask(final UUID taskId) {
         for (final Iterator<UiTask> itr = tasks.iterator(); itr.hasNext();) {
             if (itr.next().getId().equals(taskId)) {

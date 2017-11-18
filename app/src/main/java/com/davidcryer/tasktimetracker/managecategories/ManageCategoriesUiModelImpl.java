@@ -54,35 +54,6 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void removeCategory(UUID categoryId, ManageCategoriesUi ui) {
-        final int i = indexOf(categoryId);
-        if (ui != null) {
-            ui.removeCategory(i);
-        }
-        categories.remove(i);
-    }
-
-    @Override
-    public void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui) {
-        final UiCategory category = category(categoryId);
-        if (category != null) {
-            final int taskIndex = category.taskIndex(taskId);
-            if (category.removeTask(taskId) && ui != null) {
-                ui.removeTask(indexOf(category), taskIndex);
-            }
-        }
-    }
-
-    private UiCategory category(final UUID id) {
-        for (final UiCategory category : categories) {
-            if (category.getId().equals(id)) {
-                return category;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public void addCategory(UiCategory category, ManageCategoriesUi ui) {
         if (ui != null) {
             ui.addCategory(category);
@@ -111,23 +82,12 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void expandCategory(UiCategory category, int pos, ManageCategoriesUi ui) {
-        category.expand();
+    public void removeCategory(UUID categoryId, ManageCategoriesUi ui) {
+        final int i = indexOf(categoryId);
         if (ui != null) {
-            ui.expandCategory(indexOf(category), pos);
+            ui.removeCategory(i);
         }
-    }
-
-    @Override
-    public void shrinkCategory(UiCategory category, int pos, ManageCategoriesUi ui) {
-        category.shrink();
-        if (ui != null) {
-            ui.shrinkCategory(indexOf(category), pos);
-        }
-    }
-
-    private int indexOf(final UiCategory category) {
-        return categories.indexOf(category);
+        categories.remove(i);
     }
 
     private int indexOf(final UUID categoryId) {
@@ -137,6 +97,35 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
             }
         }
         return -1;
+    }
+
+    @Override
+    public void addTask(UiTask task, int categoryInd) {
+        categories.get(categoryInd).addTask(task);
+    }
+
+    @Override
+    public void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui) {
+        final UiCategory category = category(categoryId);
+        if (category != null) {
+            final int taskIndex = category.taskIndex(taskId);
+            if (category.removeTask(taskId) && ui != null) {
+                ui.removeTask(indexOf(category), taskIndex);
+            }
+        }
+    }
+
+    private int indexOf(final UiCategory category) {
+        return categories.indexOf(category);
+    }
+
+    private UiCategory category(final UUID id) {
+        for (final UiCategory category : categories) {
+            if (category.getId().equals(id)) {
+                return category;
+            }
+        }
+        return null;
     }
 
     @Override

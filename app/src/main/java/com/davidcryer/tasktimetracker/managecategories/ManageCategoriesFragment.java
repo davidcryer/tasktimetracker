@@ -156,16 +156,6 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
-    public void expandCategory(int i, int pos) {
-        categoriesAdapter.expandCategory(i, pos);
-    }
-
-    @Override
-    public void shrinkCategory(final int i, final int pos) {
-        categoriesAdapter.shrinkCategory(i, pos);
-    }
-
-    @Override
     public void showFilterOptions(List<String> options) {
         categoriesFilter.populate(options, filterSpinner);
     }

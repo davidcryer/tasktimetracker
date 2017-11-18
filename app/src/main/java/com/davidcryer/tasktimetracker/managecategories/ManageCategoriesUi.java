@@ -13,8 +13,6 @@ public interface ManageCategoriesUi {
     void removeCategory(int i);
     void addTask(UiTask task, int categoryInd);
     void removeTask(int categoryInd, int taskInd);
-    void expandCategory(int i, int pos);
-    void shrinkCategory(int i, int pos);
     void showFilterOptions(List<String> options );
     void showFilterOptions(List<String> options, int selected);
     void showAddCategoryPrompt();
