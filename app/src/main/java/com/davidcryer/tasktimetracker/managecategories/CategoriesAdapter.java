@@ -56,6 +56,10 @@ class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolde
         notifyItemRangeRemoved(categoryPosition(i), category.expandedTaskCount() + 1);
     }
 
+    void addTask(final UiTask task, final int categoryInd) {
+        //TODO
+    }
+
     void removeTask(final int categoryInd, final int taskInd) {
         final UiCategory category = categories.get(categoryInd);
         if (category.isExpanded()) {

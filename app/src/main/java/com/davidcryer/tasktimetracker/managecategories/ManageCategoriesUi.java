@@ -11,6 +11,7 @@ public interface ManageCategoriesUi {
     void insertCategory(UiCategory category, int i);
     void setCategory(UiCategory category, int i);
     void removeCategory(int i);
+    void addTask(UiTask task, int categoryInd);
     void removeTask(int categoryInd, int taskInd);
     void expandCategory(int i, int pos);
     void shrinkCategory(int i, int pos);

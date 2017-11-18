@@ -146,6 +146,11 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
+    public void addTask(UiTask task, int categoryInd) {
+        categoriesAdapter.addTask(task, categoryInd);
+    }
+
+    @Override
     public void removeTask(int categoryInd, int taskInd) {
         categoriesAdapter.removeTask(categoryInd, taskInd);
     }
