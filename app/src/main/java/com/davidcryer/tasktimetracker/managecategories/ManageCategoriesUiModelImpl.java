@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -20,19 +21,19 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     @Override
     public void onto(@NonNull ManageCategoriesUi ui) {
-        showCategoriesGivenUi(categories, ui);
+        showCategoriesAndFilters(categories, ui);
     }
 
     @Override
     public void showCategories(List<UiCategory> categories, ManageCategoriesUi ui) {
         if (ui != null) {
-            showCategoriesGivenUi(categories, ui);
+            showCategoriesAndFilters(categories, ui);
         }
         this.categories = categories;
     }
 
-    private void showCategoriesGivenUi(final List<UiCategory> categories, final ManageCategoriesUi ui) {
-        ui.showCategories(ListUtils.newList(categories));
+    private void showCategoriesAndFilters(final List<UiCategory> categories, final ManageCategoriesUi ui) {
+        ui.showCategories(ListUtils.newList(filteredItems(filteredCategory)));
         final List<String> titles = categoryTitles(categories);
         if (filteredCategory == null) {
             ui.showFilterOptions(titles);
@@ -141,7 +142,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void removeFilter(ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.showCategories(categories);
+            ui.showCategories(filteredItems(null));
         }
         filteredCategory = null;
     }
@@ -149,9 +150,16 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void updateFilter(int selected, ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.showCategories(categories);//TODO show tasks for filtered category
+            ui.showCategories(filteredItems(selected));//TODO show tasks for filtered category
         }
         filteredCategory = selected;
+    }
+
+    private List<UiCategory> filteredItems(Integer selected) {
+        if (selected == null) {
+            return ListUtils.newList(categories);
+        }
+        return new ArrayList<>(Collections.singletonList(categories.get(selected)));
     }
 
     @Override
