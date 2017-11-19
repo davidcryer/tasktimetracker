@@ -1,5 +1,8 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
@@ -12,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class Category {
+public class Category implements Parcelable {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null or empty";
     private final UUID id;
@@ -150,4 +153,36 @@ public class Category {
             }
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.note);
+        dest.writeTypedList(this.tasks);
+    }
+
+    private Category(Parcel in) {
+        this.id = (UUID) in.readSerializable();
+        this.title = in.readString();
+        this.note = in.readString();
+        this.tasks = in.createTypedArrayList(Task.CREATOR);
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel source) {
+            return new Category(source);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 }

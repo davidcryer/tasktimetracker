@@ -33,32 +33,18 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
 
     public ManageCategoriesFragment() {
         categoriesAdapter = new CategoriesAdapter();
-        categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.OnClickCategoryListener() {
+        categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.OnClickListener() {
             @Override
-            public void onClick(UiCategory category, int pos) {
+            public void onClick(UiCategory category, int i) {
                 if (hasListener()) {
-                    listener().onClickCategory(ManageCategoriesFragment.this, category, pos);
+                    listener().onClickCategory(ManageCategoriesFragment.this, category, i);
                 }
             }
 
             @Override
-            public void onLongClick(UiCategory category) {
+            public void onClick(UiTask task) {
                 if (hasListener()) {
-                    listener().onLongClickCategory(ManageCategoriesFragment.this, category);
-                }
-            }
-
-            @Override
-            public void onClick(UiTask task, UiCategory category) {
-                if (hasListener()) {
-                    listener().onClickTask(ManageCategoriesFragment.this, task, category);
-                }
-            }
-
-            @Override
-            public void onLongClick(UiTask task, UiCategory category) {
-                if (hasListener()) {
-                    listener().onLongClickTask(ManageCategoriesFragment.this, task, category);
+                    listener().onClickTask(ManageCategoriesFragment.this, task);
                 }
             }
         });
@@ -101,7 +87,7 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_manage_categories, container, false);
-        final RecyclerView recyclerView = view.findViewById(R.id.categories);
+        final RecyclerView recyclerView = view.findViewById(R.id.items);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(categoriesAdapter);
         return view;
@@ -121,38 +107,33 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
-    public void showCategories(final List<UiCategory> categories) {
-        categoriesAdapter.Categories(categories);
+    public void show(List<UiListItem> items) {
+        categoriesAdapter.items(items);
     }
 
     @Override
-    public void addCategory(final UiCategory category) {
-        categoriesAdapter.add(category);
+    public void add(final UiListItem item) {
+        categoriesAdapter.add(item);
     }
 
     @Override
-    public void insertCategory(final UiCategory category, final int i) {
-        categoriesAdapter.insert(category, i);
+    public void insert(final UiListItem item, final int i) {
+        categoriesAdapter.insert(item, i);
     }
 
     @Override
-    public void setCategory(UiCategory category, int i) {
-        categoriesAdapter.set(category, i);
+    public void set(UiListItem item, int i) {
+        categoriesAdapter.set(item, i);
     }
 
     @Override
-    public void removeCategory(int i) {
+    public void remove(int i) {
         categoriesAdapter.remove(i);
     }
 
     @Override
-    public void addTask(UiTask task, int categoryInd) {
-        categoriesAdapter.addTask(task, categoryInd);
-    }
-
-    @Override
-    public void removeTask(int categoryInd, int taskInd) {
-        categoriesAdapter.removeTask(categoryInd, taskInd);
+    public void remove(int i, int count) {
+        categoriesAdapter.remove(i, count);
     }
 
     @Override

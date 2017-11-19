@@ -4,19 +4,25 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import com.davidcryer.tasktimetracker.common.ListUtils;
+import com.davidcryer.tasktimetracker.common.domain.Category;
+import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
-    private List<UiCategory> categories;
+    private List<Category> categories;
+    private Date categoriesSet;
     private Integer filteredCategory;
 
-    ManageCategoriesUiModelImpl(final List<UiCategory> categories) {
+    ManageCategoriesUiModelImpl(final List<Category> categories, final Date categoriesSet, final Integer filteredCategory) {
         this.categories = categories == null ? null : new LinkedList<>(categories);
+        this.categoriesSet = categoriesSet == null ? null : new Date(categoriesSet.getTime());
+        this.filteredCategory = filteredCategory;
     }
 
     @Override
@@ -25,15 +31,16 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void showCategories(List<UiCategory> categories, ManageCategoriesUi ui) {
+    public void showCategories(List<Category> categories, ManageCategoriesUi ui) {
         if (ui != null) {
             showCategoriesAndFilters(categories, ui);
         }
         this.categories = categories;
+        categoriesSet = new Date();
     }
 
-    private void showCategoriesAndFilters(final List<UiCategory> categories, final ManageCategoriesUi ui) {
-        ui.showCategories(ListUtils.newList(filteredItems(filteredCategory)));
+    private void showCategoriesAndFilters(final List<Category> categories, final ManageCategoriesUi ui) {
+        ui.show(ListUtils.newList(filteredItems(filteredCategory)));
         final List<String> titles = categoryTitles(categories);
         if (filteredCategory == null) {
             ui.showFilterOptions(titles);
@@ -42,57 +49,57 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         }
     }
 
-    private List<String> categoryTitles(final List<UiCategory> categories) {
+    private List<String> categoryTitles(final List<Category> categories) {
         if (categories == null) {
             return new LinkedList<>();
         }
         final List<String> titles = new LinkedList<>();
-        for (final UiCategory category : categories) {
-            titles.add(category.getTitle());
+        for (final Category category : categories) {
+            titles.add(category.title());
         }
         return titles;
     }
 
     @Override
-    public void addCategory(UiCategory category, ManageCategoriesUi ui) {
+    public void addCategory(Category item, ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.addCategory(category);
+            ui.add(UiCategoryMapper.from(item));
         }
         if (categories == null) {
             categories = new LinkedList<>();
         }
-        categories.add(category);
+        categories.add(item);
     }
 
     @Override
-    public void insertCategory(UiCategory category, int i, ManageCategoriesUi ui) {
+    public void insertCategory(Category item, int i, ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.insertCategory(category, i);
+            ui.insert(UiCategoryMapper.from(item), i);
         }
-        categories.set(i, category);
+        categories.set(i, item);
     }
 
     @Override
-    public void updateCategory(UiCategory category, ManageCategoriesUi ui) {
-        final int categoryIndex = indexOf(category.getId());
+    public void updateCategory(Category item, ManageCategoriesUi ui) {
+        final int categoryIndex = indexOf(item.id());
         if (ui != null) {
-            ui.setCategory(category, categoryIndex);
+            ui.set(UiCategoryMapper.from(item), categoryIndex);
         }
-        categories.set(categoryIndex, category);
+        categories.set(categoryIndex, item);
     }
 
     @Override
     public void removeCategory(UUID categoryId, ManageCategoriesUi ui) {
         final int i = indexOf(categoryId);
         if (ui != null) {
-            ui.removeCategory(i);
+            ui.remove(i);
         }
         categories.remove(i);
     }
 
     private int indexOf(final UUID categoryId) {
         for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getId().equals(categoryId)) {
+            if (categories.get(i).id().equals(categoryId)) {
                 return i;
             }
         }
@@ -100,28 +107,48 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void addTask(UiTask task, int categoryInd) {
-        categories.get(categoryInd).addTask(task);
+    public void addTask(Task task, int categoryInd, ManageCategoriesUi ui) {
+        final Category category = categories.get(categoryInd);
+        int taskIndex = 0;//TODO refactor - maybe pass value through method params
+        for (int i = 0; i < categoryInd; i++) {
+            taskIndex += 1 + categories.get(categoryInd).tasks().size();
+        }
+        if (ui != null) {
+            ui.insert(UiTaskMapper.from(task, category), taskIndex);
+        }
+        category.addTask(task);
     }
 
     @Override
     public void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui) {
-        final UiCategory category = category(categoryId);
+        final Category category = category(categoryId);
+        int taskIndex = 0;//TODO refactor - maybe pass value through method params
+        for (final Category cat : categories) {
+            taskIndex++;
+            for (final Task task : cat.tasks()) {
+                if (task.id().equals(taskId)) {
+                    break;
+                }
+                taskIndex++;
+            }
+            if (cat.id().equals(categoryId)) {
+                break;
+            }
+        }
         if (category != null) {
-            final int taskIndex = category.taskIndex(taskId);
-            if (category.removeTask(taskId) && ui != null) {
-                ui.removeTask(indexOf(category), taskIndex);
+            if (category.deleteTask(taskId) && ui != null) {
+                ui.remove(indexOf(category), taskIndex);
             }
         }
     }
 
-    private int indexOf(final UiCategory category) {
+    private int indexOf(final Category category) {
         return categories.indexOf(category);
     }
 
-    private UiCategory category(final UUID id) {
-        for (final UiCategory category : categories) {
-            if (category.getId().equals(id)) {
+    private Category category(final UUID id) {
+        for (final Category category : categories) {
+            if (category.id().equals(id)) {
                 return category;
             }
         }
@@ -131,7 +158,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void removeFilter(ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.showCategories(filteredItems(null));
+            ui.show(filteredItems(null));
         }
         filteredCategory = null;
     }
@@ -139,22 +166,32 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void updateFilter(int selected, ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.showCategories(filteredItems(selected));//TODO show tasks for filtered category
+            ui.show(filteredItems(selected));
         }
         filteredCategory = selected;
     }
 
-    private List<UiCategory> filteredItems(Integer selected) {
+    private List<UiListItem> filteredItems(Integer selected) {
         if (selected == null) {
-            return ListUtils.newList(categories);
+            return unfilteredItems();
         }
-        return new ArrayList<>(Collections.singletonList(categories.get(selected)));
+        return new LinkedList<UiListItem>(UiTaskMapper.from(categories.get(selected)));
+    }
+
+    private List<UiListItem> unfilteredItems() {
+        final List<UiListItem> items = new LinkedList<>();
+        for (final Category category: categories) {
+            items.add(UiCategoryMapper.from(category));
+            items.addAll(UiTaskMapper.from(category));
+        }
+        return items;
     }
 
     @Override
     public boolean isPopulated() {
         return categories != null;
     }
+
 
     @Override
     public int describeContents() {
@@ -164,11 +201,14 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.categories);
+        dest.writeLong(this.categoriesSet != null ? this.categoriesSet.getTime() : -1);
         dest.writeValue(this.filteredCategory);
     }
 
     private ManageCategoriesUiModelImpl(Parcel in) {
-        this.categories = in.createTypedArrayList(UiCategory.CREATOR);
+        this.categories = in.createTypedArrayList(Category.CREATOR);
+        long tmpCategoriesSet = in.readLong();
+        this.categoriesSet = tmpCategoriesSet == -1 ? null : new Date(tmpCategoriesSet);
         this.filteredCategory = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 

@@ -43,13 +43,4 @@ public class CategoryLayout extends LinearLayout {
             clicker.setOnClickListener(l);
         }
     }
-
-    @Override
-    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
-        if (clicker == this) {
-            super.setOnLongClickListener(l);
-        } else {
-            clicker.setOnLongClickListener(l);
-        }
-    }
 }

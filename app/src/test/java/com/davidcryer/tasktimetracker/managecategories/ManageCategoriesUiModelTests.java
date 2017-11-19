@@ -88,27 +88,27 @@ public class ManageCategoriesUiModelTests {
         }
 
         @Override
-        public void addCategory(UiCategory category) {
-            this.categories.add(category);
+        public void add(UiCategory item) {
+            this.categories.add(item);
         }
 
         @Override
-        public void insertCategory(UiCategory category, int i) {
-            this.categories.set(i, category);
+        public void insert(UiCategory item, int i) {
+            this.categories.set(i, item);
         }
 
         @Override
-        public void removeCategory(int pos) {
+        public void remove(int pos) {
             this.categories.remove(pos);
         }
 
         @Override
-        public void removeTask(int categoryInd, int taskInd) {
+        public void remove(int categoryInd, int taskInd) {
 
         }
 
         @Override
-        public void setCategory(UiCategory category, int i) {
+        public void set(UiCategory item, int i) {
 
         }
 

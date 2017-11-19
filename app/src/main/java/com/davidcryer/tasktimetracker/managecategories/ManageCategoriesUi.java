@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ManageCategoriesUi {
-    void showCategories(List<UiCategory> categories);//TODO change to show list of items - categories or tasks
-    void addCategory(UiCategory category);
-    void insertCategory(UiCategory category, int i);
-    void setCategory(UiCategory category, int i);
-    void removeCategory(int i);
-    void addTask(UiTask task, int categoryInd);
-    void removeTask(int categoryInd, int taskInd);
+    void show(List<UiListItem> items);//TODO change to showCategories list of items - items or tasks
+    void add(UiListItem item);
+    void insert(UiListItem item, int i);
+    void set(UiListItem item, int i);
+    void remove(int i);
+    void remove(int i, int count);
     void showFilterOptions(List<String> options );
     void showFilterOptions(List<String> options, int selected);
     void showAddCategoryPrompt();
@@ -28,9 +27,7 @@ public interface ManageCategoriesUi {
 
     interface Listener {
         void onClickCategory(ManageCategoriesUi ui, UiCategory category, int pos);
-        void onLongClickCategory(ManageCategoriesUi ui, UiCategory category);
-        void onClickTask(ManageCategoriesUi ui, UiTask task, UiCategory category);
-        void onLongClickTask(ManageCategoriesUi ui, UiTask task, UiCategory category);
+        void onClickTask(ManageCategoriesUi ui, UiTask task);
         void onClickAddCategory(ManageCategoriesUi ui);
         void onClickAddTask(ManageCategoriesUi ui, UiCategory category);
         void onAddCategory(InputCategoryPrompt prompt, String title, String note);

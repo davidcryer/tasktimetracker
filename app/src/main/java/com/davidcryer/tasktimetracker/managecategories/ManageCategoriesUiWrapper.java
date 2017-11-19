@@ -43,18 +43,8 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             }
 
             @Override
-            public void onLongClickCategory(ManageCategoriesUi ui, UiCategory category) {
-                ui.showRemoveCategoryPrompt(category);
-            }
-
-            @Override
-            public void onClickTask(ManageCategoriesUi ui, UiTask task, UiCategory category) {
-                ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task, category.getId()));
-            }
-
-            @Override
-            public void onLongClickTask(ManageCategoriesUi ui, UiTask task, UiCategory category) {
-                ui.showRemoveTaskPrompt(task, category);
+            public void onClickTask(ManageCategoriesUi ui, UiTask task) {
+                ui.showManageTaskScreen(UiTaskMapper.toManageTaskIntentModel(task));
             }
 
             @Override
@@ -72,7 +62,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                 try {
                     final Category category = new Category(title, note);
                     categoryDatabase.save(category);
-                    uiModel().addCategory(UiCategoryMapper.from(category), ui());
+                    uiModel().addCategory(category, ui());//TODO add in alphabetical order
                     prompt.dismiss();
                 } catch (IllegalCategoryArgsException iae) {
                     showErrors(prompt, iae.args());
@@ -92,7 +82,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                     if (category != null) {
                         category.writer().title(title).note(note).commit();
                         categoryDatabase.save(category);
-                        uiModel().updateCategory(UiCategoryMapper.from(category), ui());
+                        uiModel().updateCategory(category, ui());
                     }
                     prompt.dismiss();
                 } catch (IllegalCategoryArgsException iae) {
@@ -131,7 +121,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showCategories(UiCategoryMapper.from(alphabeticallyOrderedCategories()), ui());
+            uiModel().showCategories(alphabeticallyOrderedCategories(), ui());
         }
     }
 
