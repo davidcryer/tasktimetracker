@@ -20,7 +20,7 @@ public class TaskLayout extends LinearLayout {
         clicker = this;
     }
 
-    public void task(final UiTask task) {
+    void task(final UiTask task) {
         title(task.getTitle());
     }
 

@@ -24,7 +24,7 @@ public class CategoryLayout extends LinearLayout {
         clicker = this;
     }
 
-    public void category(final UiCategory category) {
+    void category(final UiCategory category) {
         title(category.getTitle());
         note(category.getNote());
     }
@@ -37,11 +37,11 @@ public class CategoryLayout extends LinearLayout {
         noteView.setText(note);
     }
 
-    public void showDivider() {
+    void showDivider() {
         divider.setVisibility(VISIBLE);
     }
 
-    public void hideDivider() {
+    void hideDivider() {
         divider.setVisibility(GONE);
     }
 

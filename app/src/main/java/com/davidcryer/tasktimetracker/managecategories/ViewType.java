@@ -2,7 +2,7 @@ package com.davidcryer.tasktimetracker.managecategories;
 
 import android.view.ViewGroup;
 
-public enum ViewType {
+enum ViewType {
     CATEGORY {
         @Override
         UiListItem.ViewHolder viewHolder(ViewGroup group) {
