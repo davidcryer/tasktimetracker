@@ -1,18 +1,21 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 
 import java.util.List;
 
-class CategoriesFilter implements AdapterView.OnItemClickListener {
+class CategoriesFilter {
     private final static int NO_FILTER_INDEX = 0;
     private final static String NO_FILTER_CONTENT = "All categories";
     private final Context context;
@@ -70,24 +73,40 @@ class CategoriesFilter implements AdapterView.OnItemClickListener {
     void setup(@NonNull final Spinner spinner) {
         spinner.setAdapter(adapter());
         spinner.setSelection(selected);
-        spinner.setOnItemClickListener(this);
+        spinner.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                colorSelectedTextWhite(spinner);
+                switch (position) {
+                    case NO_FILTER_INDEX: {
+                        listener.onFilterRemoved();
+                    } break;
+                    default: {
+                        final int index = position > NO_FILTER_INDEX ? position - 1 : position;
+                        listener.onFilterSelected(index);
+                    } break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (i) {
-            case NO_FILTER_INDEX: {
-                listener.onFilterRemoved();
-            } break;
-            default: {
-                final int index = i > NO_FILTER_INDEX ? i - 1 : i;
-                listener.onFilterSelected(index);
-            } break;
+    private static void colorSelectedTextWhite(final Spinner spinner) {
+        final TextView selectedTextView = ((TextView) spinner.getSelectedView());
+        if (selectedTextView != null) {
+            selectedTextView.setTextColor(Color.WHITE);
         }
     }
 
     private ArrayAdapter<String> adapter() {
-        return new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, options);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, options);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     interface OnFilterChangeListener {

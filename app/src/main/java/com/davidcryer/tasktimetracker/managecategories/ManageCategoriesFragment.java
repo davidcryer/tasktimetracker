@@ -81,6 +81,7 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     public void onDetach() {
         super.onDetach();
         navigator = null;
+        categoriesFilter = null;
     }
 
     @Nullable
@@ -98,6 +99,7 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.manage_categories, menu);
         filterSpinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
+        categoriesFilter.setup(filterSpinner);
     }
 
     @Override
