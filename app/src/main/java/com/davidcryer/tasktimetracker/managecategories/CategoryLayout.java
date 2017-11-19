@@ -12,6 +12,7 @@ import com.davidcryer.tasktimetracker.R;
 public class CategoryLayout extends LinearLayout {
     private final TextView titleView;
     private final TextView noteView;
+    private final View divider;
     private final View clicker;
 
     public CategoryLayout(Context context, @Nullable AttributeSet attrs) {
@@ -19,6 +20,7 @@ public class CategoryLayout extends LinearLayout {
         inflate(context, R.layout.layout_category, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
+        divider = findViewById(R.id.divider);
         clicker = this;
     }
 
@@ -33,6 +35,14 @@ public class CategoryLayout extends LinearLayout {
 
     private void note(final String note) {
         noteView.setText(note);
+    }
+
+    public void showDivider() {
+        divider.setVisibility(VISIBLE);
+    }
+
+    public void hideDivider() {
+        divider.setVisibility(GONE);
     }
 
     @Override

@@ -107,6 +107,15 @@ class UiCategory extends UiListItem implements Parcelable {
                     listener.onClickCategory(category, ViewHolder.this.getAdapterPosition());
                 }
             });
+            setUpDivider();
+        }
+
+        private void setUpDivider() {
+            if (getAdapterPosition() == 0) {
+                layout.hideDivider();
+            } else {
+                layout.showDivider();
+            }
         }
     }
 

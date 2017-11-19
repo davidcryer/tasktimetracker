@@ -3,13 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="@drawable/grey_on_white_selector">
+    android:layout_marginBottom="16dp"
+    android:paddingStart="72dp"
+    android:paddingEnd="72dp">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:textSize="14sp" />
 
     <TextView
