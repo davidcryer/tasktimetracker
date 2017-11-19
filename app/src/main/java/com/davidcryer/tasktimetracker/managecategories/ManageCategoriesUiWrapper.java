@@ -7,6 +7,7 @@ import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,12 +54,12 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             }
 
             @Override
-            public void onClickAddTask(ManageCategoriesUi ui, UiCategory category) {
-                throw new UnsupportedOperationException("onClickAddTask not supported");
+            public void onClickAddTask(ManageCategoriesUi ui, UUID categoryId) {
+                ui.showAddTaskPrompt(categoryId);
             }
 
             @Override
-            public void onAddCategory(ManageCategoriesUi.InputCategoryPrompt prompt, String title, String note) {
+            public void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
                 try {
                     final Category category = new Category(title, note);
                     categoryDatabase.save(category);
@@ -69,14 +70,28 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                 }
             }
 
-            private void showErrors(final ManageCategoriesUi.InputCategoryPrompt prompt, final IllegalCategoryArgsException.Args args) {
+            @Override
+            public void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
+                try {
+                    final Category category = categoryDatabase.find(categoryId);
+                    final Task task = new Task(title, note);
+                    category.addTask(task);
+                    categoryDatabase.save(category);
+                    uiModel().addTask(task, categoryId, ui());
+                    prompt.dismiss();
+                } catch (IllegalCategoryArgsException iae) {
+                    showErrors(prompt, iae.args());
+                }
+            }
+
+            private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final IllegalCategoryArgsException.Args args) {
                 if (args.titleIsIllegal()) {
                     prompt.showTitleError(args.titleError());
                 }
             }
 
             @Override
-            public void onEditCategory(ManageCategoriesUi.InputCategoryPrompt prompt, UUID categoryId, String title, String note) {
+            public void onEditCategory(ManageCategoriesUi.InputPrompt prompt, UUID categoryId, String title, String note) {
                 try {
                     final Category category = categoryDatabase.find(categoryId);
                     if (category != null) {

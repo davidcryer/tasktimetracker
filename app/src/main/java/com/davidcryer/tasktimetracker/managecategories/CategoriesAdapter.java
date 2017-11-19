@@ -7,8 +7,9 @@ import com.davidcryer.tasktimetracker.common.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> implements UiCategory.Listener, UiTask.Listener {
+class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> implements UiCategory.Listener, UiTask.Listener, AddTask.Listener {
     private List<UiListItem> items;
     private OnClickListener onClickListener;
 
@@ -75,6 +76,13 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
     }
 
     @Override
+    public void onClickAddTask(UUID categoryId) {
+        if (onClickListener != null) {
+            onClickListener.onClickAddTask(categoryId);
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return items.size();
     }
@@ -87,5 +95,6 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
     interface OnClickListener {
         void onClick(UiCategory category, int i);
         void onClick(UiTask task);
+        void onClickAddTask(UUID categoryId);
     }
 }

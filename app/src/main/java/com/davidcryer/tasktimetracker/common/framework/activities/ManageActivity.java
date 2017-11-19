@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 
 import com.davidc.uiwrapper.SingleContentContainerWithAppBarActivity;
 import com.davidcryer.tasktimetracker.managecategories.AddCategoryNavigator;
+import com.davidcryer.tasktimetracker.managecategories.AddTaskNavigator;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesFragment;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesNavigator;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
@@ -16,9 +17,12 @@ import com.davidcryer.tasktimetracker.managecategories.RemoveTaskNavigator;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskFragment;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
+import java.util.UUID;
+
 public class ManageActivity extends SingleContentContainerWithAppBarActivity
-        implements ManageCategoriesNavigator, AddCategoryNavigator, RemoveCategoryNavigator, RemoveTaskNavigator {
+        implements ManageCategoriesNavigator, AddCategoryNavigator, AddTaskNavigator, RemoveCategoryNavigator, RemoveTaskNavigator {
     private final static String FRAGMENT_TAG_ADD_CATEGORY_PROMPT = "add category prompt";
+    private final static String FRAGMENT_TAG_ADD_TASK_PROMPT = "add task prompt";
     private final static String FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT = "remove category prompt";
     private final static String FRAGMENT_TAG_REMOVE_TASK_PROMPT = "remove task prompt";
     private final static String FRAGMENT_TAG_MANAGE_TASK = "manage task";
@@ -36,22 +40,27 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity
 
     @Override
     public void showAddCategoryPrompt(DialogFragmentFactory factory) {
-        if (noFragmentExists(FRAGMENT_TAG_ADD_CATEGORY_PROMPT)) {
-            show(factory, FRAGMENT_TAG_ADD_CATEGORY_PROMPT);
-        }
+        showIfNonExists(factory, FRAGMENT_TAG_ADD_CATEGORY_PROMPT);
+    }
+
+    @Override
+    public void showAddTaskPrompt(DialogFragmentFactory factory) {
+        showIfNonExists(factory, FRAGMENT_TAG_ADD_TASK_PROMPT);
     }
 
     @Override
     public void showRemoveCategoryPrompt(DialogFragmentFactory factory) {
-        if (noFragmentExists(FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT)) {
-            show(factory, FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT);
-        }
+        showIfNonExists(factory, FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT);
     }
 
     @Override
     public void showRemoveTaskPrompt(DialogFragmentFactory factory) {
-        if (noFragmentExists(FRAGMENT_TAG_REMOVE_TASK_PROMPT)) {
-            show(factory, FRAGMENT_TAG_REMOVE_TASK_PROMPT);
+        showIfNonExists(factory, FRAGMENT_TAG_REMOVE_TASK_PROMPT);
+    }
+
+    private void showIfNonExists(final DialogFragmentFactory factory, final String tag) {
+        if (noFragmentExists(tag)) {
+            show(factory, tag);
         }
     }
 
@@ -67,10 +76,18 @@ public class ManageActivity extends SingleContentContainerWithAppBarActivity
     }
 
     @Override
-    public void onClickAdd(ManageCategoriesUi.InputCategoryPrompt prompt, String title, String note) {
+    public void onClickAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
         final Fragment fragment = findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
         if (fragment != null) {
             ((ManageCategoriesNavigator.Callback) fragment).onAddCategory(prompt, title, note);
+        }
+    }
+
+    @Override
+    public void onClickAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
+        final Fragment fragment = findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
+        if (fragment != null) {
+            ((ManageCategoriesNavigator.Callback) fragment).onAddTask(prompt, title, note, categoryId);
         }
     }
 

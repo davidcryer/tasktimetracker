@@ -23,6 +23,7 @@ import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperReposi
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.Listener, UiWrapperRepository>
         implements ManageCategoriesUi, ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener {
@@ -45,6 +46,13 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
             public void onClick(UiTask task) {
                 if (hasListener()) {
                     listener().onClickTask(ManageCategoriesFragment.this, task);
+                }
+            }
+
+            @Override
+            public void onClickAddTask(UUID categoryId) {
+                if (hasListener()) {
+                    listener().onClickAddTask(ManageCategoriesFragment.this, categoryId);
                 }
             }
         });
@@ -161,6 +169,18 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
+    public void showAddTaskPrompt(final UUID categoryId) {
+        if (navigator != null) {
+            navigator.showAddTaskPrompt(new DialogFragmentFactory() {
+                @Override
+                public DialogFragment create() {
+                    return AddTaskDialogFragment.newInstance(categoryId);
+                }
+            });
+        }
+    }
+
+    @Override
     public void showRemoveCategoryPrompt(final UiCategory category) {
         if (navigator != null) {
             navigator.showRemoveCategoryPrompt(new DialogFragmentFactory() {
@@ -192,9 +212,16 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
-    public void onAddCategory(InputCategoryPrompt prompt, String title, String note) {
+    public void onAddCategory(InputPrompt prompt, String title, String note) {
         if (hasListener()) {
             listener().onAddCategory(prompt, title, note);
+        }
+    }
+
+    @Override
+    public void onAddTask(InputPrompt prompt, String title, String note, UUID categoryId) {
+        if (hasListener()) {
+            listener().onAddTask(prompt, title, note, categoryId);
         }
     }
 

@@ -13,7 +13,7 @@ public interface ManageCategoriesUiModel extends UiModel<ManageCategoriesUi> {
     void insertCategory(Category item, int i, ManageCategoriesUi ui);
     void updateCategory(Category item, ManageCategoriesUi ui);
     void removeCategory(UUID categoryId, ManageCategoriesUi ui);
-    void addTask(Task task, int categoryInd, ManageCategoriesUi ui);
+    void addTask(Task task, UUID categoryId, ManageCategoriesUi ui);
     void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui);
     void removeFilter(ManageCategoriesUi ui);
     void updateFilter(int selected, ManageCategoriesUi ui);

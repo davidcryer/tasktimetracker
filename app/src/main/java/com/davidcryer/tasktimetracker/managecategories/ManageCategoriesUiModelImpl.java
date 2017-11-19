@@ -40,7 +40,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     private void showCategoriesAndFilters(final List<Category> categories, final ManageCategoriesUi ui) {
-        ui.show(ListUtils.newList(filteredItems(filteredCategory)));
+        ui.show(filteredItems(filteredCategory));
         final List<String> titles = categoryTitles(categories);
         if (filteredCategory == null) {
             ui.showFilterOptions(titles);
@@ -107,14 +107,17 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void addTask(Task task, int categoryInd, ManageCategoriesUi ui) {
-        final Category category = categories.get(categoryInd);
-        int taskIndex = 0;//TODO refactor - maybe pass value through method params
-        for (int i = 0; i < categoryInd; i++) {
-            taskIndex += 1 + categories.get(categoryInd).tasks().size();
+    public void addTask(Task task, UUID categoryId, ManageCategoriesUi ui) {
+        final Category category = category(categoryId);
+        if (category == null) {
+            throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
+        }
+        int taskPosition = 0;//TODO refactor - maybe pass value through method params
+        for (int i = 0; i < categories.indexOf(category); i++) {
+            taskPosition += 2 + categories.get(i).tasks().size();
         }
         if (ui != null) {
-            ui.insert(UiTaskMapper.from(task, category), taskIndex);
+            ui.insert(UiTaskMapper.from(task, category), taskPosition);
         }
         category.addTask(task);
     }
@@ -175,7 +178,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         if (selected == null) {
             return unfilteredItems();
         }
-        return new LinkedList<UiListItem>(UiTaskMapper.from(categories.get(selected)));
+        return taskItems(categories.get(selected));
     }
 
     private List<UiListItem> unfilteredItems() {
@@ -183,7 +186,15 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         for (final Category category: categories) {
             items.add(UiCategoryMapper.from(category));
             items.addAll(UiTaskMapper.from(category));
+            items.add(AddTaskMapper.from(category));
         }
+        return items;
+    }
+
+    private List<UiListItem> taskItems(final Category category) {
+        final LinkedList<UiListItem> items = new LinkedList<>();
+        items.addAll(UiTaskMapper.from(category));
+        items.add(AddTaskMapper.from(category));
         return items;
     }
 

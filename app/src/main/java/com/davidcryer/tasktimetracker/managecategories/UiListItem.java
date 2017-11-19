@@ -1,9 +1,10 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-abstract class UiListItem {
+abstract class UiListItem implements Parcelable {
 
     abstract ViewType viewType();
 

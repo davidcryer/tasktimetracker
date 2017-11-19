@@ -13,17 +13,36 @@ import android.widget.LinearLayout;
 
 import com.davidcryer.tasktimetracker.R;
 
-public class AddCategoryDialogFragment extends DialogFragment implements ManageCategoriesUi.InputPrompt {
-    private CategoryLayout categoryLayout;
-    private AddCategoryNavigator navigator;
+import java.util.UUID;
+
+public class AddTaskDialogFragment extends DialogFragment implements ManageCategoriesUi.InputPrompt {
+    private final static String ARGS_CATEGORY_ID = "category id";
+    private AddTaskNavigator navigator;
+    private TaskLayout taskLayout;
+
+    static AddTaskDialogFragment newInstance(final UUID categoryId) {
+        final AddTaskDialogFragment fragment = new AddTaskDialogFragment();
+        final Bundle args = new Bundle();
+        args.putSerializable(ARGS_CATEGORY_ID, categoryId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        categoryLayout = new CategoryLayout(getContext());
+        final Bundle args = getArguments();
+        if (args == null) {
+            throw new IllegalStateException("Args must not be null");
+        }
+        final UUID categoryId = args.getParcelable(ARGS_CATEGORY_ID);
+        if (categoryId == null) {
+            throw new IllegalStateException("Args must contain UUID for ARGS_CATEGORY_ID key");
+        }
+        taskLayout = new TaskLayout(getContext());
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setView(categoryLayout)
-                .setTitle("Add category")
+                .setView(taskLayout)
+                .setTitle("Add task")
                 .setPositiveButton("Add", null)
                 .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -38,7 +57,7 @@ public class AddCategoryDialogFragment extends DialogFragment implements ManageC
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onClickAdd();
+                        onClickAdd(categoryId);
                     }
                 });
             }
@@ -46,36 +65,36 @@ public class AddCategoryDialogFragment extends DialogFragment implements ManageC
         return dialog;
     }
 
-    private void onClickAdd() {
+    private void onClickAdd(final UUID categoryId) {
         if (navigator != null) {
-            navigator.onClickAddCategory(this, categoryLayout.title(), categoryLayout.note());
+            navigator.onClickAddTask(this, taskLayout.title(), taskLayout.note(), categoryId);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        categoryLayout = null;
+        taskLayout = null;
     }
 
     @Override
     public void showTitleError(String message) {
-        if (categoryLayout != null) {
-            categoryLayout.showTitleError(message);
+        if (taskLayout != null) {
+            taskLayout.showTitleError(message);
         }
     }
 
     @Override
     public void showNoteError(String message) {
-        if (categoryLayout != null) {
-            categoryLayout.showNoteError(message);
+        if (taskLayout != null) {
+            taskLayout.showNoteError(message);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        navigator = (AddCategoryNavigator) context;
+        navigator = (AddTaskNavigator) context;
     }
 
     @Override
@@ -84,11 +103,11 @@ public class AddCategoryDialogFragment extends DialogFragment implements ManageC
         navigator = null;
     }
 
-    private static class CategoryLayout extends LinearLayout {
+    private static class TaskLayout extends LinearLayout {
         private final EditText titleEdit;
         private final EditText noteEdit;
 
-        public CategoryLayout(Context context) {
+        public TaskLayout(Context context) {
             super(context);
             inflate(context, R.layout.component_category_input, this);
             titleEdit = findViewById(R.id.title);

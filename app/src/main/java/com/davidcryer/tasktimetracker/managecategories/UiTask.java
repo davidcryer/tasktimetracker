@@ -10,7 +10,7 @@ import com.davidcryer.tasktimetracker.R;
 
 import java.util.UUID;
 
-class UiTask extends UiListItem implements Parcelable {
+class UiTask extends UiListItem {
     private final UUID id;
     private final String title;
     private final String note;

@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-class UiCategory extends UiListItem implements Parcelable {
+class UiCategory extends UiListItem {
     private final UUID id;
     private final String title;
     private final String note;

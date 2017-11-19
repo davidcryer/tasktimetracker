@@ -13,6 +13,11 @@ enum ViewType {
         UiListItem.ViewHolder viewHolder(ViewGroup group) {
             return UiTask.ViewHolder.newInstance(group);
         }
+    }, ADD_TASK {
+        @Override
+        UiListItem.ViewHolder viewHolder(ViewGroup group) {
+            return AddTask.ViewHolder.newInstance(group);
+        }
     };
 
     abstract UiListItem.ViewHolder viewHolder(final ViewGroup group);
