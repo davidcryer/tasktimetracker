@@ -113,13 +113,18 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
             throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
         }
         int taskPosition = 0;//TODO refactor - maybe pass value through method params
-        for (int i = 0; i < categories.indexOf(category); i++) {
-            taskPosition += 2 + categories.get(i).tasks().size();
+        final int categoryOffset = 1;
+        for (int i = 0; i < categories.indexOf(category) + 1; i++) {
+            taskPosition += addTaskItemOffset(i) + categoryOffset + categories.get(i).tasks().size();
         }
         if (ui != null) {
             ui.insert(UiTaskMapper.from(task, category), taskPosition);
         }
         category.addTask(task);
+    }
+
+    private int addTaskItemOffset(int categoryIndex) {
+        return categoryIndex == 0 ? 0 : 1;
     }
 
     @Override
