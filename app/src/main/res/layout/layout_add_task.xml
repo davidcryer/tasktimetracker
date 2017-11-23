@@ -3,8 +3,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:padding="12dp"
-    android:layout_weight="1">
+    android:background="@drawable/grey_on_white_selector">
 
     <ImageView
         android:id="@+id/add"
@@ -15,7 +16,6 @@
         android:layout_gravity="start"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="@color/theme.light.text_color_default"
-        android:background="@drawable/grey_on_white_selector"
         android:contentDescription="Add task" />
 
     <TextView
