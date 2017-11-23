@@ -35,7 +35,7 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
         if (args == null) {
             throw new IllegalStateException("Args must not be null");
         }
-        final UUID categoryId = args.getParcelable(ARGS_CATEGORY_ID);
+        final UUID categoryId = (UUID) args.getSerializable(ARGS_CATEGORY_ID);
         if (categoryId == null) {
             throw new IllegalStateException("Args must contain UUID for ARGS_CATEGORY_ID key");
         }
@@ -49,8 +49,7 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                })
-                .show();
+                }).create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -62,6 +61,7 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
                 });
             }
         });
+        dialog.show();
         return dialog;
     }
 
