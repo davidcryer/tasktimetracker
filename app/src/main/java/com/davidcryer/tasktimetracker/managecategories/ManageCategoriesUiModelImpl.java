@@ -112,15 +112,23 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         if (category == null) {
             throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
         }
-        int taskPosition = 0;//TODO refactor - maybe pass value through method params
-        final int categoryOffset = 1;
-        for (int i = 0; i < categories.indexOf(category) + 1; i++) {
-            taskPosition += addTaskItemOffset(i) + categoryOffset + categories.get(i).tasks().size();
-        }
         if (ui != null) {
-            ui.insert(UiTaskMapper.from(task, category), taskPosition);
+            ui.insert(UiTaskMapper.from(task, category), addedTaskPosition(category));
         }
         category.addTask(task);
+    }
+
+    private int addedTaskPosition(final Category category) {//TODO refactor - maybe pass value through method params
+        int taskPosition = 0;
+        if (filteredCategory == null) {
+            final int categoryOffset = 1;
+            for (int i = 0; i < categories.indexOf(category) + 1; i++) {
+                taskPosition += addTaskItemOffset(i) + categoryOffset + categories.get(i).tasks().size();
+            }
+        } else {
+            taskPosition = category.tasks().size();
+        }
+        return taskPosition;
     }
 
     private int addTaskItemOffset(int categoryIndex) {
@@ -130,24 +138,38 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui) {
         final Category category = category(categoryId);
-        int taskIndex = 0;//TODO refactor - maybe pass value through method params
-        for (final Category cat : categories) {
-            taskIndex++;
-            for (final Task task : cat.tasks()) {
-                if (task.id().equals(taskId)) {
-                    break;
-                }
-                taskIndex++;
-            }
-            if (cat.id().equals(categoryId)) {
-                break;
-            }
-        }
+        final int taskIndex = removedTaskPosition(taskId, category);
         if (category != null) {
             if (category.deleteTask(taskId) && ui != null) {
                 ui.remove(indexOf(category), taskIndex);
             }
         }
+    }
+
+    private int removedTaskPosition(final UUID taskId, final Category category) {//TODO refactor - maybe pass value through method params
+        int taskPosition = 0;
+        if (filteredCategory == null) {
+            for (final Category cat : categories) {
+                taskPosition++;
+                for (final Task task : cat.tasks()) {
+                    if (task.id().equals(taskId)) {
+                        break;
+                    }
+                    taskPosition++;
+                }
+                if (cat.id().equals(category.id())) {
+                    break;
+                }
+            }
+        } else {
+            for (final Task task : category.tasks()) {
+                if (task.id().equals(taskId)) {
+                    break;
+                }
+                taskPosition++;
+            }
+        }
+        return taskPosition;
     }
 
     private int indexOf(final Category category) {
