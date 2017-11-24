@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> implements UiCategory.Listener, UiTask.Listener, AddTask.Listener {
+class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> implements UiCategory.Listener, UiTask.Listener {
     private List<UiListItem> items;
     private OnClickListener onClickListener;
 

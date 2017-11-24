@@ -3,12 +3,9 @@ package com.davidcryer.tasktimetracker.managecategories;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.davidcryer.tasktimetracker.common.ListUtils;
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,16 +120,12 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         if (filteredCategory == null) {
             final int categoryOffset = 1;
             for (int i = 0; i < categories.indexOf(category) + 1; i++) {
-                taskPosition += addTaskItemOffset(i) + categoryOffset + categories.get(i).tasks().size();
+                taskPosition += categoryOffset + categories.get(i).tasks().size();
             }
         } else {
-            taskPosition = category.tasks().size();
+            taskPosition = 1 + category.tasks().size();
         }
         return taskPosition;
-    }
-
-    private int addTaskItemOffset(int categoryIndex) {
-        return categoryIndex == 0 ? 0 : 1;
     }
 
     @Override
@@ -205,24 +198,26 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         if (selected == null) {
             return unfilteredItems();
         }
-        return taskItems(categories.get(selected));
+        return categoryItems(categories.get(selected));
     }
 
     private List<UiListItem> unfilteredItems() {
         final List<UiListItem> items = new LinkedList<>();
         for (final Category category: categories) {
-            items.add(UiCategoryMapper.from(category));
-            items.addAll(UiTaskMapper.from(category));
-            items.add(AddTaskMapper.from(category));
+            addCategoryItems(category, items);
         }
         return items;
     }
 
-    private List<UiListItem> taskItems(final Category category) {
+    private static List<UiListItem> categoryItems(final Category category) {
         final LinkedList<UiListItem> items = new LinkedList<>();
-        items.addAll(UiTaskMapper.from(category));
-        items.add(AddTaskMapper.from(category));
+        addCategoryItems(category, items);
         return items;
+    }
+
+    private static void addCategoryItems(final Category category, final List<UiListItem> items) {
+        items.add(UiCategoryMapper.from(category));
+        items.addAll(UiTaskMapper.from(category));
     }
 
     @Override

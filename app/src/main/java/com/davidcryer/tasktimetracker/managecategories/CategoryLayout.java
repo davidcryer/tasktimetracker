@@ -12,16 +12,16 @@ import com.davidcryer.tasktimetracker.R;
 public class CategoryLayout extends LinearLayout {
     private final TextView titleView;
     private final TextView noteView;
+    private final View addTaskView;
     private final View divider;
-    private final View clicker;
 
     public CategoryLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.layout_category, this);
         titleView = findViewById(R.id.title);
         noteView = findViewById(R.id.note);
+        addTaskView = findViewById(R.id.add);
         divider = findViewById(R.id.divider);
-        clicker = this;
     }
 
     void category(final UiCategory category) {
@@ -45,12 +45,7 @@ public class CategoryLayout extends LinearLayout {
         divider.setVisibility(GONE);
     }
 
-    @Override
-    public void setOnClickListener(@Nullable OnClickListener l) {
-        if (clicker == this) {
-            super.setOnClickListener(l);
-        } else {
-            clicker.setOnClickListener(l);
-        }
+    void setOnClickAddTaskListener(final OnClickListener l) {
+        addTaskView.setOnClickListener(l);
     }
 }

@@ -107,6 +107,12 @@ class UiCategory extends UiListItem {
                     listener.onClickCategory(category, ViewHolder.this.getAdapterPosition());
                 }
             });
+            layout.setOnClickAddTaskListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClickAddTask(category.id);
+                }
+            });
             setUpDivider();
         }
 
@@ -121,6 +127,7 @@ class UiCategory extends UiListItem {
 
     interface Listener extends UiListItem.Listener {
         void onClickCategory(UiCategory category, int i);
+        void onClickAddTask(UUID categoryId);
     }
 
     @Override
