@@ -9,9 +9,6 @@ import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.UUID;
 
 public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> {
@@ -136,18 +133,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showCategories(alphabeticallyOrderedCategories(), ui());
+            uiModel().showCategories(categoryDatabase.findAll(), ui());
         }
-    }
-
-    private List<Category> alphabeticallyOrderedCategories() {
-        final List<Category> categories = categoryDatabase.findAll();
-        Collections.sort(categories, new Comparator<Category>() {
-            @Override
-            public int compare(Category l, Category r) {
-                return l.title().compareTo(r.title());
-            }
-        });
-        return categories;
     }
 }

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import com.davidcryer.tasktimetracker.common.domain.Category;
+import com.davidcryer.tasktimetracker.common.domain.CategoryUtils;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.Date;
@@ -58,49 +59,48 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     }
 
     @Override
-    public void addCategory(Category item, ManageCategoriesUi ui) {
+    public void addCategory(Category category, ManageCategoriesUi ui) {
+        ensureCategoriesNonNull();
+        categories.add(category);
+        CategoryUtils.sortAlphabetically(categories);
         if (ui != null) {
-            ui.add(UiCategoryMapper.from(item));
+            ui.insert(UiCategoryMapper.from(category), position(category.id()));
         }
+    }
+
+    private void ensureCategoriesNonNull() {
         if (categories == null) {
             categories = new LinkedList<>();
         }
-        categories.add(item);
+    }
+
+    private int position(final UUID categoryId) {
+        int position = 0;
+        for (final Category category : categories) {
+            if (category.id().equals(categoryId)) {
+                break;
+            }
+            position += 1 + category.tasks().size();
+        }
+        return position;
     }
 
     @Override
-    public void insertCategory(Category item, int i, ManageCategoriesUi ui) {
+    public void updateCategory(Category category, ManageCategoriesUi ui) {
+        final int categoryIndex = position(category.id());
         if (ui != null) {
-            ui.insert(UiCategoryMapper.from(item), i);
+            ui.set(UiCategoryMapper.from(category), categoryIndex);
         }
-        categories.set(i, item);
-    }
-
-    @Override
-    public void updateCategory(Category item, ManageCategoriesUi ui) {
-        final int categoryIndex = indexOf(item.id());
-        if (ui != null) {
-            ui.set(UiCategoryMapper.from(item), categoryIndex);
-        }
-        categories.set(categoryIndex, item);
+        categories.set(categoryIndex, category);
     }
 
     @Override
     public void removeCategory(UUID categoryId, ManageCategoriesUi ui) {
-        final int i = indexOf(categoryId);
+        final int i = position(categoryId);
         if (ui != null) {
             ui.remove(i);
         }
         categories.remove(i);
-    }
-
-    private int indexOf(final UUID categoryId) {
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).id().equals(categoryId)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -110,59 +110,64 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
             throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
         }
         if (ui != null) {
-            ui.insert(UiTaskMapper.from(task, category), addedTaskPosition(category));
+            ui.insert(UiTaskMapper.from(task, category), lastTaskPosition(category));
         }
         category.addTask(task);
     }
 
-    private int addedTaskPosition(final Category category) {//TODO refactor - maybe pass value through method params
-        int taskPosition = 0;
+    private int lastTaskPosition(final Category category) {
+        int position = 0;
         if (filteredCategory == null) {
             final int categoryOffset = 1;
             for (int i = 0; i < categories.indexOf(category) + 1; i++) {
-                taskPosition += categoryOffset + categories.get(i).tasks().size();
+                position += categoryOffset + categories.get(i).tasks().size();
             }
+        } else if (filteredCategory == categories.indexOf(category)) {
+            position = 1 + category.tasks().size();
         } else {
-            taskPosition = 1 + category.tasks().size();
+            position = -1;
         }
-        return taskPosition;
+        return position;
     }
 
     @Override
     public void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui) {
         final Category category = category(categoryId);
-        final int taskIndex = removedTaskPosition(taskId, category);
+        final int position = removedTaskPosition(taskId, category);
         if (category != null) {
             if (category.deleteTask(taskId) && ui != null) {
-                ui.remove(indexOf(category), taskIndex);
+                ui.remove(indexOf(category), position);
             }
         }
     }
 
-    private int removedTaskPosition(final UUID taskId, final Category category) {//TODO refactor - maybe pass value through method params
-        int taskPosition = 0;
+    private int removedTaskPosition(final UUID taskId, final Category category) {
+        int position = 0;
         if (filteredCategory == null) {
-            for (final Category cat : categories) {
-                taskPosition++;
-                for (final Task task : cat.tasks()) {
+            for (int i = 0; i < categories.indexOf(category); i++) {
+                position++;
+                final Category c = categories.get(i);
+                for (final Task task : c.tasks()) {
                     if (task.id().equals(taskId)) {
                         break;
                     }
-                    taskPosition++;
+                    position++;
                 }
-                if (cat.id().equals(category.id())) {
+                if (c.id().equals(category.id())) {
                     break;
                 }
             }
-        } else {
+        } else if (filteredCategory == categories.indexOf(category)) {
             for (final Task task : category.tasks()) {
                 if (task.id().equals(taskId)) {
                     break;
                 }
-                taskPosition++;
+                position++;
             }
+        } else {
+            position = -1;
         }
-        return taskPosition;
+        return position;
     }
 
     private int indexOf(final Category category) {
