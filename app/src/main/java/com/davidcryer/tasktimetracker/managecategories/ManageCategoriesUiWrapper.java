@@ -40,7 +40,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
         return new ManageCategoriesUi.Listener() {
             @Override
             public void onClickCategory(ManageCategoriesUi ui, UiCategory category, int pos) {
-                //TODO repurpose method
+                //TODO go to category screen
             }
 
             @Override
