@@ -30,6 +30,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     @Override
     public void showCategories(List<Category> categories, ManageCategoriesUi ui) {
+        CategoryUtils.sortAlphabetically(categories);
         if (ui != null) {
             showCategoriesAndFilters(categories, ui);
         }
