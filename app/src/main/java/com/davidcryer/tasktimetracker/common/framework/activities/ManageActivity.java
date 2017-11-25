@@ -7,10 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.davidc.uiwrapper.UiWrapperRepositoryActivity;
 import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.framework.FabListener;
 import com.davidcryer.tasktimetracker.managecategories.AddCategoryNavigator;
@@ -28,9 +28,8 @@ import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 import java.util.List;
 import java.util.UUID;
 
-public class ManageActivity extends AppCompatActivity
-        implements UiRepositoryWrapperProvider,
-        ManageCategoriesNavigator,
+public class ManageActivity extends UiWrapperRepositoryActivity
+        implements ManageCategoriesNavigator,
         AddCategoryNavigator,
         AddTaskNavigator,
         RemoveCategoryNavigator,
