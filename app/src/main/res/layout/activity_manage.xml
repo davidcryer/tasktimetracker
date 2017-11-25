@@ -30,8 +30,10 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_black_24dp"
-        app:layout_anchor="@+id/root"
-        app:layout_anchorGravity="end|bottom" />
+        android:tint="@android:color/white"
+        android:contentDescription="Add category or task" />
 
 </android.support.design.widget.CoordinatorLayout>
