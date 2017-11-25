@@ -87,20 +87,20 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                 }
             }
 
-            @Override
-            public void onEditCategory(ManageCategoriesUi.InputPrompt prompt, UUID categoryId, String title, String note) {
-                try {
-                    final Category category = categoryDatabase.find(categoryId);
-                    if (category != null) {
-                        category.writer().title(title).note(note).commit();
-                        categoryDatabase.save(category);
-                        uiModel().updateCategory(category, ui());
-                    }
-                    prompt.dismiss();
-                } catch (IllegalCategoryArgsException iae) {
-                    showErrors(prompt, iae.args());
-                }
-            }
+//            @Override
+//            public void onEditCategory(ManageCategoriesUi.InputPrompt prompt, UUID categoryId, String title, String note) {
+//                try {
+//                    final Category category = categoryDatabase.find(categoryId);
+//                    if (category != null) {
+//                        category.writer().title(title).note(note).commit();
+//                        categoryDatabase.save(category);
+//                        uiModel().updateCategory(category, ui());
+//                    }
+//                    prompt.dismiss();
+//                } catch (IllegalCategoryArgsException iae) {
+//                    showErrors(prompt, iae.args());
+//                }
+//            }
 
             @Override
             public void onRemoveCategory(ManageCategoriesUi ui, UiCategory category) {

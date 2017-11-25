@@ -18,6 +18,7 @@ import com.davidc.uiwrapper.UiBinder;
 import com.davidc.uiwrapper.UiFragment;
 import com.davidc.uiwrapper.UiUnbinder;
 import com.davidcryer.tasktimetracker.R;
+import com.davidcryer.tasktimetracker.common.framework.FabListener;
 import com.davidcryer.tasktimetracker.common.framework.activities.DialogFragmentFactory;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.Listener, UiWrapperRepository>
-        implements ManageCategoriesUi, ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener {
+        implements ManageCategoriesUi, ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener, FabListener {
     private final CategoriesAdapter categoriesAdapter;
     private CategoriesFilter categoriesFilter;
     private Spinner filterSpinner;
@@ -181,30 +182,6 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
-    public void showRemoveCategoryPrompt(final UiCategory category) {
-        if (navigator != null) {
-            navigator.showRemoveCategoryPrompt(new DialogFragmentFactory() {
-                @Override
-                public DialogFragment create() {
-                    return RemoveCategoryDialogFragment.newInstance(category);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void showRemoveTaskPrompt(final UiTask task, final UiCategory category) {
-        if (navigator != null) {
-            navigator.showRemoveTaskPrompt(new DialogFragmentFactory() {
-                @Override
-                public DialogFragment create() {
-                    return RemoveTaskDialogFragment.newInstance(task, category);
-                }
-            });
-        }
-    }
-
-    @Override
     public void showManageTaskScreen(final ManageTaskIntentModel intentModel) {
         if (navigator != null) {
             navigator.toManageTaskScreen(intentModel);
@@ -237,6 +214,14 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         if (hasListener()) {
             listener().onRemoveTask(this, task, category);
         }
+    }
+
+    @Override
+    public boolean onFabClicked() {
+        if (hasListener()) {
+            listener().onClickAddCategory(this);
+        }
+        return true;
     }
 
     @Override
