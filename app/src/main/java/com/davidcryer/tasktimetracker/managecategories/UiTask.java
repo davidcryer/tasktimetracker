@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import com.davidcryer.tasktimetracker.R;
 
@@ -14,29 +15,49 @@ class UiTask extends UiListItem {
     private final UUID id;
     private final String title;
     private final String note;
+    private long totalTimeActive;
+    private boolean isActive;
     private final UUID categoryId;
 
-    public UiTask(UUID id, String title, String note, UUID categoryId) {
+    UiTask(UUID id, String title, String note, long totalTimeActive, boolean isActive, UUID categoryId) {
         this.id = id;
         this.title = title;
         this.note = note;
+        this.totalTimeActive = totalTimeActive;
+        this.isActive = isActive;
         this.categoryId = categoryId;
     }
 
-    public UUID getId() {
+    UUID getId() {
         return id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
-    public String getNote() {
+    String getNote() {
         return note;
     }
 
-    public UUID getCategoryId() {
+    long getTotalTimeActive() {
+        return totalTimeActive;
+    }
+
+    boolean isActive() {
+        return isActive;
+    }
+
+    UUID getCategoryId() {
         return categoryId;
+    }
+
+    void setActive(final boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    void incrementActiveTime(final long time) {
+        totalTimeActive += time;
     }
 
     @Override
@@ -68,17 +89,17 @@ class UiTask extends UiListItem {
         @Override
         void task(final UiTask task, final Listener listener) {
             layout.task(task);
-            layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onClickTask(task);
-                }
+            layout.setOnClickListener(view -> listener.onClickTask(task));
+            layout.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                task.setActive(isChecked);
+                listener.onToggleActiveStatus(task, isChecked);
             });
         }
     }
 
     interface Listener extends UiListItem.Listener {
         void onClickTask(UiTask task);
+        void onToggleActiveStatus(UiTask task, boolean isActive);
     }
 
     @Override
@@ -91,6 +112,8 @@ class UiTask extends UiListItem {
         dest.writeSerializable(this.id);
         dest.writeString(this.title);
         dest.writeString(this.note);
+        dest.writeLong(this.totalTimeActive);
+        dest.writeByte(this.isActive ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.categoryId);
     }
 
@@ -98,6 +121,8 @@ class UiTask extends UiListItem {
         this.id = (UUID) in.readSerializable();
         this.title = in.readString();
         this.note = in.readString();
+        this.totalTimeActive = in.readLong();
+        this.isActive = in.readByte() != 0;
         this.categoryId = (UUID) in.readSerializable();
     }
 

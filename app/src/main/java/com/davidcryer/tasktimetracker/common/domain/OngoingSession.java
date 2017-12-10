@@ -1,8 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.DateUtils;
@@ -11,8 +8,8 @@ import com.davidcryer.tasktimetracker.common.argvalidation.OngoingSessionArgsBui
 
 import java.util.Date;
 
-public class OngoingSession implements Parcelable {
-    private final static String ILLEGAL_START_MESSAGE = "start cannot be null";
+public class OngoingSession {
+    private final static String ILLEGAL_START_MESSAGE = "register cannot be null";
     private final Date start;
     private Date stop;
 
@@ -46,34 +43,7 @@ public class OngoingSession implements Parcelable {
         return DateUtils.difference(start, stop == null ? new Date() : stop);
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    DbOngoingSession toDbOngoingSession() {
+        return new DbOngoingSession(start, stop);
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.start != null ? this.start.getTime() : -1);
-        dest.writeLong(this.stop != null ? this.stop.getTime() : -1);
-    }
-
-    private OngoingSession(Parcel in) {
-        long tmpStart = in.readLong();
-        this.start = tmpStart == -1 ? null : new Date(tmpStart);
-        long tmpStop = in.readLong();
-        this.stop = tmpStop == -1 ? null : new Date(tmpStop);
-    }
-
-    public static final Creator<OngoingSession> CREATOR = new Creator<OngoingSession>() {
-        @Override
-        public OngoingSession createFromParcel(Parcel source) {
-            return new OngoingSession(source);
-        }
-
-        @Override
-        public OngoingSession[] newArray(int size) {
-            return new OngoingSession[size];
-        }
-    };
 }

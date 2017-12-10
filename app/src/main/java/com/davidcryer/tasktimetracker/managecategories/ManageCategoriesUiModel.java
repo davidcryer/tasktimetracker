@@ -15,6 +15,10 @@ public interface ManageCategoriesUiModel extends UiModel<ManageCategoriesUi> {
     void addTask(Task task, UUID categoryId, ManageCategoriesUi ui);
     void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui);
     void removeFilter(ManageCategoriesUi ui);
+    void activate(Task task, ManageCategoriesUi ui);
+    void deactivate(Task task, ManageCategoriesUi ui);
     void updateFilter(int selected, ManageCategoriesUi ui);
     boolean isPopulated();
+    Category category(UUID id);
+    Task task(UUID id);
 }

@@ -35,7 +35,7 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
 
     public ManageCategoriesFragment() {
         categoriesAdapter = new CategoriesAdapter();
-        categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.OnClickListener() {
+        categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.Listener() {
             @Override
             public void onClick(UiCategory category, int i) {
                 if (hasListener()) {
@@ -47,6 +47,13 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
             public void onClick(UiTask task) {
                 if (hasListener()) {
                     listener().onClickTask(ManageCategoriesFragment.this, task);
+                }
+            }
+
+            @Override
+            public void onToggleActiveStatus(UiTask task, boolean isActive) {
+                if (hasListener()) {
+                    listener().onToggleActiveStatus(ManageCategoriesFragment.this, task, isActive);
                 }
             }
 
@@ -160,24 +167,14 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     @Override
     public void showAddCategoryPrompt() {
         if (navigator != null) {
-            navigator.showAddCategoryPrompt(new DialogFragmentFactory() {
-                @Override
-                public DialogFragment create() {
-                    return new AddCategoryDialogFragment();
-                }
-            });
+            navigator.showAddCategoryPrompt(AddCategoryDialogFragment::new);
         }
     }
 
     @Override
     public void showAddTaskPrompt(final UUID categoryId) {
         if (navigator != null) {
-            navigator.showAddTaskPrompt(new DialogFragmentFactory() {
-                @Override
-                public DialogFragment create() {
-                    return AddTaskDialogFragment.newInstance(categoryId);
-                }
-            });
+            navigator.showAddTaskPrompt(() -> AddTaskDialogFragment.newInstance(categoryId));
         }
     }
 

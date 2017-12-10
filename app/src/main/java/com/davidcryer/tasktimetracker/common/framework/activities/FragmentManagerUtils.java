@@ -27,10 +27,6 @@ class FragmentManagerUtils {
         return fragment(fm, view) != null;
     }
 
-    static void addFragment(final FragmentManagerProvider fmProvider, final Fragment fragment, final String tag) {
-        fmProvider.fragmentManager().beginTransaction().add(fragment, tag).commit();
-    }
-
     static void addFragment(
             final FragmentManager fragmentManager,
             final Fragment fragment,
@@ -40,6 +36,19 @@ class FragmentManagerUtils {
         fragmentManager
                 .beginTransaction()
                 .add(view, fragment, tag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    static void replaceFragment(
+            final FragmentManager fragmentManager,
+            final Fragment fragment,
+            @IdRes final int view,
+            final String tag
+    ) {
+        fragmentManager
+                .beginTransaction()
+                .replace(view, fragment, tag)
                 .addToBackStack(null)
                 .commit();
     }

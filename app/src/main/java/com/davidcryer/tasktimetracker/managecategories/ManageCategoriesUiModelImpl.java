@@ -175,13 +175,80 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         return categories.indexOf(category);
     }
 
-    private Category category(final UUID id) {
-        for (final Category category : categories) {
-            if (category.id().equals(id)) {
-                return category;
+    @Override
+    public void activate(Task task, ManageCategoriesUi ui) {
+        if (ui != null) {
+            activateTaskInUi(task, ui);
+        }
+    }
+
+    private void activateTaskInUi(final Task activatedTask, ManageCategoriesUi ui) {
+        if (filteredCategory == null) {
+            int position = 0;
+            for (final Category category : categories) {
+                position++;
+                for (final Task task : category.tasks()) {
+                    if (task.id().equals(activatedTask.id())) {
+                        activateUiTask(UiTaskMapper.from(task, category), position, ui);
+                        break;
+                    }
+                    position++;
+                }
+            }
+        } else {
+            final Category category = categories.get(filteredCategory);
+            int position = 1;
+            for (final Task task : category.tasks()) {
+                if (task.id().equals(activatedTask.id())) {
+                    activateUiTask(UiTaskMapper.from(task, category), position, ui);
+                    break;
+                }
+                position++;
             }
         }
-        return null;
+    }
+
+    private void activateUiTask(final UiTask task, final int position, final ManageCategoriesUi ui) {
+        task.setActive(true);
+        ui.set(task, position);
+    }
+
+    @Override
+    public void deactivate(Task task, ManageCategoriesUi ui) {
+        if (ui != null) {
+            deactivateTaskInUi(task, ui);
+        }
+    }
+
+    private void deactivateTaskInUi(final Task deactivatedTask, ManageCategoriesUi ui) {
+        if (filteredCategory == null) {
+            int position = 0;
+            for (final Category category : categories) {
+                position++;
+                for (final Task task : category.tasks()) {
+                    if (task.id().equals(deactivatedTask.id())) {
+                        deactivateUiTask(UiTaskMapper.from(task, category), position, ui);
+                        break;
+                    }
+                    position++;
+                }
+            }
+        } else {
+            final Category category = categories.get(filteredCategory);
+            int position = 1;
+            for (final Task task : category.tasks()) {
+                if (task.id().equals(deactivatedTask.id())) {
+                    deactivateUiTask(UiTaskMapper.from(task, category), position, ui);
+                    break;
+                }
+                position++;
+            }
+        }
+    }
+
+    private void deactivateUiTask(final UiTask task, final int position, final ManageCategoriesUi ui) {
+        task.setActive(false);
+        ui.set(task, position);
     }
 
     @Override
@@ -231,6 +298,28 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         return categories != null;
     }
 
+    @Override
+    public Category category(final UUID id) {
+        for (final Category category : categories) {
+            if (category.id().equals(id)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Task task(UUID id) {
+        for (final Category category : categories) {
+            for (final Task task : category.tasks()) {
+                if (task.id().equals(id)) {
+                    return task;
+                }
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public int describeContents() {
@@ -239,15 +328,10 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(this.categories);
-        dest.writeLong(this.categoriesSet != null ? this.categoriesSet.getTime() : -1);
         dest.writeValue(this.filteredCategory);
     }
 
     private ManageCategoriesUiModelImpl(Parcel in) {
-        this.categories = in.createTypedArrayList(Category.CREATOR);
-        long tmpCategoriesSet = in.readLong();
-        this.categoriesSet = tmpCategoriesSet == -1 ? null : new Date(tmpCategoriesSet);
         this.filteredCategory = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 

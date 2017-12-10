@@ -8,28 +8,33 @@ import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsEx
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
 import com.davidcryer.tasktimetracker.common.domain.Task;
+import com.davidcryer.tasktimetracker.common.domain.TaskFactory;
 
 import java.util.UUID;
 
-public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> {
+public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel>
+        implements Task.OngoingStatusListener {
     private final CategoryDatabase categoryDatabase;
+    private final TaskFactory taskFactory;
 
-    private ManageCategoriesUiWrapper(@NonNull final ManageCategoriesUiModel uiModel, final CategoryDatabase categoryDatabase) {
+    private ManageCategoriesUiWrapper(@NonNull final ManageCategoriesUiModel uiModel, final CategoryDatabase categoryDatabase, final TaskFactory taskFactory) {
         super(uiModel);
         this.categoryDatabase = categoryDatabase;
+        this.taskFactory = taskFactory;
     }
 
-    public static ManageCategoriesUiWrapper newInstance(final ManageCategoriesUiModelFactory modelFactory, final CategoryDatabase categoryDatabase) {
-        return new ManageCategoriesUiWrapper(modelFactory.create(), categoryDatabase);
+    public static ManageCategoriesUiWrapper newInstance(final ManageCategoriesUiModelFactory modelFactory, final CategoryDatabase categoryDatabase, final TaskFactory taskFactory) {
+        return new ManageCategoriesUiWrapper(modelFactory.create(), categoryDatabase, taskFactory);
     }
 
     public static ManageCategoriesUiWrapper savedElseNewInstance(
             @NonNull final Bundle savedInstanceState,
             final ManageCategoriesUiModelFactory modelFactory,
-            final CategoryDatabase categoryDatabase
+            final CategoryDatabase categoryDatabase,
+            final TaskFactory taskFactory
     ) {
         final ManageCategoriesUiModel savedModel = savedUiModel(savedInstanceState);
-        return savedModel == null ? newInstance(modelFactory, categoryDatabase) : new ManageCategoriesUiWrapper(savedModel, categoryDatabase);
+        return savedModel == null ? newInstance(modelFactory, categoryDatabase, taskFactory) : new ManageCategoriesUiWrapper(savedModel, categoryDatabase, taskFactory);
     }
 
     @Override
@@ -56,6 +61,16 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             }
 
             @Override
+            public void onToggleActiveStatus(ManageCategoriesUi ui, UiTask uiTask, boolean isActive) {
+                final Task task = uiModel().task(uiTask.getId());
+                if (isActive) {
+                    task.start();
+                } else {
+                    task.stop();
+                }
+            }
+
+            @Override
             public void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
                 try {
                     final Category category = new Category(title, note);
@@ -70,8 +85,8 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             @Override
             public void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
                 try {
-                    final Category category = categoryDatabase.find(categoryId);
-                    final Task task = new Task(title, note);
+                    final Category category = uiModel().category(categoryId);
+                    final Task task = taskFactory.create(title, note);
                     category.addTask(task);
                     categoryDatabase.save(category);
                     uiModel().addTask(task, categoryId, ui());
@@ -110,7 +125,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
 
             @Override
             public void onRemoveTask(ManageCategoriesUi ui, UiTask task, UiCategory category) {
-                final Category domainCategory = categoryDatabase.find(category.getId());
+                final Category domainCategory = uiModel().category(category.getId());
                 if (domainCategory.deleteTask(task.getId())) {
                     categoryDatabase.save(domainCategory);
                     uiModel().removeTask(task.getId(), category.getId(), ui);
@@ -130,10 +145,20 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
     }
 
     @Override
+    public void onStart(Task task) {
+        uiModel().activate(task, ui());
+    }
+
+    @Override
+    public void onStop(Task task) {
+        uiModel().deactivate(task, ui());
+    }
+
+    @Override
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showCategories(categoryDatabase.findAll(), ui());
+            uiModel().showCategories(categoryDatabase.findAll(this), ui());
         }
     }
 }

@@ -54,7 +54,7 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     }
 
     private void setUpToolbar() {
-        setSupportActionBar((Toolbar) findViewById(com.davidc.uiwrapper.R.id.toolbar));
+        setSupportActionBar(findViewById(com.davidc.uiwrapper.R.id.toolbar));
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             setUpActionBar(actionBar);
@@ -62,12 +62,7 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     }
 
     private void setUpFab() {
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passFabClickToFragments();
-            }
-        });
+        findViewById(R.id.fab).setOnClickListener(v -> passFabClickToFragments());
     }
 
     private void passFabClickToFragments() {
@@ -108,7 +103,6 @@ public class ManageActivity extends UiWrapperRepositoryActivity
         return true;
     }
 
-
     @Override
     public void onBackPressed() {
         if (FragmentManagerUtils.hasMoreThanFragmentOnBackStack(this)) {
@@ -141,7 +135,7 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     @Override
     public void toManageTaskScreen(ManageTaskIntentModel intentModel) {
         if (noFragmentExists(FRAGMENT_TAG_MANAGE_TASK)) {
-            addFragment(ManageTaskFragment.newInstance(intentModel), FRAGMENT_TAG_MANAGE_TASK);
+            replaceFragment(ManageTaskFragment.newInstance(intentModel), FRAGMENT_TAG_MANAGE_TASK);
         }
     }
 
@@ -173,6 +167,10 @@ public class ManageActivity extends UiWrapperRepositoryActivity
 
     private void addFragment(final Fragment fragment, final String tag) {
         FragmentManagerUtils.addFragment(getSupportFragmentManager(), fragment, getContentFragmentViewContainer(), tag);
+    }
+
+    private void replaceFragment(final Fragment fragment, final String tag) {
+        FragmentManagerUtils.replaceFragment(getSupportFragmentManager(), fragment, getContentFragmentViewContainer(), tag);
     }
 
     private Fragment findFragmentByTag(final String tag) {

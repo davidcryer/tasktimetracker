@@ -15,13 +15,13 @@ class UiTaskMapper {
     static List<UiTask> from(final Category category) {
         final List<UiTask> uiTasks = new ArrayList<>(category.tasks().size());
         for (final Task task : category.tasks()) {
-            uiTasks.add(new UiTask(task.id(), task.title(), task.note(), category.id()));
+            uiTasks.add(from(task, category));
         }
         return uiTasks;
     }
 
     static UiTask from(final Task task, final Category category) {
-        return new UiTask(task.id(), task.title(), task.note(), category.id());
+        return new UiTask(task.id(), task.title(), task.note(), task.expendedTime(), task.isOngoing(), category.id());
     }
 
     static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task) {

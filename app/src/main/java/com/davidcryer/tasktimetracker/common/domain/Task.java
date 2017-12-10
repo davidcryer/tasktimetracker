@@ -1,45 +1,48 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
 import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
 import com.davidcryer.tasktimetracker.common.argvalidation.TaskArgsBuilder;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-public class Task implements Parcelable {
+public class Task implements OngoingTaskRegister.Task {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
     private final static String ILLEGAL_ONGOING_SESSION_MESSAGE = "ongoing session cannot be finished";
+    private final OngoingTaskRegister ongoingTaskRegister;
     private final UUID id;
     private String title;
     private String note;
     private OngoingSession ongoingSession;
     private List<FinishedSession> finishedSessions;
+    private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
 
-    public Task(final String title, final String note) {
-        this(UUID.randomUUID(), title, note, null);
+    Task(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) {
+        this(UUID.randomUUID(), title, note, null, new LinkedList<>(), ongoingTaskRegister);
     }
 
-    public Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession) throws IllegalTaskArgsException {
-        this(id, title, note, ongoingSession, null);
-    }
-
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
+    Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
         ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args());
         this.id = id;
         this.title = title;
         this.note = note;
         this.ongoingSession = ongoingSession;
         this.finishedSessions = finishedSessions;
+        this.ongoingTaskRegister = ongoingTaskRegister;
+        ongoingStatusListeners = new HashSet<>();
+        if (isOngoing()) {
+            ongoingTaskRegister.register(this);
+        }
     }
 
     private static Arg idArg(final UUID id) {
@@ -54,19 +57,12 @@ public class Task implements Parcelable {
         return new Arg(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
-    void start() throws AlreadyStartedException {
-        if (isOngoing()) {
-            throw new AlreadyStartedException();
-        }
-        ongoingSession = new OngoingSession();
+    public void start() throws AlreadyStartedException {
+        ongoingTaskRegister.register(this);
     }
 
-    void stop() throws AlreadyStoppedException {
-        if (!isOngoing()) {
-            throw new AlreadyStoppedException();
-        }
-        addFinishedSession(ongoingSession.stop());
-        ongoingSession = null;
+    public void stop() throws AlreadyStoppedException {
+        ongoingTaskRegister.unregister(this);
     }
 
     private void addFinishedSession(final FinishedSession session) {
@@ -111,7 +107,51 @@ public class Task implements Parcelable {
     }
 
     public List<FinishedSession> finishedSessions() {
-        return finishedSessions == null ? new ArrayList<FinishedSession>() : new ArrayList<>(finishedSessions);
+        return finishedSessions == null ? new ArrayList<>() : new ArrayList<>(finishedSessions);
+    }
+
+    void addOngoingStatusListener(final OngoingStatusListener listener) {
+        if (listener != null) {
+            ongoingStatusListeners.add(new WeakReference<>(listener));
+        }
+    }
+
+    @Override
+    public void onRegister() throws AlreadyStartedException {
+        if (isOngoing()) {
+            throw new AlreadyStartedException();
+        }
+        ongoingSession = new OngoingSession();
+        notifyOngoingTaskListener(listener -> listener.onStart(this));
+    }
+
+    @Override
+    public void onUnregister() throws AlreadyStoppedException {
+        if (!isOngoing()) {
+            throw new AlreadyStoppedException();
+        }
+        addFinishedSession(ongoingSession.stop());
+        ongoingSession = null;
+        notifyOngoingTaskListener(listener -> listener.onStop(this));
+    }
+
+    private void notifyOngoingTaskListener(final NotifyOngoingStatusListenerAction action) {
+        for (final Iterator<WeakReference<OngoingStatusListener>> itr = ongoingStatusListeners.iterator(); itr.hasNext();) {
+            final OngoingStatusListener listener = itr.next().get();
+            if (listener == null) {
+                itr.remove();
+            } else {
+                action.perform(listener);
+            }
+        }
+    }
+
+    private interface NotifyOngoingStatusListenerAction {
+        void perform(OngoingStatusListener listener);
+    }
+
+    DbTask toDbTask() {
+        return new DbTask(id, title, note, ongoingSession.toDbOngoingSession(), DbMapper.dbFinishedSessions(finishedSessions));
     }
 
     public UUID id() {
@@ -192,38 +232,8 @@ public class Task implements Parcelable {
         }
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public interface OngoingStatusListener {
+        void onStart(Task task);
+        void onStop(Task task);
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.note);
-        dest.writeParcelable(this.ongoingSession, flags);
-        dest.writeTypedList(this.finishedSessions);
-    }
-
-    private Task(Parcel in) {
-        this.id = (UUID) in.readSerializable();
-        this.title = in.readString();
-        this.note = in.readString();
-        this.ongoingSession = in.readParcelable(OngoingSession.class.getClassLoader());
-        this.finishedSessions = in.createTypedArrayList(FinishedSession.CREATOR);
-    }
-
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel source) {
-            return new Task(source);
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
 }

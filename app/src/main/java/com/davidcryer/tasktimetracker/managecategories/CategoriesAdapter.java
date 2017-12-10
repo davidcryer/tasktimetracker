@@ -11,14 +11,14 @@ import java.util.UUID;
 
 class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> implements UiCategory.Listener, UiTask.Listener {
     private List<UiListItem> items;
-    private OnClickListener onClickListener;
+    private Listener listener;
 
     CategoriesAdapter() {
         this.items = new ArrayList<>();
     }
 
-    void onClickCategoryListener(final OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    void onClickCategoryListener(final Listener listener) {
+        this.listener = listener;
     }
 
     void items(final List<UiListItem> items) {
@@ -63,22 +63,29 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
 
     @Override
     public void onClickCategory(final UiCategory category, final int i) {
-        if (onClickListener != null) {
-            onClickListener.onClick(category, i);
+        if (listener != null) {
+            listener.onClick(category, i);
         }
     }
 
     @Override
     public void onClickTask(final UiTask task) {
-        if (onClickListener != null) {
-            onClickListener.onClick(task);
+        if (listener != null) {
+            listener.onClick(task);
+        }
+    }
+
+    @Override
+    public void onToggleActiveStatus(UiTask task, boolean isActive) {
+        if (listener != null) {
+            listener.onToggleActiveStatus(task, isActive);
         }
     }
 
     @Override
     public void onClickAddTask(UUID categoryId) {
-        if (onClickListener != null) {
-            onClickListener.onClickAddTask(categoryId);
+        if (listener != null) {
+            listener.onClickAddTask(categoryId);
         }
     }
 
@@ -92,9 +99,10 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
         return items.get(position).viewType().ordinal();
     }
 
-    interface OnClickListener {
+    interface Listener {
         void onClick(UiCategory category, int i);
         void onClick(UiTask task);
+        void onToggleActiveStatus(UiTask task, boolean isActive);
         void onClickAddTask(UUID categoryId);
     }
 }

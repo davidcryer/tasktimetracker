@@ -29,6 +29,7 @@ public interface ManageCategoriesUi {
         void onClickTask(ManageCategoriesUi ui, UiTask task);
         void onClickAddCategory(ManageCategoriesUi ui);
         void onClickAddTask(ManageCategoriesUi ui, UUID categoryId);
+        void onToggleActiveStatus(ManageCategoriesUi ui, UiTask task, boolean isActive);
         void onAddCategory(InputPrompt prompt, String title, String note);
         void onAddTask(InputPrompt prompt, String title, String note, UUID categoryId);
         void onRemoveCategory(ManageCategoriesUi ui, UiCategory category);
