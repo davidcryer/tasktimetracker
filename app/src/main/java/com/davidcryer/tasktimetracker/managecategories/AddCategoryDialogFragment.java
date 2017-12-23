@@ -25,24 +25,11 @@ public class AddCategoryDialogFragment extends DialogFragment implements ManageC
                 .setView(categoryLayout)
                 .setTitle("Add category")
                 .setPositiveButton("Add", null)
-                .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setNeutralButton(android.R.string.cancel, (dialogInterface, i) -> {
 
-                    }
                 })
                 .show();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onClickAdd();
-                    }
-                });
-            }
-        });
+        dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> onClickAdd()));
         return dialog;
     }
 
