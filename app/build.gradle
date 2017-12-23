@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
     compile 'com.davidcryer.uiwrapper:uiwrapper:2.0.0'
+    compile 'com.davidcryer.simpleactivities:simpleactivities:0.0.2'
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'junit:junit:4.12'
-    implementation project(':simple-activities-0.0.1')
 }

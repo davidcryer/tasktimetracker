@@ -71,7 +71,7 @@ public class ManageActivity extends SimpleAppBarActivity
 
     @Override
     protected void addInitialFragment() {
-        add(getContentFragmentViewContainer(), FRAGMENT_TAG_MANAGE_CATEGORIES, ManageCategoriesFragment::new);
+        add(FRAGMENT_TAG_MANAGE_CATEGORIES, ManageCategoriesFragment::new);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ManageActivity extends SimpleAppBarActivity
     @Override
     public void toManageTaskScreen(ManageTaskIntentModel intentModel) {
         if (noFragmentExists(FRAGMENT_TAG_MANAGE_TASK)) {
-            replace(getContentFragmentViewContainer(), FRAGMENT_TAG_MANAGE_TASK, () -> ManageTaskFragment.newInstance(intentModel));
+            replace(FRAGMENT_TAG_MANAGE_TASK, () -> ManageTaskFragment.newInstance(intentModel));
         }
     }
 
