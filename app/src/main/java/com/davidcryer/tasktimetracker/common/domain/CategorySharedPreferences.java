@@ -15,7 +15,7 @@ public class CategorySharedPreferences implements CategoryDatabase {
     private final Gson gson;
     private final TaskFactory taskFactory;
 
-    CategorySharedPreferences(final Context context, final Gson gson, final TaskFactory taskFactory) {
+    public CategorySharedPreferences(final Context context, final Gson gson, final TaskFactory taskFactory) {
         sharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
         this.gson = gson;
         this.taskFactory = taskFactory;

@@ -1,16 +1,14 @@
 package com.davidcryer.tasktimetracker;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
 
-import com.davidc.uiwrapper.UiWrapperRepositoryFactory;
-import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
+import com.davidc.uiwrapper.UiWrapperFactoryProvider;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 
-public class TrackerApplication extends Application implements UiWrapperRepositoryFactory<UiWrapperRepository> {
+public class TrackerApplication extends Application implements UiWrapperFactoryProvider<UiWrapperFactory> {
 
-    @NonNull
     @Override
-    public UiWrapperRepository create() {
-        return ApplicationDependencyProvider.uiWrapperRepository(this);
+    public UiWrapperFactory getUiWrapperFactory() {
+        return ApplicationDependencyProvider.uiWrapperFactory(this);
     }
 }

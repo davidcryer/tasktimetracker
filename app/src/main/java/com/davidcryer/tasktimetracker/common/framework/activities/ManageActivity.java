@@ -2,15 +2,12 @@ package com.davidcryer.tasktimetracker.common.framework.activities;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
-import com.davidc.uiwrapper.UiWrapperRepositoryActivity;
+import com.davidcryer.simpleactivities.SimpleAppBarActivity;
 import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.framework.FabListener;
 import com.davidcryer.tasktimetracker.managecategories.AddCategoryNavigator;
@@ -28,14 +25,13 @@ import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 import java.util.List;
 import java.util.UUID;
 
-public class ManageActivity extends UiWrapperRepositoryActivity
+public class ManageActivity extends SimpleAppBarActivity
         implements ManageCategoriesNavigator,
         AddCategoryNavigator,
         AddTaskNavigator,
         RemoveCategoryNavigator,
         RemoveTaskNavigator,
-        FragmentManagerUtils.FragmentManagerProvider
-{
+        FragmentManagerUtils.FragmentManagerProvider {
     private final static String FRAGMENT_TAG_ADD_CATEGORY_PROMPT = "add category prompt";
     private final static String FRAGMENT_TAG_ADD_TASK_PROMPT = "add task prompt";
     private final static String FRAGMENT_TAG_REMOVE_CATEGORY_PROMPT = "remove category prompt";
@@ -48,17 +44,12 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage);
-        setUpToolbar();
         setUpFab();
-        addInitialFragmentIfNone();
     }
 
-    private void setUpToolbar() {
-        setSupportActionBar(findViewById(com.davidc.uiwrapper.R.id.toolbar));
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            setUpActionBar(actionBar);
-        }
+    @Override
+    protected void setupActionBar(@NonNull ActionBar actionBar) {
+        actionBar.setTitle("");
     }
 
     private void setUpFab() {
@@ -78,38 +69,9 @@ public class ManageActivity extends UiWrapperRepositoryActivity
         }
     }
 
-    private void setUpActionBar(@NonNull ActionBar actionBar) {
-        actionBar.setTitle("");
-    }
-
-    private void addInitialFragmentIfNone() {
-        if (FragmentManagerUtils.noFragmentExsist(R.id.content, this)) {
-            addInitialFragment();
-        }
-    }
-
-    private void addInitialFragment() {
-        addFragment(new ManageCategoriesFragment(), FRAGMENT_TAG_MANAGE_CATEGORIES);
-    }
-
-    @IdRes
-    protected int getContentFragmentViewContainer() {
-        return com.davidc.uiwrapper.R.id.content;
-    }
-
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (FragmentManagerUtils.hasMoreThanFragmentOnBackStack(this)) {
-            super.onBackPressed();
-            return;
-        }
-        finish();
+    protected void addInitialFragment() {
+        add(getContentFragmentViewContainer(), FRAGMENT_TAG_MANAGE_CATEGORIES, ManageCategoriesFragment::new);
     }
 
     @Override
@@ -135,7 +97,7 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     @Override
     public void toManageTaskScreen(ManageTaskIntentModel intentModel) {
         if (noFragmentExists(FRAGMENT_TAG_MANAGE_TASK)) {
-            replaceFragment(ManageTaskFragment.newInstance(intentModel), FRAGMENT_TAG_MANAGE_TASK);
+            replace(getContentFragmentViewContainer(), FRAGMENT_TAG_MANAGE_TASK, () -> ManageTaskFragment.newInstance(intentModel));
         }
     }
 
@@ -163,14 +125,6 @@ public class ManageActivity extends UiWrapperRepositoryActivity
     @Override
     public RemoveTaskListener removeTaskListener() {
         return (RemoveTaskListener) findFragmentByTag(FRAGMENT_TAG_MANAGE_CATEGORIES);
-    }
-
-    private void addFragment(final Fragment fragment, final String tag) {
-        FragmentManagerUtils.addFragment(getSupportFragmentManager(), fragment, getContentFragmentViewContainer(), tag);
-    }
-
-    private void replaceFragment(final Fragment fragment, final String tag) {
-        FragmentManagerUtils.replaceFragment(getSupportFragmentManager(), fragment, getContentFragmentViewContainer(), tag);
     }
 
     private Fragment findFragmentByTag(final String tag) {

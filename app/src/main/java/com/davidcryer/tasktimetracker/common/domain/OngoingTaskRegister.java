@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-class OngoingTaskRegister {
+public class OngoingTaskRegister {
     private Task ongoingTask;
 
     void register(final Task task) throws AlreadyStartedException {

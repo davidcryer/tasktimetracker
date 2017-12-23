@@ -2,9 +2,7 @@ package com.davidcryer.tasktimetracker.managecategories;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,20 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
-import com.davidc.uiwrapper.UiBinder;
-import com.davidc.uiwrapper.UiFragment;
-import com.davidc.uiwrapper.UiUnbinder;
+import com.davidc.uiwrapper.UiWrapper;
+import com.davidc.uiwrapper.UiWrapperFactoryFragment;
 import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.framework.FabListener;
-import com.davidcryer.tasktimetracker.common.framework.activities.DialogFragmentFactory;
-import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperRepository;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
 
 import java.util.List;
 import java.util.UUID;
 
-public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.Listener, UiWrapperRepository>
-        implements ManageCategoriesUi, ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener, FabListener {
+public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCategoriesUi, ManageCategoriesUi.Listener, UiWrapperFactory>
+        implements ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener, FabListener {
     private final CategoriesAdapter categoriesAdapter;
     private CategoriesFilter categoriesFilter;
     private Spinner filterSpinner;
@@ -38,30 +34,22 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.Listener() {
             @Override
             public void onClick(UiCategory category, int i) {
-                if (hasListener()) {
-                    listener().onClickCategory(ManageCategoriesFragment.this, category, i);
-                }
+                listener().onClickCategory(ui(), category, i);
             }
 
             @Override
             public void onClick(UiTask task) {
-                if (hasListener()) {
-                    listener().onClickTask(ManageCategoriesFragment.this, task);
-                }
+                listener().onClickTask(ui(), task);
             }
 
             @Override
             public void onToggleActiveStatus(UiTask task, boolean isActive) {
-                if (hasListener()) {
-                    listener().onToggleActiveStatus(ManageCategoriesFragment.this, task, isActive);
-                }
+                listener().onToggleActiveStatus(ui(), task, isActive);
             }
 
             @Override
             public void onClickAddTask(UUID categoryId) {
-                if (hasListener()) {
-                    listener().onClickAddTask(ManageCategoriesFragment.this, categoryId);
-                }
+                listener().onClickAddTask(ui(), categoryId);
             }
         });
     }
@@ -79,16 +67,12 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
         categoriesFilter = new CategoriesFilter(context, new CategoriesFilter.OnFilterChangeListener() {
             @Override
             public void onFilterRemoved() {
-                if (hasListener()) {
-                    listener().onFilterRemoved(ManageCategoriesFragment.this);
-                }
+                listener().onFilterRemoved(ui());
             }
 
             @Override
             public void onFilterSelected(int i) {
-                if (hasListener()) {
-                    listener().onFilterSelected(ManageCategoriesFragment.this, i);
-                }
+                listener().onFilterSelected(ui(), i);
             }
         });
     }
@@ -125,109 +109,99 @@ public class ManageCategoriesFragment extends UiFragment<ManageCategoriesUi.List
     }
 
     @Override
-    public void show(List<UiListItem> items) {
-        categoriesAdapter.items(items);
+    public void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
+        listener().onAddCategory(prompt, title, note);
     }
 
     @Override
-    public void add(final UiListItem item) {
-        categoriesAdapter.add(item);
-    }
-
-    @Override
-    public void insert(final UiListItem item, final int i) {
-        categoriesAdapter.insert(item, i);
-    }
-
-    @Override
-    public void set(UiListItem item, int i) {
-        categoriesAdapter.set(item, i);
-    }
-
-    @Override
-    public void remove(int i) {
-        categoriesAdapter.remove(i);
-    }
-
-    @Override
-    public void remove(int i, int count) {
-        categoriesAdapter.remove(i, count);
-    }
-
-    @Override
-    public void showFilterOptions(List<String> options) {
-        categoriesFilter.populate(options, filterSpinner);
-    }
-
-    @Override
-    public void showFilterOptions(List<String> options, int selected) {
-        categoriesFilter.populate(options, selected, filterSpinner);
-    }
-
-    @Override
-    public void showAddCategoryPrompt() {
-        if (navigator != null) {
-            navigator.showAddCategoryPrompt(AddCategoryDialogFragment::new);
-        }
-    }
-
-    @Override
-    public void showAddTaskPrompt(final UUID categoryId) {
-        if (navigator != null) {
-            navigator.showAddTaskPrompt(() -> AddTaskDialogFragment.newInstance(categoryId));
-        }
-    }
-
-    @Override
-    public void showManageTaskScreen(final ManageTaskIntentModel intentModel) {
-        if (navigator != null) {
-            navigator.toManageTaskScreen(intentModel);
-        }
-    }
-
-    @Override
-    public void onAddCategory(InputPrompt prompt, String title, String note) {
-        if (hasListener()) {
-            listener().onAddCategory(prompt, title, note);
-        }
-    }
-
-    @Override
-    public void onAddTask(InputPrompt prompt, String title, String note, UUID categoryId) {
-        if (hasListener()) {
-            listener().onAddTask(prompt, title, note, categoryId);
-        }
+    public void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
+        listener().onAddTask(prompt, title, note, categoryId);
     }
 
     @Override
     public void onClickDelete(UiCategory category) {
-        if (hasListener()) {
-            listener().onRemoveCategory(this, category);
-        }
+        listener().onRemoveCategory(ui(), category);
     }
 
     @Override
     public void onClickDelete(UiTask task, UiCategory category) {
-        if (hasListener()) {
-            listener().onRemoveTask(this, task, category);
-        }
+        listener().onRemoveTask(ui(), task, category);
     }
 
     @Override
     public boolean onFabClicked() {
-        if (hasListener()) {
-            listener().onClickAddCategory(this);
-        }
+        listener().onClickAddCategory(ui());
         return true;
     }
 
     @Override
-    protected Listener bind(@NonNull UiWrapperRepository uiWrapperRepository, @NonNull UiBinder binder) {
-        return uiWrapperRepository.bind(this, binder);
+    protected ManageCategoriesUi ui() {
+        return new ManageCategoriesUi() {
+            @Override
+            public void show(List<UiListItem> items) {
+                categoriesAdapter.items(items);
+            }
+
+            @Override
+            public void add(final UiListItem item) {
+                categoriesAdapter.add(item);
+            }
+
+            @Override
+            public void insert(final UiListItem item, final int i) {
+                categoriesAdapter.insert(item, i);
+            }
+
+            @Override
+            public void set(UiListItem item, int i) {
+                categoriesAdapter.set(item, i);
+            }
+
+            @Override
+            public void remove(int i) {
+                categoriesAdapter.remove(i);
+            }
+
+            @Override
+            public void remove(int i, int count) {
+                categoriesAdapter.remove(i, count);
+            }
+
+            @Override
+            public void showFilterOptions(List<String> options) {
+                categoriesFilter.populate(options, filterSpinner);
+            }
+
+            @Override
+            public void showFilterOptions(List<String> options, int selected) {
+                categoriesFilter.populate(options, selected, filterSpinner);
+            }
+
+            @Override
+            public void showAddCategoryPrompt() {
+                if (navigator != null) {
+                    navigator.showAddCategoryPrompt(AddCategoryDialogFragment::new);
+                }
+            }
+
+            @Override
+            public void showAddTaskPrompt(final UUID categoryId) {
+                if (navigator != null) {
+                    navigator.showAddTaskPrompt(() -> AddTaskDialogFragment.newInstance(categoryId));
+                }
+            }
+
+            @Override
+            public void showManageTaskScreen(final ManageTaskIntentModel intentModel) {
+                if (navigator != null) {
+                    navigator.toManageTaskScreen(intentModel);
+                }
+            }
+        };
     }
 
     @Override
-    protected void unbind(@NonNull UiWrapperRepository uiWrapperRepository, @NonNull UiUnbinder unbinder) {
-        uiWrapperRepository.unbind(this, unbinder);
+    protected UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ?> uiWrapper(UiWrapperFactory uiWrapperFactory, @Nullable Bundle savedState) {
+        return uiWrapperFactory.createManageCategoriesUiWrapper(savedState);
     }
 }
