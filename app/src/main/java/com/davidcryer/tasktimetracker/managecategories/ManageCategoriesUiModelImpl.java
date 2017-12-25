@@ -30,6 +30,7 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     @Override
     public void showCategories(List<Category> categories, ManageCategoriesUi ui) {
+        categoriesSet = new Date();
         CategoryUtils.sortAlphabetically(categories);
         if (ui != null) {
             showCategoriesAndFilters(categories, ui);
@@ -101,19 +102,16 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
         if (ui != null) {
             ui.remove(i);
         }
-        categories.remove(i);
+        final Category category = category(categoryId);
+        categories.remove(category);
+        category.delete();
     }
 
     @Override
-    public void addTask(Task task, UUID categoryId, ManageCategoriesUi ui) {
-        final Category category = category(categoryId);
-        if (category == null) {
-            throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
-        }
+    public void addTask(Task task, Category category, ManageCategoriesUi ui) {
         if (ui != null) {
             ui.insert(UiTaskMapper.from(task, category), lastTaskPosition(category));
         }
-        category.addTask(task);
     }
 
     private int lastTaskPosition(final Category category) {

@@ -3,7 +3,7 @@ package com.davidcryer.tasktimetracker.common.framework.uiwrapper;
 import android.os.Bundle;
 
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.DomainManager;
 import com.davidcryer.tasktimetracker.common.domain.TaskFactory;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiModel;
@@ -11,17 +11,15 @@ import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiModelFa
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiWrapper;
 
 public class UiWrapperFactory {
-    private final CategoryDatabase categoryDatabase;
-    private final TaskFactory taskFactory;
+    private final DomainManager domainManager;
 
-    public UiWrapperFactory(CategoryDatabase categoryDatabase, TaskFactory taskFactory) {
-        this.categoryDatabase = categoryDatabase;
-        this.taskFactory = taskFactory;
+    public UiWrapperFactory(DomainManager domainManager) {
+        this.domainManager = domainManager;
     }
 
     public UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> createManageCategoriesUiWrapper(final Bundle savedState) {
         return savedState == null
-                ? ManageCategoriesUiWrapper.newInstance(new ManageCategoriesUiModelFactory(), categoryDatabase, taskFactory)
-                : ManageCategoriesUiWrapper.savedElseNewInstance(savedState, new ManageCategoriesUiModelFactory(), categoryDatabase, taskFactory);
+                ? ManageCategoriesUiWrapper.newInstance(new ManageCategoriesUiModelFactory(), domainManager)
+                : ManageCategoriesUiWrapper.savedElseNewInstance(savedState, new ManageCategoriesUiModelFactory(), domainManager);
     }
 }

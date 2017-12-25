@@ -1,18 +1,16 @@
 package com.davidcryer.tasktimetracker.managetask;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.davidc.uiwrapper.UiBinder;
-import com.davidc.uiwrapper.UiFragment;
-import com.davidc.uiwrapper.UiUnbinder;
+import com.davidc.uiwrapper.UiWrapper;
+import com.davidc.uiwrapper.UiWrapperFactoryFragment;
 import com.davidcryer.tasktimetracker.R;
 
-public class ManageTaskFragment extends UiFragment {
+public class ManageTaskFragment extends UiWrapperFactoryFragment<Object, Object, Object> {
     private final static String ARGS_INTENT_MODEL = "intent model";
 
     public static ManageTaskFragment newInstance(final ManageTaskIntentModel intentModel) {
@@ -30,12 +28,7 @@ public class ManageTaskFragment extends UiFragment {
     }
 
     @Override
-    protected Object bind(@NonNull Object uiWrapperRepository, @NonNull UiBinder binder) {
-        return null;
-    }
-
-    @Override
-    protected void unbind(@NonNull Object uiWrapperRepository, @NonNull UiUnbinder binder) {
-
+    protected UiWrapper<Object, Object, ?> uiWrapper(Object uiWrapperFactory, @Nullable Bundle savedState) {
+        return null;//TODO
     }
 }

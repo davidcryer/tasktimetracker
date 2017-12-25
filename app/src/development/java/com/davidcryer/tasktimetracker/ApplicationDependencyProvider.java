@@ -2,7 +2,8 @@ package com.davidcryer.tasktimetracker;
 
 import android.content.Context;
 
-import com.davidcryer.tasktimetracker.common.domain.CategoryDatabase;
+import com.davidcryer.tasktimetracker.common.domain.CategoryFactory;
+import com.davidcryer.tasktimetracker.common.domain.DomainManager;
 import com.davidcryer.tasktimetracker.common.domain.OngoingTaskRegister;
 import com.davidcryer.tasktimetracker.common.domain.PrePopulatedCategorySharedPreferences;
 import com.davidcryer.tasktimetracker.common.domain.TaskFactory;
@@ -14,11 +15,15 @@ class ApplicationDependencyProvider {
     private ApplicationDependencyProvider() {}
 
     static UiWrapperFactory uiWrapperFactory(final Context context) {
-        return new UiWrapperFactory(categoryDatabase(context), taskFactory());//TODO change CategoryDatabase to handle task creation
+        return new UiWrapperFactory(domainManager(context));//TODO change DomainManager to handle task creation
     }
 
-    private static CategoryDatabase categoryDatabase(final Context context) {
-        return new PrePopulatedCategorySharedPreferences(context, new Gson(), taskFactory());
+    private static DomainManager domainManager(final Context context) {
+        return new PrePopulatedCategorySharedPreferences(context, new Gson(), categoryFactory());
+    }
+
+    private static CategoryFactory categoryFactory() {
+        return new CategoryFactory(taskFactory());
     }
 
     private static TaskFactory taskFactory() {

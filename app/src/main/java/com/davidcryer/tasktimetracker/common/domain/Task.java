@@ -26,6 +26,7 @@ public class Task implements OngoingTaskRegister.Task {
     private OngoingSession ongoingSession;
     private List<FinishedSession> finishedSessions;
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
+    private OnChangeListener onChangeListener;
 
     Task(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) {
         this(UUID.randomUUID(), title, note, null, new LinkedList<>(), ongoingTaskRegister);
@@ -99,6 +100,7 @@ public class Task implements OngoingTaskRegister.Task {
             for (final Iterator<FinishedSession> itr = finishedSessions.iterator(); itr.hasNext(); ) {
                 if (itr.next().id().equals(sessionId)) {
                     itr.remove();
+                    notifyChanged();
                     return true;
                 }
             }
@@ -116,6 +118,16 @@ public class Task implements OngoingTaskRegister.Task {
         }
     }
 
+    void onChangeListener(final OnChangeListener onChangeListener) {
+        this.onChangeListener = onChangeListener;
+    }
+
+    private void notifyChanged() {
+        if (onChangeListener != null) {
+            onChangeListener.taskChanged(this);
+        }
+    }
+
     @Override
     public void onRegister() throws AlreadyStartedException {
         if (isOngoing()) {
@@ -123,6 +135,7 @@ public class Task implements OngoingTaskRegister.Task {
         }
         ongoingSession = new OngoingSession();
         notifyOngoingTaskListener(listener -> listener.onStart(this));
+        notifyChanged();
     }
 
     @Override
@@ -133,6 +146,7 @@ public class Task implements OngoingTaskRegister.Task {
         addFinishedSession(ongoingSession.stop());
         ongoingSession = null;
         notifyOngoingTaskListener(listener -> listener.onStop(this));
+        notifyChanged();
     }
 
     private void notifyOngoingTaskListener(final NotifyOngoingStatusListenerAction action) {
@@ -205,6 +219,7 @@ public class Task implements OngoingTaskRegister.Task {
             inspectInput();
             writeTitle();
             writeNote();
+            notifyChanged();
         }
 
         private void inspectInput() throws IllegalTaskArgsException {
@@ -230,10 +245,20 @@ public class Task implements OngoingTaskRegister.Task {
                 task.note(note);
             }
         }
+
+        private void notifyChanged() {
+            if (titleChanged || noteChanged) {
+                task.notifyChanged();
+            }
+        }
     }
 
     public interface OngoingStatusListener {
         void onStart(Task task);
         void onStop(Task task);
+    }
+
+    interface OnChangeListener {
+        void taskChanged(Task task);
     }
 }

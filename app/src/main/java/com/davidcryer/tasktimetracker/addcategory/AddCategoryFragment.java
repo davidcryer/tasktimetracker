@@ -1,13 +1,13 @@
 package com.davidcryer.tasktimetracker.addcategory;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.davidc.uiwrapper.UiBinder;
-import com.davidc.uiwrapper.UiFragment;
-import com.davidc.uiwrapper.UiUnbinder;
+import com.davidc.uiwrapper.UiWrapper;
+import com.davidc.uiwrapper.UiWrapperFactoryFragment;
+import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 
-public class AddCategoryFragment extends UiFragment {
+public class AddCategoryFragment extends UiWrapperFactoryFragment<Object, Object, UiWrapperFactory> {
     private final static String ARGS_CATEGORY_RETURN_KEY = "category return key";
 
     public static AddCategoryFragment newInstance(final String categoryReturnKey) {
@@ -19,12 +19,7 @@ public class AddCategoryFragment extends UiFragment {
     }
 
     @Override
-    protected Object bind(@NonNull Object uiWrapperRepository, @NonNull UiBinder binder) {
+    protected UiWrapper<Object, Object, ?> uiWrapper(UiWrapperFactory uiWrapperFactory, @Nullable Bundle savedState) {
         return null;
-    }
-
-    @Override
-    protected void unbind(@NonNull Object uiWrapperRepository, @NonNull UiUnbinder binder) {
-
     }
 }

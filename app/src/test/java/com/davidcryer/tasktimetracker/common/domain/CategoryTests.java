@@ -37,7 +37,7 @@ public class CategoryTests {
     public void addTask() {
         final Category category = new Category("", null);
         final Task task = new Task("", null);
-        Assert.assertTrue(category.addTask(task));
+        Assert.assertTrue(category.newTask(task));
         Assert.assertTrue(!category.tasks().isEmpty());
         Assert.assertTrue(category.tasks().get(0) == task);
     }
@@ -46,8 +46,8 @@ public class CategoryTests {
     public void addTask_alreadyAdded() {
         final Category category = new Category("", null);
         final Task task = new Task("", null);
-        Assert.assertTrue(category.addTask(task));
-        Assert.assertFalse(category.addTask(task));
+        Assert.assertTrue(category.newTask(task));
+        Assert.assertFalse(category.newTask(task));
         Assert.assertTrue(category.tasks().size() == 1);
     }
 
@@ -55,7 +55,7 @@ public class CategoryTests {
     public void deleteTask() {
         final Category category = new Category("", null);
         final Task task = new Task("", null);
-        category.addTask(task);
+        category.newTask(task);
         Assert.assertTrue(category.deleteTask(task.id()));
         Assert.assertTrue(category.tasks().isEmpty());
     }
@@ -72,8 +72,8 @@ public class CategoryTests {
         final Category category = new Category("", null);
         final Task task1 = new Task("", null);
         final Task task2 = new Task("", null);
-        category.addTask(task1);
-        category.addTask(task2);
+        category.newTask(task1);
+        category.newTask(task2);
         task1.start();
         task2.start();
         Thread.sleep(10L);

@@ -12,24 +12,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class Category {
+public class Category implements Task.OnChangeListener {
     private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
     private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null or empty";
+    private final CategoryStore categoryStore;
+    private final TaskFactory taskFactory;
     private final UUID id;
     private String title;
     private String note;
     private List<Task> tasks;
 
-    public Category(String title, String note) throws IllegalCategoryArgsException {
-        this(UUID.randomUUID(), title, note, null);
+    public Category(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws IllegalCategoryArgsException {
+        this(categoryStore, taskFactory, UUID.randomUUID(), title, note, null);
     }
 
-    Category(UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
+    Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
         ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
+        this.categoryStore = categoryStore;
+        this.taskFactory = taskFactory;
         this.id = id;
         this.title = title;
         this.note = note;
         this.tasks = tasks;
+        tasks.forEach(task -> task.onChangeListener(this));
     }
 
     private static Arg idArg(final UUID id) {
@@ -61,21 +66,31 @@ public class Category {
     }
 
     public List<Task> tasks() {
-        return tasks == null ? new ArrayList<Task>() : new ArrayList<>(tasks);
+        return tasks == null ? new ArrayList<>() : new ArrayList<>(tasks);
     }
 
-    public boolean addTask(final Task task) {
+    public Task newTask(final String title, final String note) {
         if (tasks == null) {
             tasks = new LinkedList<>();
         }
-        return !tasks.contains(task) && tasks.add(task);
+        final Task task = taskFactory.create(title, note);
+        tasks.add(task);
+        task.onChangeListener(this);
+        save();
+        return task;
     }
 
     public boolean deleteTask(final UUID taskId) {
         if (tasks != null) {
             for (final Iterator<Task> itr = tasks.iterator(); itr.hasNext(); ) {
-                if (itr.next().id().equals(taskId)) {
+                final Task task = itr.next();
+                if (task.id().equals(taskId)) {
+                    task.onChangeListener(null);
+                    if (task.isOngoing()) {
+                        task.stop();
+                    }
                     itr.remove();
+                    save();
                     return true;
                 }
             }
@@ -91,6 +106,19 @@ public class Category {
             }
         }
         return expendedTime;
+    }
+
+    @Override
+    public void taskChanged(Task task) {
+        save();
+    }
+
+    private void save() {
+        categoryStore.save(this);
+    }
+
+    public void delete() {
+        categoryStore.delete(this);
     }
 
     DbCategory toDbCategory() {
@@ -128,6 +156,7 @@ public class Category {
             inspectInput();
             writeTitle();
             writeNote();
+            save();
         }
 
         private void inspectInput() throws IllegalCategoryArgsException {
@@ -151,6 +180,12 @@ public class Category {
         private void writeNote() {
             if (noteChanged) {
                 category.note(note);
+            }
+        }
+
+        private void save() {
+            if (titleChanged || noteChanged) {
+                category.save();
             }
         }
     }

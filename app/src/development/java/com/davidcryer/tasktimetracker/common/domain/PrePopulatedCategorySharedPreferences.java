@@ -4,46 +4,32 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class PrePopulatedCategorySharedPreferences extends CategorySharedPreferences {
 
-    public PrePopulatedCategorySharedPreferences(Context context, Gson gson, TaskFactory taskFactory) {
-        super(context, gson, taskFactory);
+    public PrePopulatedCategorySharedPreferences(Context context, Gson gson, CategoryFactory categoryFactory) {
+        super(context, gson, categoryFactory);
         deleteAll();
         saveCategories();
     }
 
     private void deleteAll() {
-        final List<Category> categories = findAll(null);
+        final List<Category> categories = getAll(null);
         for (final Category category : categories) {
-            delete(category.id());
+            category.delete();
         }
     }
 
     private void saveCategories() {
-        save(Arrays.asList(
-                category("Category_1", "This the the first category", null),
-                category("Category_2", "This the the second category", Arrays.asList(
-                        task("Task_1", "This the the first task"),
-                        task("Task_2", "This the the second task"),
-                        task("Task_3", "This the the third task")
-                )),
-                category("Category_3", "This the the third category", Arrays.asList(
-                        task("Task_1", "This the the first task"),
-                        task("Task_2", "This the the second task")
-                )),
-                category("Category_4", "This the the fourth category", null)
-        ));
-    }
-
-    private Category category(final String title, final String note, final List<Task> tasks) {
-        return new Category(UUID.randomUUID(), title, note, tasks);
-    }
-
-    private Task task(final String title, final String note) {
-        return new Task(title, note, null);
+        create("Category_1", "This the the first category");
+        final Category cat2 = create("Category_2", "This the the second category");
+        cat2.newTask("Task_1", "This the the first task");
+        cat2.newTask("Task_2", "This the the second task");
+        cat2.newTask("Task_3", "This the the third task");
+        final Category cat3 = create("Category_3", "This the the third category");
+        cat3.newTask("Task_1", "This the the first task");
+        cat3.newTask("Task_2", "This the the second task");
+        create("Category_4", "This the the fourth category");
     }
 }

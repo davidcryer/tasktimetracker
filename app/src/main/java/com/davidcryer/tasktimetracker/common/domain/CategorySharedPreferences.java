@@ -3,45 +3,28 @@ package com.davidcryer.tasktimetracker.common.domain;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.google.gson.Gson;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class CategorySharedPreferences implements CategoryDatabase {
+public class CategorySharedPreferences implements DomainManager, CategoryStore {
     private final static String PREFS_KEY = "category";
     private final SharedPreferences sharedPreferences;
     private final Gson gson;
-    private final TaskFactory taskFactory;
+    private final CategoryFactory categoryFactory;
 
-    public CategorySharedPreferences(final Context context, final Gson gson, final TaskFactory taskFactory) {
+    public CategorySharedPreferences(final Context context, final Gson gson, final CategoryFactory categoryFactory) {
         sharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
         this.gson = gson;
-        this.taskFactory = taskFactory;
+        this.categoryFactory = categoryFactory;
     }
 
     @Override
-    public void save(final Category category) {
-        sharedPreferences.edit().putString(category.id().toString(), gson.toJson(dbCategory(category))).apply();
-    }
-
-    @Override
-    public void save(final List<Category> categories) {
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        for (final Category category : categories) {
-            editor.putString(category.id().toString(), gson.toJson(dbCategory(category)));
-        }
-        editor.apply();
-    }
-
-    private DbCategory dbCategory(final Category category) {
-        return category.toDbCategory();
-    }
-
-    @Override
-    public Category find(UUID id, Task.OngoingStatusListener ongoingStatusListener) {//TODO optimise (probably with cache)
-        final List<Category> categories = findAll(ongoingStatusListener);
+    public Category get(UUID id, Task.OngoingStatusListener ongoingStatusListener) {//TODO optimise (probably with cache)
+        final List<Category> categories = getAll(ongoingStatusListener);
         for (final Category category : categories) {
             if (category.id().equals(id)) {
                 return category;
@@ -51,7 +34,7 @@ public class CategorySharedPreferences implements CategoryDatabase {
     }
 
     @Override
-    public List<Category> findAll(Task.OngoingStatusListener ongoingStatusListener) {
+    public List<Category> getAll(Task.OngoingStatusListener ongoingStatusListener) {
         final List<Category> categories = new LinkedList<>();
         for (final Object json : sharedPreferences.getAll().values()) {
             categories.add(fromJson(json, ongoingStatusListener));
@@ -60,7 +43,7 @@ public class CategorySharedPreferences implements CategoryDatabase {
     }
 
     private Category fromJson(final Object json, final Task.OngoingStatusListener ongoingStatusListener) {
-        return fromJson(json).toCategory(taskFactory, ongoingStatusListener);
+        return fromJson(json).toCategory(this, categoryFactory, ongoingStatusListener);
     }
 
     private DbCategory fromJson(final Object json) {
@@ -68,7 +51,21 @@ public class CategorySharedPreferences implements CategoryDatabase {
     }
 
     @Override
-    public void delete(final UUID categoryId) {
-        sharedPreferences.edit().remove(categoryId.toString()).apply();
+    public Category create(String title, String note) throws IllegalCategoryArgsException {
+        return categoryFactory.create(this, title, note);
+    }
+
+    @Override
+    public void save(final Category category) {
+        sharedPreferences.edit().putString(id(category), gson.toJson(category.toDbCategory())).apply();
+    }
+
+    @Override
+    public void delete(final Category category) {
+        sharedPreferences.edit().remove(id(category)).apply();
+    }
+
+    private String id(final Category category) {
+        return category.id().toString();
     }
 }

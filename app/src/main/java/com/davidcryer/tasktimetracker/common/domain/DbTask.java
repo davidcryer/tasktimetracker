@@ -23,7 +23,7 @@ class DbTask implements Serializable, Parcelable {
     }
 
     Task toTask(final TaskFactory factory, final Task.OngoingStatusListener listener) {
-        final Task task = factory.create(id, title, note, ongoingSession.toOngoingSession(), DbMapper.finishedSessions(finishedSessions));
+        final Task task = factory.inflate(id, title, note, ongoingSession.toOngoingSession(), DbMapper.finishedSessions(finishedSessions));
         task.addOngoingStatusListener(listener);
         return task;
     }

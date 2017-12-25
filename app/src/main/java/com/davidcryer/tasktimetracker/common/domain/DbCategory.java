@@ -13,15 +13,15 @@ class DbCategory implements Serializable, Parcelable {
     private String note;
     private List<DbTask> tasks;
 
-    public DbCategory(UUID id, String title, String note, List<DbTask> tasks) {
+    DbCategory(UUID id, String title, String note, List<DbTask> tasks) {
         this.id = id;
         this.title = title;
         this.note = note;
         this.tasks = tasks;
     }
 
-    Category toCategory(final TaskFactory factory, final Task.OngoingStatusListener ongoingStatusListener) {
-        return new Category(id, title, note, DbMapper.tasks(tasks, factory, ongoingStatusListener));
+    Category toCategory(final CategoryStore categoryStore, final CategoryFactory factory, final Task.OngoingStatusListener ongoingStatusListener) {
+        return factory.inflate(categoryStore, id, title, note, tasks, ongoingStatusListener);
     }
 
     @Override

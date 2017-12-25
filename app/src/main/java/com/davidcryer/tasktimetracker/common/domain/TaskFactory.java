@@ -16,7 +16,7 @@ public class TaskFactory {
         return new Task(title, note, ongoingTaskRegister);
     }
 
-    Task create(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
+    Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
         return new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
     }
 }
