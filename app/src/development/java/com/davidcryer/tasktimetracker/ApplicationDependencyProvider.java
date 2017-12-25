@@ -15,7 +15,7 @@ class ApplicationDependencyProvider {
     private ApplicationDependencyProvider() {}
 
     static UiWrapperFactory uiWrapperFactory(final Context context) {
-        return new UiWrapperFactory(domainManager(context));//TODO change DomainManager to handle task creation
+        return new UiWrapperFactory(domainManager(context));
     }
 
     private static DomainManager domainManager(final Context context) {
