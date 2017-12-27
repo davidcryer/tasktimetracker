@@ -28,7 +28,7 @@ public class Task implements OngoingTaskRegister.Task {
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
         ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args());
         this.id = id;
         this.title = title;
@@ -40,7 +40,7 @@ public class Task implements OngoingTaskRegister.Task {
     }
 
     static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
-        return new Task(UUID.randomUUID(), title, note, null, new LinkedList<>(), ongoingTaskRegister);
+        return new Task(UUID.randomUUID(), title, note, null, null, ongoingTaskRegister);
     }
 
     static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
