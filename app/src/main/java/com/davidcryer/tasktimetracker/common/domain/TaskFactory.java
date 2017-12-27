@@ -5,18 +5,18 @@ import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsExcept
 import java.util.List;
 import java.util.UUID;
 
-public class TaskFactory {
+class TaskFactory {
     private final OngoingTaskRegister ongoingTaskRegister;
 
-    public TaskFactory(final OngoingTaskRegister ongoingTaskRegister) {
+    TaskFactory(final OngoingTaskRegister ongoingTaskRegister) {
         this.ongoingTaskRegister = ongoingTaskRegister;
     }
 
-    public Task create(final String title, final String note) {
-        return new Task(title, note, ongoingTaskRegister);
+    Task create(final String title, final String note) {
+        return Task.create(title, note, ongoingTaskRegister);
     }
 
     Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
-        return new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
+        return Task.inflate(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
     }
 }

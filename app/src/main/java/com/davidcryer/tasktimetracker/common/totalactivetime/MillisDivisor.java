@@ -34,7 +34,9 @@ public class MillisDivisor {
 
     private long denominations(final long denom) {
         final long denoms = millis / denom;
-        millis %= (denoms * denom);
+        if (denoms != 0L) {
+            millis %= (denoms * denom);
+        }
         return denoms;
     }
 }

@@ -3,6 +3,13 @@ package com.davidcryer.tasktimetracker.common.domain;
 public class OngoingTaskRegister {
     private Task ongoingTask;
 
+    void setUp(final Task task) {
+        if (task != null) {
+            safeStopOngoingTask();
+            ongoingTask = task;
+        }
+    }
+
     void register(final Task task) throws AlreadyStartedException {
         if (task != null) {
             task.onRegister();

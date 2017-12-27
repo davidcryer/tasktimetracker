@@ -10,13 +10,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class CategorySharedPreferences implements DomainManager, CategoryStore {
+class CategorySharedPreferences implements DomainManager, CategoryStore {
     private final static String PREFS_KEY = "category";
     private final SharedPreferences sharedPreferences;
     private final Gson gson;
     private final CategoryFactory categoryFactory;
 
-    public CategorySharedPreferences(final Context context, final Gson gson, final CategoryFactory categoryFactory) {
+    CategorySharedPreferences(final Context context, final Gson gson, final CategoryFactory categoryFactory) {
         sharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
         this.gson = gson;
         this.categoryFactory = categoryFactory;

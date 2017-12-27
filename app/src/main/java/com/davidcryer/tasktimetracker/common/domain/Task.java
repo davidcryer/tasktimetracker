@@ -28,10 +28,6 @@ public class Task implements OngoingTaskRegister.Task {
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    Task(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) {
-        this(UUID.randomUUID(), title, note, null, new LinkedList<>(), ongoingTaskRegister);
-    }
-
     Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
         ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args());
         this.id = id;
@@ -41,9 +37,18 @@ public class Task implements OngoingTaskRegister.Task {
         this.finishedSessions = finishedSessions;
         this.ongoingTaskRegister = ongoingTaskRegister;
         ongoingStatusListeners = new HashSet<>();
-        if (isOngoing()) {
-            ongoingTaskRegister.register(this);
+    }
+
+    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
+        return new Task(UUID.randomUUID(), title, note, null, new LinkedList<>(), ongoingTaskRegister);
+    }
+
+    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
+        final Task task = new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
+        if (task.isOngoing()) {
+            ongoingTaskRegister.setUp(task);
         }
+        return task;
     }
 
     private static Arg idArg(final UUID id) {
@@ -165,7 +170,11 @@ public class Task implements OngoingTaskRegister.Task {
     }
 
     DbTask toDbTask() {
-        return new DbTask(id, title, note, ongoingSession.toDbOngoingSession(), DbMapper.dbFinishedSessions(finishedSessions));
+        return new DbTask(id, title, note, dbOngoingSession(), DbMapper.dbFinishedSessions(finishedSessions));
+    }
+
+    private DbOngoingSession dbOngoingSession() {
+        return ongoingSession == null ? null : ongoingSession.toDbOngoingSession();
     }
 
     public UUID id() {

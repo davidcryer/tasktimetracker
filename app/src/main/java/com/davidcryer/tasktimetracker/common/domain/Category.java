@@ -22,11 +22,7 @@ public class Category implements Task.OnChangeListener {
     private String note;
     private List<Task> tasks;
 
-    public Category(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws IllegalCategoryArgsException {
-        this(categoryStore, taskFactory, UUID.randomUUID(), title, note, null);
-    }
-
-    Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
+    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
         ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
         this.categoryStore = categoryStore;
         this.taskFactory = taskFactory;
@@ -34,7 +30,18 @@ public class Category implements Task.OnChangeListener {
         this.title = title;
         this.note = note;
         this.tasks = tasks;
-        tasks.forEach(task -> task.onChangeListener(this));
+    }
+
+    static Category create(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws IllegalCategoryArgsException {
+        final Category category = new Category(categoryStore, taskFactory, UUID.randomUUID(), title, note, null);
+        categoryStore.save(category);
+        return category;
+    }
+
+    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
+        final Category category = new Category(categoryStore, taskFactory, id, title, note, tasks);
+        category.listenToTaskChanges();
+        return category;
     }
 
     private static Arg idArg(final UUID id) {
@@ -43,6 +50,12 @@ public class Category implements Task.OnChangeListener {
 
     private static Arg titleArg(final String title) {
         return new Arg(title != null && !title.isEmpty(), ILLEGAL_TITLE_MESSAGE);
+    }
+
+    private void listenToTaskChanges() {
+        if (tasks != null) {
+            tasks.forEach(task -> task.onChangeListener(this));
+        }
     }
 
     public UUID id() {
