@@ -110,12 +110,16 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     @Override
     public void addTask(Task task, Category category, ManageCategoriesUi ui) {
         if (ui != null) {
-            ui.insert(UiTaskMapper.from(task, category), lastTaskPosition(category));
+            final int position = lastTaskPosition(category);
+            if (position != -1) {
+                ui.insert(UiTaskMapper.from(task, category), lastTaskPosition(category));
+            }
         }
     }
 
     private int lastTaskPosition(final Category category) {
         int position = 0;
+        final int addedTaskOffset = -1;
         if (filteredCategory == null) {
             final int categoryOffset = 1;
             for (int i = 0; i < categories.indexOf(category) + 1; i++) {
@@ -123,10 +127,8 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
             }
         } else if (filteredCategory == categories.indexOf(category)) {
             position = 1 + category.tasks().size();
-        } else {
-            position = -1;
         }
-        return position;
+        return position + addedTaskOffset;
     }
 
     @Override
