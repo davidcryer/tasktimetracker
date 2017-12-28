@@ -1,11 +1,12 @@
 package com.davidcryer.tasktimetracker.common.totalactivetime;
 
+import static com.davidcryer.tasktimetracker.common.TimeInterval.MILLIS_IN_DAY;
+import static com.davidcryer.tasktimetracker.common.TimeInterval.MILLIS_IN_HOUR;
+import static com.davidcryer.tasktimetracker.common.TimeInterval.MILLIS_IN_MINUTE;
+import static com.davidcryer.tasktimetracker.common.TimeInterval.MILLIS_IN_SECOND;
+import static com.davidcryer.tasktimetracker.common.TimeInterval.MILLIS_IN_YEAR;
+
 public class MillisDivisor {
-    private final static long MILLIS_IN_SECOND = 1000;
-    private final static long MILLIS_IN_MINUTE = MILLIS_IN_SECOND * 60;
-    private final static long MILLIS_IN_HOUR = MILLIS_IN_MINUTE * 60;
-    private final static long MILLIS_IN_DAY = MILLIS_IN_HOUR * 24;
-    private final static long MILLIS_IN_YEAR = MILLIS_IN_DAY * 365;//FIXME not strictly correct
     private long millis;
 
     MillisDivisor(long millis) {

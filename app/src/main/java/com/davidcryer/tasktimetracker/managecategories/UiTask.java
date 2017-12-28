@@ -1,11 +1,8 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import com.davidcryer.tasktimetracker.R;
 
@@ -91,7 +88,6 @@ class UiTask extends UiListItem {
             layout.task(task);
             layout.setOnClickListener(view -> listener.onClickTask(task));
             layout.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                task.setActive(isChecked);
                 listener.onToggleActiveStatus(task, isChecked);
             });
         }
