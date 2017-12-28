@@ -44,23 +44,9 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
                 .setView(taskLayout)
                 .setTitle("Add task")
                 .setPositiveButton("Add", null)
-                .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }).create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onClickAdd(categoryId);
-                    }
-                });
-            }
-        });
+                .setNeutralButton(android.R.string.cancel, (dialogInterface, i) -> {})
+                .create();
+        dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> onClickAdd(categoryId)));
         dialog.show();
         return dialog;
     }
