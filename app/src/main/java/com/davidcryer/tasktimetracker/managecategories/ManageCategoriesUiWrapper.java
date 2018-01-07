@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
+import com.davidcryer.tasktimetracker.common.domain.AlreadyStartedException;
+import com.davidcryer.tasktimetracker.common.domain.AlreadyStoppedException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.DomainManager;
 import com.davidcryer.tasktimetracker.common.domain.Task;
@@ -61,9 +63,17 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             public void onToggleActiveStatus(ManageCategoriesUi ui, UiTask uiTask, boolean isActive) {
                 final Task task = uiModel().task(uiTask.getId());
                 if (isActive) {
-                    task.start();
+                    try {
+                        task.start();
+                    } catch (AlreadyStartedException e) {
+                        onStart(task);
+                    }
                 } else {
-                    task.stop();
+                    try {
+                        task.stop();
+                    } catch (AlreadyStoppedException e) {
+                        onStop(task);
+                    }
                 }
             }
 

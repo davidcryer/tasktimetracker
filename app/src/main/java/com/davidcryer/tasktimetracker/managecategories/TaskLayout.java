@@ -1,7 +1,6 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.CompoundButton;
@@ -11,31 +10,22 @@ import android.widget.TextView;
 
 import com.davidcryer.tasktimetracker.R;
 import com.davidcryer.tasktimetracker.common.TimeInterval;
+import com.davidcryer.tasktimetracker.common.Timer;
 import com.davidcryer.tasktimetracker.common.totalactivetime.FormatBuilder;
 import com.davidcryer.tasktimetracker.common.totalactivetime.HoursFormatBuilder;
 import com.davidcryer.tasktimetracker.common.totalactivetime.TotalActiveTimeFormatter;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class TaskLayout extends LinearLayout {
     private final static FormatBuilder timeFormat = new HoursFormatBuilder();
-    private final Timer timer = new Timer(false);
-    private final TimerTask timerTask;
     private final TextView titleView;
     private final TextView timeView;
     private final Switch switchView;
+    private final Timer timer;
     private UiTask task;
     private Long timeOfLastTick;
 
     {
-        final Handler handler = new Handler();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(() -> onTick());
-            }
-        };
+        timer = new Timer();
     }
 
     public TaskLayout(Context context, @Nullable AttributeSet attrs) {
@@ -50,13 +40,13 @@ public class TaskLayout extends LinearLayout {
         final long currentTime = System.currentTimeMillis();
         task.incrementActiveTime(currentTime - timeOfLastTick);
         timeOfLastTick = currentTime;
-        totalTimeActive(task.getTotalTimeActive());
+        totalTimeActive(task.getTotalTimeActive(), task.isActive());
     }
 
     void task(final UiTask task) {
         this.task = task;
         title(task.getTitle());
-        totalTimeActive(task.getTotalTimeActive());
+        totalTimeActive(task.getTotalTimeActive(), task.isActive());
         isActive(task.isActive());
         setUpClock(task);
     }
@@ -65,8 +55,8 @@ public class TaskLayout extends LinearLayout {
         titleView.setText(title);
     }
 
-    private void totalTimeActive(final long totalTimeActive) {
-        timeView.setText(TotalActiveTimeFormatter.toString(totalTimeActive, timeFormat));
+    private void totalTimeActive(final long totalTimeActive, final boolean isActive) {
+        timeView.setText(TotalActiveTimeFormatter.toString(totalTimeActive, isActive, timeFormat));
     }
 
     private void isActive(final boolean isActive) {
@@ -85,11 +75,13 @@ public class TaskLayout extends LinearLayout {
 
     private void scheduleTimer() {
         timeOfLastTick = System.currentTimeMillis();
-        timer.schedule(timerTask, TimeInterval.MILLIS_IN_SECOND, TimeInterval.MILLIS_IN_SECOND);
+        timer.schedule(this::onTick, TimeInterval.MILLIS_IN_SECOND, TimeInterval.MILLIS_IN_SECOND);
     }
 
     private void cancelTimer() {
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override

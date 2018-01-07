@@ -4,8 +4,8 @@ public final class TotalActiveTimeFormatter {
 
     private TotalActiveTimeFormatter() {}
 
-    public static String toString(final long totalActiveTime, final FormatBuilder builder) {
-        if (totalActiveTime == 0L) {
+    public static String toString(final long totalActiveTime, final boolean isActive, final FormatBuilder builder) {
+        if (totalActiveTime == 0L && !isActive) {
             return "";
         }
         final MillisDivisor millisDivisor = new MillisDivisor(totalActiveTime);
