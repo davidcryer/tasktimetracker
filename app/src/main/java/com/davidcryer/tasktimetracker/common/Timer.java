@@ -26,6 +26,7 @@ public class Timer {
     public void cancel() {
         if (timer != null) {
             timer.cancel();
+            timer = null;
         }
     }
 }
