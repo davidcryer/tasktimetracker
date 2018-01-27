@@ -29,7 +29,7 @@ public class Task implements OngoingTaskRegister.Task {
     private OnChangeListener onChangeListener;
 
     private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
-        ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args());
+        ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)));
         this.id = id;
         this.title = title;
         this.note = note;
@@ -232,15 +232,15 @@ public class Task implements OngoingTaskRegister.Task {
         }
 
         private void inspectInput() throws IllegalTaskArgsException {
-            ArgsInspector.inspect(args());
+            ArgsInspector.inspect(argsBuilder());
         }
 
-        private IllegalTaskArgsException.Args args() {
+        private TaskArgsBuilder argsBuilder() {
             final TaskArgsBuilder builder = new TaskArgsBuilder();
             if (titleChanged) {
                 builder.title(Task.titleArg(title));
             }
-            return builder.args();
+            return builder;
         }
 
         private void writeTitle() {

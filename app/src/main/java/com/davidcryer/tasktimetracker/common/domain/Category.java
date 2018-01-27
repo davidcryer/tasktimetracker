@@ -23,7 +23,7 @@ public class Category implements Task.OnChangeListener {
     private List<Task> tasks;
 
     private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
-        ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args());
+        ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)));
         this.categoryStore = categoryStore;
         this.taskFactory = taskFactory;
         this.id = id;
@@ -173,15 +173,15 @@ public class Category implements Task.OnChangeListener {
         }
 
         private void inspectInput() throws IllegalCategoryArgsException {
-            ArgsInspector.inspect(args());
+            ArgsInspector.inspect(argsBuilder());
         }
 
-        private IllegalCategoryArgsException.Args args() {
+        private CategoryArgsBuilder argsBuilder() {
             final CategoryArgsBuilder argsBuilder = new CategoryArgsBuilder();
             if (titleChanged) {
                 argsBuilder.title(Category.titleArg(title));
             }
-            return argsBuilder.args();
+            return argsBuilder;
         }
 
         private void writeTitle() {

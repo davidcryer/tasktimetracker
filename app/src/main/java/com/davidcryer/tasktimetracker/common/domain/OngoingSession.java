@@ -18,7 +18,7 @@ public class OngoingSession {
     }
 
     OngoingSession(final Date start, final Date stop) throws IllegalOngoingSessionArgsException {
-        ArgsInspector.inspect(new OngoingSessionArgsBuilder().start(startArg(start)).args());
+        ArgsInspector.inspect(new OngoingSessionArgsBuilder().start(startArg(start)));
         this.start = start;
         this.stop = stop;
     }

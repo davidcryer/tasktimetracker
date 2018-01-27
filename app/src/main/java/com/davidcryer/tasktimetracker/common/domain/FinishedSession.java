@@ -23,7 +23,7 @@ public class FinishedSession {
     }
 
     FinishedSession(final UUID id, final Date start, final Date finish) throws IllegalFinishedSessionArgsException {
-        ArgsInspector.inspect(new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)).args());
+        ArgsInspector.inspect(new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)));
         this.id = id;
         this.start = start;
         this.finish = finish;

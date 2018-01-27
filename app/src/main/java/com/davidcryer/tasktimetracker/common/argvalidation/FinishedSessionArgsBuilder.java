@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public class FinishedSessionArgsBuilder implements ArgsBuilder<IllegalFinishedSessionArgsException.Args> {
+public class FinishedSessionArgsBuilder implements ArgsBuilder<IllegalFinishedSessionArgsException, IllegalFinishedSessionArgsException.Args> {
     private final IllegalFinishedSessionArgsException.Args.Builder builder;
 
     public FinishedSessionArgsBuilder() {

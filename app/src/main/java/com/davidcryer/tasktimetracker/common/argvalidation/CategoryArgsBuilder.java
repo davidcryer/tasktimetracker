@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public class CategoryArgsBuilder implements ArgsBuilder<IllegalCategoryArgsException.Args> {
+public class CategoryArgsBuilder implements ArgsBuilder<IllegalCategoryArgsException, IllegalCategoryArgsException.Args> {
     private final IllegalCategoryArgsException.Args.Builder illegalArgsBuilder;
 
     public CategoryArgsBuilder() {
