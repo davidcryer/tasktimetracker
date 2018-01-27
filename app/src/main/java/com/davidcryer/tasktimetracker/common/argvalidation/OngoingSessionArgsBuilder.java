@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public class OngoingSessionArgsBuilder {
+public class OngoingSessionArgsBuilder implements ArgsBuilder<IllegalOngoingSessionArgsException.Args> {
     private final IllegalOngoingSessionArgsException.Args.Builder illegalArgsBuilder;
 
     public OngoingSessionArgsBuilder() {
@@ -14,6 +14,7 @@ public class OngoingSessionArgsBuilder {
         return this;
     }
 
+    @Override
     public IllegalOngoingSessionArgsException.Args args() {
         return illegalArgsBuilder.create();
     }
