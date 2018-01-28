@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.EnforceRule;
+import com.davidcryer.argrules.EnforceRule;
 
 import java.util.List;
 
@@ -30,12 +30,7 @@ class CategoriesFilter {
 
     void populate(final List<String> options, @Nullable final Spinner spinner) {
         EnforceRule.that(options != null, "adapter cannot be null");
-        populate(spinner, new Runnable() {
-            @Override
-            public void run() {
-                options(options);
-            }
-        });
+        populate(spinner, () -> options(options));
     }
 
     private void options(final List<String> options) {
@@ -45,12 +40,7 @@ class CategoriesFilter {
 
     void populate(final List<String> options, final Integer selected, @Nullable final Spinner spinner) {
         EnforceRule.that(options != null, "adapter cannot be null");
-        populate(spinner, new Runnable() {
-            @Override
-            public void run() {
-                options(options, selected);
-            }
-        });
+        populate(spinner, () -> options(options, selected));
     }
 
     private void options(final List<String> options, final int selected) {

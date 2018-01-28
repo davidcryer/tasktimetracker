@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
+import com.davidcryer.argrules.ArgRules;
 
 public class TaskArgRules extends ArgRules<TaskArgRules.Exception> {
     private final String idError;

@@ -1,7 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Rule;
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgRulesBuilder;
+import com.davidcryer.argrules.ArgRulesBuilder;
+import com.davidcryer.argrules.Rule;
 
 class OngoingSessionArgRulesBuilder implements ArgRulesBuilder<OngoingSessionArgRules> {
     private final OngoingSessionArgRules.Builder builder;

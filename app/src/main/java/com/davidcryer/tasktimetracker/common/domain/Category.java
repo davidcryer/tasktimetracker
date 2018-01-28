@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Rule;
+import com.davidcryer.argrules.Rule;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
 import java.util.ArrayList;

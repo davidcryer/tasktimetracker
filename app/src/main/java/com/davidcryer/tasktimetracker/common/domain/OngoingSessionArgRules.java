@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
+import com.davidcryer.argrules.ArgRules;
 
 public class OngoingSessionArgRules extends ArgRules<OngoingSessionArgRules.Exception> {
     private final String startError;
