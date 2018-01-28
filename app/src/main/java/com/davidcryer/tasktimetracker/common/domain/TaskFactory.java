@@ -14,7 +14,7 @@ class TaskFactory {
         return Task.create(title, note, ongoingTaskRegister);
     }
 
-    Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws TaskArgs.Exception {
+    Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws TaskArgRules.Exception {
         return Task.inflate(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
     }
 }

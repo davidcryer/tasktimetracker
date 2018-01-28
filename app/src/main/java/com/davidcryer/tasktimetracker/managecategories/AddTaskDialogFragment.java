@@ -33,11 +33,11 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle args = getArguments();
         if (args == null) {
-            throw new IllegalStateException("Args must not be null");
+            throw new IllegalStateException("ArgRules must not be null");
         }
         final UUID categoryId = (UUID) args.getSerializable(ARGS_CATEGORY_ID);
         if (categoryId == null) {
-            throw new IllegalStateException("Args must contain UUID for ARGS_CATEGORY_ID key");
+            throw new IllegalStateException("ArgRules must contain UUID for ARGS_CATEGORY_ID key");
         }
         taskLayout = new TaskLayout(getContext());
         final AlertDialog dialog = new AlertDialog.Builder(getContext())

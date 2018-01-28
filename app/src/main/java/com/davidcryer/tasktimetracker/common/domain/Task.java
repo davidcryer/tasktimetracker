@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
+import com.davidcryer.tasktimetracker.common.argvalidation.Rule;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
 import java.lang.ref.WeakReference;
@@ -25,8 +25,8 @@ public class Task implements OngoingTaskRegister.Task {
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
-        new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args().enforce();
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
+        new TaskArgRulesBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args().enforce();
         this.id = id;
         this.title = title;
         this.note = note;
@@ -36,11 +36,11 @@ public class Task implements OngoingTaskRegister.Task {
         ongoingStatusListeners = new HashSet<>();
     }
 
-    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
+    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
         return new Task(UUID.randomUUID(), title, note, null, null, ongoingTaskRegister);
     }
 
-    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
+    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
         final Task task = new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
         if (task.isOngoing()) {
             ongoingTaskRegister.setUp(task);
@@ -48,16 +48,16 @@ public class Task implements OngoingTaskRegister.Task {
         return task;
     }
 
-    private static Arg idArg(final UUID id) {
-        return new Arg(id != null, ILLEGAL_ID_MESSAGE);
+    private static Rule idArg(final UUID id) {
+        return new Rule(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static Arg titleArg(final String title) {
-        return new Arg(title != null, ILLEGAL_TITLE_MESSAGE);
+    private static Rule titleArg(final String title) {
+        return new Rule(title != null, ILLEGAL_TITLE_MESSAGE);
     }
 
-    private static Arg ongoingSessionArg(final OngoingSession ongoingSession) {
-        return new Arg(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
+    private static Rule ongoingSessionArg(final OngoingSession ongoingSession) {
+        return new Rule(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
     public void start() throws AlreadyStartedException {
@@ -221,19 +221,19 @@ public class Task implements OngoingTaskRegister.Task {
             return this;
         }
 
-        public void commit() throws TaskArgs.Exception {
+        public void commit() throws TaskArgRules.Exception {
             inspectInput();
             writeTitle();
             writeNote();
             notifyChanged();
         }
 
-        private void inspectInput() throws TaskArgs.Exception {
+        private void inspectInput() throws TaskArgRules.Exception {
             args().enforce();
         }
 
-        private TaskArgs args() {
-            final TaskArgsBuilder builder = new TaskArgsBuilder();
+        private TaskArgRules args() {
+            final TaskArgRulesBuilder builder = new TaskArgRulesBuilder();
             if (titleChanged) {
                 builder.title(Task.titleArg(title));
             }

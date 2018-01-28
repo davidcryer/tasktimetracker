@@ -2,19 +2,19 @@ package com.davidcryer.tasktimetracker.common.argvalidation;
 
 import com.davidcryer.tasktimetracker.common.StringUtils;
 
-public abstract class Args<E extends Args.Exception> {
+public abstract class ArgRules<E extends ArgRules.Exception> {
 
     public void enforce() throws E {
         throwExceptionIfIllegal();
     }
 
     private void throwExceptionIfIllegal() throws E {
-        if (hasFailedArg()) {
+        if (hasFailedRule()) {
             throwException();
         }
     }
 
-    protected abstract boolean hasFailedArg();
+    protected abstract boolean hasFailedRule();
 
     private void throwException() throws E {
         throw exception();

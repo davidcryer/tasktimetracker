@@ -1,12 +1,12 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Args;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
 
-public class CategoryArgs extends Args<CategoryArgs.Exception> {
+public class CategoryArgRules extends ArgRules<CategoryArgRules.Exception> {
     private final String idError;
     private final String titleError;
 
-    private CategoryArgs(String idError, String titleError) {
+    private CategoryArgRules(String idError, String titleError) {
         this.idError = idError;
         this.titleError = titleError;
     }
@@ -32,7 +32,7 @@ public class CategoryArgs extends Args<CategoryArgs.Exception> {
     }
 
     @Override
-    protected boolean hasFailedArg() {
+    protected boolean hasFailedRule() {
         return idIsIllegal() || titleIsIllegal();
     }
 
@@ -55,20 +55,20 @@ public class CategoryArgs extends Args<CategoryArgs.Exception> {
             return this;
         }
 
-        CategoryArgs create() {
-            return new CategoryArgs(titleError, idError);
+        CategoryArgRules create() {
+            return new CategoryArgRules(titleError, idError);
         }
     }
 
-    public static class Exception extends Args.Exception {
-        private final CategoryArgs args;
+    public static class Exception extends ArgRules.Exception {
+        private final CategoryArgRules args;
 
-        private Exception(CategoryArgs args) {
+        private Exception(CategoryArgRules args) {
             super(args.messages());
             this.args = args;
         }
 
-        public CategoryArgs args() {
+        public CategoryArgRules args() {
             return args;
         }
     }

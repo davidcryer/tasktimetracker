@@ -1,14 +1,14 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Args;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
 
-public class FinishedSessionArgs extends Args<FinishedSessionArgs.Exception> {
+public class FinishedSessionArgRules extends ArgRules<FinishedSessionArgRules.Exception> {
     private final String idError;
     private final String startError;
     private final String finishError;
     private final String timelineError;
 
-    private FinishedSessionArgs(String idError, String startError, String finishError, String timelineError) {
+    private FinishedSessionArgRules(String idError, String startError, String finishError, String timelineError) {
         this.idError = idError;
         this.startError = startError;
         this.finishError = finishError;
@@ -52,7 +52,7 @@ public class FinishedSessionArgs extends Args<FinishedSessionArgs.Exception> {
     }
 
     @Override
-    protected boolean hasFailedArg() {
+    protected boolean hasFailedRule() {
         return idIsIllegal() || startIsIllegal() || finishIsIllegal() || timelineIsIllegal();
     }
 
@@ -87,20 +87,20 @@ public class FinishedSessionArgs extends Args<FinishedSessionArgs.Exception> {
             return this;
         }
 
-        FinishedSessionArgs create() {
-            return new FinishedSessionArgs(idError, startError, finishError, timelineError);
+        FinishedSessionArgRules create() {
+            return new FinishedSessionArgRules(idError, startError, finishError, timelineError);
         }
     }
 
-    public static class Exception extends Args.Exception {
-        private final FinishedSessionArgs args;
+    public static class Exception extends ArgRules.Exception {
+        private final FinishedSessionArgRules args;
 
-        private Exception(FinishedSessionArgs args) {
+        private Exception(FinishedSessionArgRules args) {
             super(args.messages());
             this.args = args;
         }
 
-        public FinishedSessionArgs args() {
+        public FinishedSessionArgRules args() {
             return args;
         }
     }

@@ -1,5 +1,5 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public interface ArgsBuilder<A extends Args> {
+public interface ArgRulesBuilder<A extends ArgRules> {
     A args();
 }

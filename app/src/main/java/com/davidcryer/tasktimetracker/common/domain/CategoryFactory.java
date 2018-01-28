@@ -10,11 +10,11 @@ class CategoryFactory {
         this.taskFactory = taskFactory;
     }
 
-    Category create(final CategoryStore categoryStore, final String title, final String note) throws CategoryArgs.Exception {
+    Category create(final CategoryStore categoryStore, final String title, final String note) throws CategoryArgRules.Exception {
         return Category.create(categoryStore, taskFactory, title, note);
     }
 
-    Category inflate(final CategoryStore categoryStore, final UUID id, final String title, final String note, final List<DbTask> tasks, final Task.OngoingStatusListener ongoingStatusListener) throws CategoryArgs.Exception {
+    Category inflate(final CategoryStore categoryStore, final UUID id, final String title, final String note, final List<DbTask> tasks, final Task.OngoingStatusListener ongoingStatusListener) throws CategoryArgRules.Exception {
         return Category.inflate(categoryStore, taskFactory, id, title, note, DbMapper.tasks(tasks, taskFactory, ongoingStatusListener));
     }
 }

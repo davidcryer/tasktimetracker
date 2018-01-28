@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
+import com.davidcryer.tasktimetracker.common.argvalidation.Rule;
 import com.davidcryer.tasktimetracker.common.DateUtils;
 
 import java.util.Date;
@@ -14,14 +14,14 @@ public class OngoingSession {
         this(new Date(), null);
     }
 
-    OngoingSession(final Date start, final Date stop) throws OngoingSessionArgs.Exception {
-        new OngoingSessionArgsBuilder().start(startArg(start)).args().enforce();
+    OngoingSession(final Date start, final Date stop) throws OngoingSessionArgRules.Exception {
+        new OngoingSessionArgRulesBuilder().start(startArg(start)).args().enforce();
         this.start = start;
         this.stop = stop;
     }
 
-    private static Arg startArg(final Date start) {
-        return new Arg(start != null, ILLEGAL_START_MESSAGE);
+    private static Rule startArg(final Date start) {
+        return new Rule(start != null, ILLEGAL_START_MESSAGE);
     }
 
     FinishedSession stop() throws AlreadyStoppedException {

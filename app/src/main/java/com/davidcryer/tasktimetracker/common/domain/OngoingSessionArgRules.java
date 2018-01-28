@@ -1,11 +1,11 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Args;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
 
-public class OngoingSessionArgs extends Args<OngoingSessionArgs.Exception> {
+public class OngoingSessionArgRules extends ArgRules<OngoingSessionArgRules.Exception> {
     private final String startError;
 
-    OngoingSessionArgs(String startError) {
+    OngoingSessionArgRules(String startError) {
         this.startError = startError;
     }
 
@@ -22,7 +22,7 @@ public class OngoingSessionArgs extends Args<OngoingSessionArgs.Exception> {
     }
 
     @Override
-    protected boolean hasFailedArg() {
+    protected boolean hasFailedRule() {
         return startIsIllegal();
     }
 
@@ -39,20 +39,20 @@ public class OngoingSessionArgs extends Args<OngoingSessionArgs.Exception> {
             return this;
         }
 
-        OngoingSessionArgs create() {
-            return new OngoingSessionArgs(startError);
+        OngoingSessionArgRules create() {
+            return new OngoingSessionArgRules(startError);
         }
     }
 
-    public static class Exception extends Args.Exception {
-        private final OngoingSessionArgs args;
+    public static class Exception extends ArgRules.Exception {
+        private final OngoingSessionArgRules args;
 
-        private Exception(OngoingSessionArgs args) {
+        private Exception(OngoingSessionArgRules args) {
             super(args.messages());
             this.args = args;
         }
 
-        public OngoingSessionArgs args() {
+        public OngoingSessionArgRules args() {
             return args;
         }
     }

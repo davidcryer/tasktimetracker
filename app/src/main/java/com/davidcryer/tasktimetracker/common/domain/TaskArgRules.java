@@ -1,13 +1,13 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Args;
+import com.davidcryer.tasktimetracker.common.argvalidation.ArgRules;
 
-public class TaskArgs extends Args<TaskArgs.Exception> {
+public class TaskArgRules extends ArgRules<TaskArgRules.Exception> {
     private final String idError;
     private final String titleError;
     private final String ongoingSessionError;
 
-    private TaskArgs(String idError, String titleError, String ongoingSessionError) {
+    private TaskArgRules(String idError, String titleError, String ongoingSessionError) {
         this.idError = idError;
         this.titleError = titleError;
         this.ongoingSessionError = ongoingSessionError;
@@ -42,7 +42,7 @@ public class TaskArgs extends Args<TaskArgs.Exception> {
     }
 
     @Override
-    protected boolean hasFailedArg() {
+    protected boolean hasFailedRule() {
         return idIsIllegal() || titleIsIllegal() || ongoingSessionIsIllegal();
     }
 
@@ -71,20 +71,20 @@ public class TaskArgs extends Args<TaskArgs.Exception> {
             return this;
         }
 
-        TaskArgs create() {
-            return new TaskArgs(titleError, idError, ongoingSessionError);
+        TaskArgRules create() {
+            return new TaskArgRules(titleError, idError, ongoingSessionError);
         }
     }
 
-    public static class Exception extends Args.Exception {
-        private final TaskArgs args;
+    public static class Exception extends ArgRules.Exception {
+        private final TaskArgRules args;
 
-        private Exception(TaskArgs args) {
+        private Exception(TaskArgRules args) {
             super(args.messages());
             this.args = args;
         }
 
-        public TaskArgs args() {
+        public TaskArgRules args() {
             return args;
         }
     }

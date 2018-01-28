@@ -1,6 +1,6 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
+import com.davidcryer.tasktimetracker.common.argvalidation.Rule;
 import com.davidcryer.tasktimetracker.common.DateUtils;
 
 import java.util.Date;
@@ -15,31 +15,31 @@ public class FinishedSession {
     private final Date start;
     private final Date finish;
 
-    FinishedSession(final Date start, final Date finish) throws FinishedSessionArgs.Exception {
+    FinishedSession(final Date start, final Date finish) throws FinishedSessionArgRules.Exception {
         this(UUID.randomUUID(), start, finish);
     }
 
-    FinishedSession(final UUID id, final Date start, final Date finish) throws FinishedSessionArgs.Exception {
-        new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)).args().enforce();
+    FinishedSession(final UUID id, final Date start, final Date finish) throws FinishedSessionArgRules.Exception {
+        new FinishedSessionArgRulesBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)).args().enforce();
         this.id = id;
         this.start = start;
         this.finish = finish;
     }
 
-    private static Arg idArg(final UUID id) {
-        return new Arg(id != null, ILLEGAL_ID_MESSAGE);
+    private static Rule idArg(final UUID id) {
+        return new Rule(id != null, ILLEGAL_ID_MESSAGE);
     }
 
-    private static Arg startArg(final Date start) {
-        return new Arg(start != null, ILLEGAL_START_MESSAGE);
+    private static Rule startArg(final Date start) {
+        return new Rule(start != null, ILLEGAL_START_MESSAGE);
     }
 
-    private static Arg finishArg(final Date finish) {
-        return new Arg(finish != null, ILLEGAL_FINISH_MESSAGE);
+    private static Rule finishArg(final Date finish) {
+        return new Rule(finish != null, ILLEGAL_FINISH_MESSAGE);
     }
 
-    private static Arg timelineArg(final Date start, final Date finish) {
-        return new Arg(start == null || finish == null || start.compareTo(finish) <= 0, ILLEGAL_TIMELINE_MESSAGE);
+    private static Rule timelineArg(final Date start, final Date finish) {
+        return new Rule(start == null || finish == null || start.compareTo(finish) <= 0, ILLEGAL_TIMELINE_MESSAGE);
     }
 
     public UUID id() {

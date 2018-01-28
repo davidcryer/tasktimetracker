@@ -29,12 +29,12 @@ public class RemoveTaskDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle args = getArguments();
         if (args == null) {
-            throw new IllegalStateException("Args must not be null");
+            throw new IllegalStateException("ArgRules must not be null");
         }
         final UiTask task = args.getParcelable(ARGS_UI_TASK);
         final UiCategory category = args.getParcelable(ARGS_UI_CATEGORY);
         if (task == null || category == null) {
-            throw new IllegalStateException("Args must contain UiTask for ARGS_UI_TASK key and UiCategory for ARGS_UI_CATEGORY key");
+            throw new IllegalStateException("ArgRules must contain UiTask for ARGS_UI_TASK key and UiCategory for ARGS_UI_CATEGORY key");
         }
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.prompt_remove_task_title)
