@@ -19,6 +19,11 @@ public class AddCategoryFragment extends UiWrapperFactoryFragment<Object, Object
     }
 
     @Override
+    protected Object ui() {
+        return null;
+    }
+
+    @Override
     protected UiWrapper<Object, Object, ?> uiWrapper(UiWrapperFactory uiWrapperFactory, @Nullable Bundle savedState) {
         return null;
     }
