@@ -1,10 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
-import com.davidcryer.tasktimetracker.common.argvalidation.CategoryArgsBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,8 +19,8 @@ public class Category implements Task.OnChangeListener {
     private String note;
     private List<Task> tasks;
 
-    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
-        ArgsInspector.inspect(new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)));
+    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgs.Exception {
+        new CategoryArgsBuilder().id(idArg(id)).title(titleArg(title)).args().enforce();
         this.categoryStore = categoryStore;
         this.taskFactory = taskFactory;
         this.id = id;
@@ -32,13 +29,13 @@ public class Category implements Task.OnChangeListener {
         this.tasks = tasks;
     }
 
-    static Category create(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws IllegalCategoryArgsException {
+    static Category create(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws CategoryArgs.Exception {
         final Category category = new Category(categoryStore, taskFactory, UUID.randomUUID(), title, note, null);
         categoryStore.save(category);
         return category;
     }
 
-    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws IllegalCategoryArgsException {
+    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgs.Exception {
         final Category category = new Category(categoryStore, taskFactory, id, title, note, tasks);
         category.listenToTaskChanges();
         return category;
@@ -165,23 +162,23 @@ public class Category implements Task.OnChangeListener {
             return this;
         }
 
-        public void commit() throws IllegalCategoryArgsException {
+        public void commit() throws CategoryArgs.Exception {
             inspectInput();
             writeTitle();
             writeNote();
             save();
         }
 
-        private void inspectInput() throws IllegalCategoryArgsException {
-            ArgsInspector.inspect(argsBuilder());
+        private void inspectInput() throws CategoryArgs.Exception {
+            args().enforce();
         }
 
-        private CategoryArgsBuilder argsBuilder() {
+        private CategoryArgs args() {
             final CategoryArgsBuilder argsBuilder = new CategoryArgsBuilder();
             if (titleChanged) {
                 argsBuilder.title(Category.titleArg(title));
             }
-            return argsBuilder;
+            return argsBuilder.args();
         }
 
         private void writeTitle() {

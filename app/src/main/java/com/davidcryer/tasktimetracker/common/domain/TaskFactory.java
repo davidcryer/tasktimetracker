@@ -1,7 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +14,7 @@ class TaskFactory {
         return Task.create(title, note, ongoingTaskRegister);
     }
 
-    Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws IllegalTaskArgsException {
+    Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions) throws TaskArgs.Exception {
         return Task.inflate(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
     }
 }

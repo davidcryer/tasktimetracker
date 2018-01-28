@@ -1,10 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.DateUtils;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalOngoingSessionArgsException;
-import com.davidcryer.tasktimetracker.common.argvalidation.OngoingSessionArgsBuilder;
 
 import java.util.Date;
 
@@ -17,8 +14,8 @@ public class OngoingSession {
         this(new Date(), null);
     }
 
-    OngoingSession(final Date start, final Date stop) throws IllegalOngoingSessionArgsException {
-        ArgsInspector.inspect(new OngoingSessionArgsBuilder().start(startArg(start)));
+    OngoingSession(final Date start, final Date stop) throws OngoingSessionArgs.Exception {
+        new OngoingSessionArgsBuilder().start(startArg(start)).args().enforce();
         this.start = start;
         this.stop = stop;
     }

@@ -1,7 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -95,7 +93,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = IllegalTaskArgsException.class)
+        @Test(expected = TaskArgs.class)
         public void nullId() {
             new Task(null, "", null, null);
         }
@@ -105,7 +103,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = IllegalTaskArgsException.class)
+        @Test(expected = TaskArgs.class)
         public void title_null() {
             new Task(UUID.randomUUID(), null, null, null);
         }
@@ -116,7 +114,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, session);
         }
 
-        @Test(expected = IllegalTaskArgsException.class)
+        @Test(expected = TaskArgs.class)
         public void ongoingSession_finished() {
             final OngoingSession session = new OngoingSession();
             session.stop();
@@ -133,7 +131,7 @@ public class TaskTests {
             Assert.assertEquals(task.title(), "New title");
         }
 
-        @Test(expected = IllegalTaskArgsException.class)
+        @Test(expected = TaskArgs.class)
         public void changeTitle_illegalTitle() {
             final Task task = new Task("Old title", null);
             task.writer().title(null).commit();

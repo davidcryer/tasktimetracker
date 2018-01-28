@@ -1,10 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
-import com.davidcryer.tasktimetracker.common.argvalidation.FinishedSessionArgsBuilder;
 import com.davidcryer.tasktimetracker.common.DateUtils;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalFinishedSessionArgsException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -18,12 +15,12 @@ public class FinishedSession {
     private final Date start;
     private final Date finish;
 
-    FinishedSession(final Date start, final Date finish) throws IllegalFinishedSessionArgsException {
+    FinishedSession(final Date start, final Date finish) throws FinishedSessionArgs.Exception {
         this(UUID.randomUUID(), start, finish);
     }
 
-    FinishedSession(final UUID id, final Date start, final Date finish) throws IllegalFinishedSessionArgsException {
-        ArgsInspector.inspect(new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)));
+    FinishedSession(final UUID id, final Date start, final Date finish) throws FinishedSessionArgs.Exception {
+        new FinishedSessionArgsBuilder().id(idArg(id)).start(startArg(start)).finish(finishArg(finish)).timeline(timelineArg(start, finish)).args().enforce();
         this.id = id;
         this.start = start;
         this.finish = finish;

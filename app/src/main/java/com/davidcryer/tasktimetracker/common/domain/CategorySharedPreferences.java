@@ -3,7 +3,6 @@ package com.davidcryer.tasktimetracker.common.domain;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
 import com.google.gson.Gson;
 
 import java.util.LinkedList;
@@ -51,7 +50,7 @@ class CategorySharedPreferences implements DomainManager, CategoryStore {
     }
 
     @Override
-    public Category create(String title, String note) throws IllegalCategoryArgsException {
+    public Category create(String title, String note) throws CategoryArgs.Exception {
         return categoryFactory.create(this, title, note);
     }
 

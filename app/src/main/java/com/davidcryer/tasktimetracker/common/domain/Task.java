@@ -1,10 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.argvalidation.Arg;
-import com.davidcryer.tasktimetracker.common.argvalidation.ArgsInspector;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
-import com.davidcryer.tasktimetracker.common.argvalidation.TaskArgsBuilder;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,8 +25,8 @@ public class Task implements OngoingTaskRegister.Task {
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
-        ArgsInspector.inspect(new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)));
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
+        new TaskArgsBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args().enforce();
         this.id = id;
         this.title = title;
         this.note = note;
@@ -39,11 +36,11 @@ public class Task implements OngoingTaskRegister.Task {
         ongoingStatusListeners = new HashSet<>();
     }
 
-    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
+    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
         return new Task(UUID.randomUUID(), title, note, null, null, ongoingTaskRegister);
     }
 
-    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws IllegalTaskArgsException {
+    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgs.Exception {
         final Task task = new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
         if (task.isOngoing()) {
             ongoingTaskRegister.setUp(task);
@@ -224,23 +221,23 @@ public class Task implements OngoingTaskRegister.Task {
             return this;
         }
 
-        public void commit() throws IllegalTaskArgsException {
+        public void commit() throws TaskArgs.Exception {
             inspectInput();
             writeTitle();
             writeNote();
             notifyChanged();
         }
 
-        private void inspectInput() throws IllegalTaskArgsException {
-            ArgsInspector.inspect(argsBuilder());
+        private void inspectInput() throws TaskArgs.Exception {
+            args().enforce();
         }
 
-        private TaskArgsBuilder argsBuilder() {
+        private TaskArgs args() {
             final TaskArgsBuilder builder = new TaskArgsBuilder();
             if (titleChanged) {
                 builder.title(Task.titleArg(title));
             }
-            return builder;
+            return builder.args();
         }
 
         private void writeTitle() {

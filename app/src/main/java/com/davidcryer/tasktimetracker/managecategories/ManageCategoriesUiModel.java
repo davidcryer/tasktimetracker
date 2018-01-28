@@ -1,8 +1,6 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
 import com.davidc.uiwrapper.UiModel;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalTaskArgsException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 

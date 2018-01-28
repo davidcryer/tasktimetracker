@@ -9,17 +9,13 @@ public class Arg {
         this.errorMessage = errorMessage;
     }
 
-    boolean passed() {
-        return passed;
-    }
-
-    String errorMessage() {
-        return errorMessage;
-    }
-
-    public static void enforce(final boolean passed, final String errorMessage) {
+    public void performCheck(final CheckCallback callback) {
         if (!passed) {
-            throw new IllegalArgumentException(errorMessage);
+            callback.onFailure(errorMessage);
         }
+    }
+
+    public interface CheckCallback {
+        void onFailure(String error);
     }
 }

@@ -1,7 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.tasktimetracker.common.argvalidation.IllegalCategoryArgsException;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -90,12 +88,12 @@ public class CategoryTests {
             new Category(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = IllegalCategoryArgsException.class)
+        @Test(expected = CategoryArgs.class)
         public void illegalTitle() {
             new Category(null, null);
         }
 
-        @Test(expected = IllegalCategoryArgsException.class)
+        @Test(expected = CategoryArgs.class)
         public void illegalId() {
             new Category(null, "", null, null);
         }
@@ -110,7 +108,7 @@ public class CategoryTests {
             Assert.assertEquals(category.title(), "New title");
         }
 
-        @Test(expected = IllegalCategoryArgsException.class)
+        @Test(expected = CategoryArgs.class)
         public void changeTitle_illegalTitle() {
             final Category category = new Category("Old title", null);
             category.writer().title(null).commit();

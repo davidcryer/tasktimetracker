@@ -1,5 +1,5 @@
 package com.davidcryer.tasktimetracker.common.argvalidation;
 
-public interface ArgsBuilder<E extends IllegalArgsException, A extends IllegalArgsException.Args<E>> {
+public interface ArgsBuilder<A extends Args> {
     A args();
 }
