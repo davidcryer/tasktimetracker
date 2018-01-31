@@ -88,12 +88,12 @@ public class CategoryTests {
             new Category(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = CategoryArgRules.class)
+        @Test(expected = CategoryArgResults.class)
         public void illegalTitle() {
             new Category(null, null);
         }
 
-        @Test(expected = CategoryArgRules.class)
+        @Test(expected = CategoryArgResults.class)
         public void illegalId() {
             new Category(null, "", null, null);
         }
@@ -108,7 +108,7 @@ public class CategoryTests {
             Assert.assertEquals(category.title(), "New title");
         }
 
-        @Test(expected = CategoryArgRules.class)
+        @Test(expected = CategoryArgResults.class)
         public void changeTitle_illegalTitle() {
             final Category category = new Category("Old title", null);
             category.writer().title(null).commit();

@@ -50,7 +50,7 @@ class CategorySharedPreferences implements DomainManager, CategoryStore {
     }
 
     @Override
-    public Category create(String title, String note) throws CategoryArgRules.Exception {
+    public Category create(String title, String note) throws CategoryArgResults.Exception {
         return categoryFactory.create(this, title, note);
     }
 

@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:design:27.0.2'
     compile 'com.davidcryer.uiwrapper:uiwrapper:2.0.2'
     compile 'com.davidcryer.simpleactivities:simpleactivities:0.0.5'
-    compile 'com.davidcryer.argrules:argrules:0.0.1'
+    compile 'com.davidcryer.argrules:argrules:0.0.6'
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'junit:junit:4.12'
 }

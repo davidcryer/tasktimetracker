@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.common.domain.CategoryArgRules;
-import com.davidcryer.tasktimetracker.common.domain.TaskArgRules;
+import com.davidcryer.tasktimetracker.common.domain.CategoryArgResults;
+import com.davidcryer.tasktimetracker.common.domain.TaskArgResults;
 import com.davidcryer.tasktimetracker.common.domain.AlreadyStartedException;
 import com.davidcryer.tasktimetracker.common.domain.AlreadyStoppedException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
@@ -83,14 +83,14 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                     final Category category = domainManager.create(title, note);
                     uiModel().addCategory(category, ui());
                     prompt.dismiss();
-                } catch (CategoryArgRules.Exception e) {
-                    showErrors(prompt, e.args());
+                } catch (CategoryArgResults.Exception e) {
+                    showErrors(prompt, e.results());
                 }
             }
 
-            private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final CategoryArgRules args) {
-                if (args.titleIsIllegal()) {
-                    prompt.showTitleError(args.titleError());
+            private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final CategoryArgResults results) {
+                if (results.hasTitleError()) {
+                    prompt.showTitleError(results.title().note());
                 }
             }
 
@@ -103,14 +103,14 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                     }
                     uiModel().addTask(category.newTask(title, note), category, ui());
                     prompt.dismiss();
-                } catch (TaskArgRules.Exception e) {
-                    showErrors(prompt, e.args());
+                } catch (TaskArgResults.Exception e) {
+                    showErrors(prompt, e.results());
                 }
             }
 
-            private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final TaskArgRules args) {
-                if (args.titleIsIllegal()) {
-                    prompt.showTitleError(args.titleError());
+            private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final TaskArgResults args) {
+                if (args.hasTitleError()) {
+                    prompt.showTitleError(args.title().note());
                 }
             }
 
@@ -124,8 +124,8 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
 //                        uiModel().updateCategory(category, ui());
 //                    }
 //                    prompt.dismiss();
-//                } catch (CategoryArgRules iae) {
-//                    showErrors(prompt, iae.args());
+//                } catch (CategoryArgResults iae) {
+//                    showErrors(prompt, iae.results());
 //                }
 //            }
 

@@ -93,7 +93,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = TaskArgRules.class)
+        @Test(expected = TaskArgResults.class)
         public void nullId() {
             new Task(null, "", null, null);
         }
@@ -103,7 +103,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, null);
         }
 
-        @Test(expected = TaskArgRules.class)
+        @Test(expected = TaskArgResults.class)
         public void title_null() {
             new Task(UUID.randomUUID(), null, null, null);
         }
@@ -114,7 +114,7 @@ public class TaskTests {
             new Task(UUID.randomUUID(), "", null, session);
         }
 
-        @Test(expected = TaskArgRules.class)
+        @Test(expected = TaskArgResults.class)
         public void ongoingSession_finished() {
             final OngoingSession session = new OngoingSession();
             session.stop();
@@ -131,7 +131,7 @@ public class TaskTests {
             Assert.assertEquals(task.title(), "New title");
         }
 
-        @Test(expected = TaskArgRules.class)
+        @Test(expected = TaskArgResults.class)
         public void changeTitle_illegalTitle() {
             final Task task = new Task("Old title", null);
             task.writer().title(null).commit();

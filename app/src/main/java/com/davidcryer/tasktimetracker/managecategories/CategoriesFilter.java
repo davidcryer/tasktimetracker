@@ -11,13 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.davidcryer.argrules.EnforceRule;
+import com.davidcryer.argrules.singlearg.Enforce;
 
 import java.util.List;
 
 class CategoriesFilter {
     private final static int NO_FILTER_INDEX = 0;
     private final static String NO_FILTER_CONTENT = "All categories";
+    private final static String ERROR_ADAPTER_NULL = "Adapter options cannot be null";
     private final Context context;
     private final OnFilterChangeListener listener;
     private List<String> options;
@@ -29,7 +30,7 @@ class CategoriesFilter {
     }
 
     void populate(final List<String> options, @Nullable final Spinner spinner) {
-        EnforceRule.that(options != null, "adapter cannot be null");
+        Enforce.isSatisfied(options != null, ERROR_ADAPTER_NULL);
         populate(spinner, () -> options(options));
     }
 
@@ -39,7 +40,7 @@ class CategoriesFilter {
     }
 
     void populate(final List<String> options, final Integer selected, @Nullable final Spinner spinner) {
-        EnforceRule.that(options != null, "adapter cannot be null");
+        Enforce.isSatisfied(options != null, ERROR_ADAPTER_NULL);
         populate(spinner, () -> options(options, selected));
     }
 

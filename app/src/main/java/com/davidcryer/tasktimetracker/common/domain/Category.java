@@ -1,6 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.argrules.Rule;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class Category implements Task.OnChangeListener {
-    private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
-    private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null or empty";
     private final CategoryStore categoryStore;
     private final TaskFactory taskFactory;
     private final UUID id;
@@ -19,8 +16,8 @@ public class Category implements Task.OnChangeListener {
     private String note;
     private List<Task> tasks;
 
-    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgRules.Exception {
-        new CategoryArgRulesBuilder().id(idArg(id)).title(titleArg(title)).args().enforce();
+    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgResults.Exception {
+        new CategoryArgChecker().id(id).title(title).check();
         this.categoryStore = categoryStore;
         this.taskFactory = taskFactory;
         this.id = id;
@@ -29,24 +26,16 @@ public class Category implements Task.OnChangeListener {
         this.tasks = tasks;
     }
 
-    static Category create(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws CategoryArgRules.Exception {
+    static Category create(CategoryStore categoryStore, TaskFactory taskFactory, String title, String note) throws CategoryArgResults.Exception {
         final Category category = new Category(categoryStore, taskFactory, UUID.randomUUID(), title, note, null);
         categoryStore.save(category);
         return category;
     }
 
-    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgRules.Exception {
+    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgResults.Exception {
         final Category category = new Category(categoryStore, taskFactory, id, title, note, tasks);
         category.listenToTaskChanges();
         return category;
-    }
-
-    private static Rule idArg(final UUID id) {
-        return new Rule(id != null, ILLEGAL_ID_MESSAGE);
-    }
-
-    private static Rule titleArg(final String title) {
-        return new Rule(title != null && !title.isEmpty(), ILLEGAL_TITLE_MESSAGE);
     }
 
     private void listenToTaskChanges() {
@@ -162,23 +151,23 @@ public class Category implements Task.OnChangeListener {
             return this;
         }
 
-        public void commit() throws CategoryArgRules.Exception {
+        public void commit() throws CategoryArgResults.Exception {
             inspectInput();
             writeTitle();
             writeNote();
             save();
         }
 
-        private void inspectInput() throws CategoryArgRules.Exception {
-            args().enforce();
+        private void inspectInput() throws CategoryArgResults.Exception {
+            argChecker().check();
         }
 
-        private CategoryArgRules args() {
-            final CategoryArgRulesBuilder argsBuilder = new CategoryArgRulesBuilder();
+        private CategoryArgChecker argChecker() {
+            final CategoryArgChecker argChecker = new CategoryArgChecker();
             if (titleChanged) {
-                argsBuilder.title(Category.titleArg(title));
+                argChecker.title(title);
             }
-            return argsBuilder.args();
+            return argChecker;
         }
 
         private void writeTitle() {

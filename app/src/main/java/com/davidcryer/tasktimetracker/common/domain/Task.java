@@ -1,6 +1,5 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.argrules.Rule;
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
 import java.lang.ref.WeakReference;
@@ -13,9 +12,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Task implements OngoingTaskRegister.Task {
-    private final static String ILLEGAL_ID_MESSAGE = "id cannot be null";
-    private final static String ILLEGAL_TITLE_MESSAGE = "title cannot be null";
-    private final static String ILLEGAL_ONGOING_SESSION_MESSAGE = "ongoing session cannot be finished";
     private final OngoingTaskRegister ongoingTaskRegister;
     private final UUID id;
     private String title;
@@ -25,8 +21,8 @@ public class Task implements OngoingTaskRegister.Task {
     private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
-        new TaskArgRulesBuilder().id(idArg(id)).title(titleArg(title)).ongoingSession(ongoingSessionArg(ongoingSession)).args().enforce();
+    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
+        new TaskArgChecker().id(id).title(title).ongoingSession(ongoingSession).check();
         this.id = id;
         this.title = title;
         this.note = note;
@@ -36,28 +32,16 @@ public class Task implements OngoingTaskRegister.Task {
         ongoingStatusListeners = new HashSet<>();
     }
 
-    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
+    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
         return new Task(UUID.randomUUID(), title, note, null, null, ongoingTaskRegister);
     }
 
-    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgRules.Exception {
+    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
         final Task task = new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
         if (task.isOngoing()) {
             ongoingTaskRegister.setUp(task);
         }
         return task;
-    }
-
-    private static Rule idArg(final UUID id) {
-        return new Rule(id != null, ILLEGAL_ID_MESSAGE);
-    }
-
-    private static Rule titleArg(final String title) {
-        return new Rule(title != null, ILLEGAL_TITLE_MESSAGE);
-    }
-
-    private static Rule ongoingSessionArg(final OngoingSession ongoingSession) {
-        return new Rule(ongoingSession == null || !ongoingSession.isFinished(), ILLEGAL_ONGOING_SESSION_MESSAGE);
     }
 
     public void start() throws AlreadyStartedException {
@@ -221,23 +205,23 @@ public class Task implements OngoingTaskRegister.Task {
             return this;
         }
 
-        public void commit() throws TaskArgRules.Exception {
+        public void commit() throws TaskArgResults.Exception {
             inspectInput();
             writeTitle();
             writeNote();
             notifyChanged();
         }
 
-        private void inspectInput() throws TaskArgRules.Exception {
-            args().enforce();
+        private void inspectInput() throws TaskArgResults.Exception {
+            argChecker().check();
         }
 
-        private TaskArgRules args() {
-            final TaskArgRulesBuilder builder = new TaskArgRulesBuilder();
+        private TaskArgChecker argChecker() {
+            final TaskArgChecker argChecker = new TaskArgChecker();
             if (titleChanged) {
-                builder.title(Task.titleArg(title));
+                argChecker.title(title);
             }
-            return builder.args();
+            return argChecker;
         }
 
         private void writeTitle() {

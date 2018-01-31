@@ -13,12 +13,12 @@ public class FinishedSessionTests {
             new FinishedSession(new Date(0L), new Date(1L));
         }
 
-        @Test(expected = FinishedSessionArgRules.class)
+        @Test(expected = FinishedSessionArgResults.class)
         public void startNull_finishNull() {
             new FinishedSession(null, null);
         }
 
-        @Test(expected = FinishedSessionArgRules.class)
+        @Test(expected = FinishedSessionArgResults.class)
         public void startNonNull_AndAfter_NonNullFinish() {
             new FinishedSession(new Date(1L), new Date(0L));
         }

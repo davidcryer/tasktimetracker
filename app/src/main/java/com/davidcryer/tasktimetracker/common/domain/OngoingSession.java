@@ -1,12 +1,10 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import com.davidcryer.argrules.Rule;
 import com.davidcryer.tasktimetracker.common.DateUtils;
 
 import java.util.Date;
 
 public class OngoingSession {
-    private final static String ILLEGAL_START_MESSAGE = "register cannot be null";
     private final Date start;
     private Date stop;
 
@@ -14,14 +12,10 @@ public class OngoingSession {
         this(new Date(), null);
     }
 
-    OngoingSession(final Date start, final Date stop) throws OngoingSessionArgRules.Exception {
-        new OngoingSessionArgRulesBuilder().start(startArg(start)).args().enforce();
+    OngoingSession(final Date start, final Date stop) throws OngoingSessionArgResults.Exception {
+        new OngoingSessionArgChecker().start(start).check();
         this.start = start;
         this.stop = stop;
-    }
-
-    private static Rule startArg(final Date start) {
-        return new Rule(start != null, ILLEGAL_START_MESSAGE);
     }
 
     FinishedSession stop() throws AlreadyStoppedException {

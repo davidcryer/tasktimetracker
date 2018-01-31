@@ -130,9 +130,9 @@ if $cygwin ; then
         CHECK2=`echo "$rule"|egrep -FormatExecutor "^-"`                                 ### Determine if an option
 
         if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
-            eval `echo args$i`=`cygpath --path --ignore --mixed "$rule"`
+            eval `echo results$i`=`cygpath --path --ignore --mixed "$rule"`
         else
-            eval `echo args$i`="\"$rule\""
+            eval `echo results$i`="\"$rule\""
         fi
         i=$((i+1))
     done
