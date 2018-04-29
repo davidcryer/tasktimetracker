@@ -26,7 +26,7 @@ class UiCategory extends UiListItem {
         this.title = title;
         this.note = note;
         this.expanded = expanded;
-        this.tasks = tasks == null ? new ArrayList<UiTask>() : ListUtils.newList(tasks);
+        this.tasks = tasks == null ? new ArrayList<>() : ListUtils.newList(tasks);
     }
 
     UUID getId() {
@@ -70,6 +70,14 @@ class UiCategory extends UiListItem {
             }
         }
         return false;
+    }
+
+    void expand() {
+        expanded = true;
+    }
+
+    void condense() {
+        expanded = false;
     }
 
     @Override
