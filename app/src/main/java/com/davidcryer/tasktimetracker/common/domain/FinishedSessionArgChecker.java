@@ -9,9 +9,9 @@ import static com.davidcryer.argrules.multiarg.ImmediateResult.forCheck;
 
 class FinishedSessionArgChecker extends ArgChecker<FinishedSessionArgResults.Exception, FinishedSessionArgResults> {
     private final static String ERROR_ID_NULL = "id cannot be null";
-    private final static String ERROR_START_NULL = "register cannot be null";
+    private final static String ERROR_START_NULL = "onActivate cannot be null";
     private final static String ERROR_FINISH_NULL = "finish cannot be null";
-    private final static String ERROR_TIMELINE_ILLEGAL = "register cannot be later than finish";
+    private final static String ERROR_TIMELINE_ILLEGAL = "onActivate cannot be later than finish";
     private final FinishedSessionArgResults.Builder resultsBuilder = new FinishedSessionArgResults.Builder();
 
     FinishedSessionArgChecker id(final UUID id) {

@@ -45,7 +45,11 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
 
             @Override
             public void onToggleActiveStatus(UiTask task, boolean isActive) {
-                listener().onToggleActiveStatus(ui(), task, isActive);
+                if (isActive) {
+                    listener().onActivateTask(ui(), task);
+                } else {
+                    listener().onDeactivateTask(ui(), task);
+                }
             }
 
             @Override
@@ -151,11 +155,6 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
             @Override
             public void insert(final UiListItem item, final int i) {
                 categoriesAdapter.insert(item, i);
-            }
-
-            @Override
-            public void set(UiListItem item, int i) {
-                categoriesAdapter.set(item, i);
             }
 
             @Override

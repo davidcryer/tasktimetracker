@@ -20,7 +20,7 @@ class UiTaskMapper {
     }
 
     static UiTask from(final Task task, final Category category) {
-        return new UiTask(task.id(), task.title(), task.note(), task.expendedTime(), task.isOngoing(), category.id());
+        return new UiTask(task.id(), task.title(), task.note(), task.expendedTime(), task.isActive(), category.id());
     }
 
     static ManageTaskIntentModel toManageTaskIntentModel(final UiTask task) {

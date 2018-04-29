@@ -1,44 +1,36 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DbMapper {
 
-    static List<DbTask> dbTasks(final List<Task> tasks) {
+    static List<DbTask> dbTasks(final Task[] tasks) {
         if (tasks == null) {
             return null;
         }
-        final List<DbTask> dbTasks = new ArrayList<>(tasks.size());
-        tasks.forEach(task -> dbTasks.add(task.toDbTask()));
-        return dbTasks;
+        return Arrays.stream(tasks).map(Task::toDbTask).collect(Collectors.toList());
     }
 
-    static List<Task> tasks(final List<DbTask> dbTasks, final TaskFactory factory, final Task.OngoingStatusListener ongoingStatusListener) {
+    static List<ObservedTask> tasks(final List<DbTask> dbTasks, final TaskFactory factory) {
         if (dbTasks == null) {
             return null;
         }
-        final List<Task> tasks = new LinkedList<>();
-        dbTasks.forEach(dbTask -> tasks.add(dbTask.toTask(factory, ongoingStatusListener)));
-        return tasks;
+        return dbTasks.stream().map(dbTask -> dbTask.toTask(factory)).collect(Collectors.toList());
     }
 
     static List<DbFinishedSession> dbFinishedSessions(final List<FinishedSession> finishedSessions) {
         if (finishedSessions == null) {
             return null;
         }
-        final List<DbFinishedSession> dbFinishedSessions = new ArrayList<>(finishedSessions.size());
-        finishedSessions.forEach(finishedSession -> dbFinishedSessions.add(finishedSession.toDbFinishedSession()));
-        return dbFinishedSessions;
+        return finishedSessions.stream().map(FinishedSession::toDbFinishedSession).collect(Collectors.toList());
     }
 
     static List<FinishedSession> finishedSessions(final List<DbFinishedSession> dbFinishedSessions) {
         if (dbFinishedSessions == null) {
             return null;
         }
-        final List<FinishedSession> finishedSessions = new LinkedList<>();
-        dbFinishedSessions.forEach(dbFinishedSession -> finishedSessions.add(dbFinishedSession.toFinishedSession()));
-        return finishedSessions;
+        return dbFinishedSessions.stream().map(DbFinishedSession::toFinishedSession).collect(Collectors.toList());
     }
 }

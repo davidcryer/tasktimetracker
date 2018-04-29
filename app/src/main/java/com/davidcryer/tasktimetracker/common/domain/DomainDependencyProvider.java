@@ -10,7 +10,7 @@ public class DomainDependencyProvider {
         return new TaskFactory(ongoingTaskRegister());
     }
 
-    private static OngoingTaskRegister ongoingTaskRegister() {
-        return new OngoingTaskRegister();
+    private static ActivatedTaskRegister ongoingTaskRegister() {
+        return new ActivatedTaskRegister();
     }
 }

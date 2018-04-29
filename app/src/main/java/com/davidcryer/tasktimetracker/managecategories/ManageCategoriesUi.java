@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ManageCategoriesUi {
-    void show(List<UiListItem> items);//TODO change to showCategories list of items - items or tasks
+    void show(List<UiListItem> items);
     void add(UiListItem item);
     void insert(UiListItem item, int i);
-    void set(UiListItem item, int i);
     void remove(int i);
     void remove(int i, int count);
-    void showFilterOptions(List<String> options );
+    void showFilterOptions(List<String> options);
     void showFilterOptions(List<String> options, int selected);
     void showAddCategoryPrompt();
     void showAddTaskPrompt(UUID categoryId);
@@ -29,7 +28,8 @@ public interface ManageCategoriesUi {
         void onClickTask(ManageCategoriesUi ui, UiTask task);
         void onClickAddCategory(ManageCategoriesUi ui);
         void onClickAddTask(ManageCategoriesUi ui, UUID categoryId);
-        void onToggleActiveStatus(ManageCategoriesUi ui, UiTask task, boolean isActive);
+        void onActivateTask(ManageCategoriesUi ui, UiTask task);
+        void onDeactivateTask(ManageCategoriesUi ui, UiTask task);
         void onAddCategory(InputPrompt prompt, String title, String note);
         void onAddTask(InputPrompt prompt, String title, String note, UUID categoryId);
         void onRemoveCategory(ManageCategoriesUi ui, UiCategory category);

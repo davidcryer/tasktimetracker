@@ -18,9 +18,9 @@ public class OngoingSession {
         this.stop = stop;
     }
 
-    FinishedSession stop() throws AlreadyStoppedException {
+    FinishedSession stop() throws AlreadyInactiveException {
         if (isFinished()) {
-            throw new AlreadyStoppedException();
+            throw new AlreadyInactiveException();
         }
         stop = new Date();
         return new FinishedSession(start, stop);

@@ -17,26 +17,26 @@ public class TaskTests {
 
     @Test
     public void start() {
-        task.start();
-        Assert.assertTrue(task.isOngoing());
+        task.activate();
+        Assert.assertTrue(task.isActive());
     }
 
-    @Test(expected = AlreadyStartedException.class)
+    @Test(expected = AlreadyActiveException.class)
     public void start_alreadyStarted() {
-        task.start();
-        task.start();
+        task.activate();
+        task.activate();
     }
 
     @Test
     public void stop() {
-        task.start();
-        task.stop();
-        Assert.assertFalse(task.isOngoing());
+        task.activate();
+        task.deactivate();
+        Assert.assertFalse(task.isActive());
     }
 
-    @Test(expected = AlreadyStoppedException.class)
+    @Test(expected = AlreadyInactiveException.class)
     public void stop_alreadyStopped() {
-        task.stop();
+        task.deactivate();
     }
 
     @Test
@@ -46,36 +46,36 @@ public class TaskTests {
 
     @Test
     public void expendedTime_afterStart_beforeStop_withDuration() throws Exception {
-        task.start();
+        task.activate();
         Thread.sleep(10L);
         Assert.assertTrue(task.expendedTime() >= 10L && task.expendedTime() < 15L);
     }
 
     @Test
     public void expendedTime_afterStart_afterStop_withDuration() throws Exception {
-        task.start();
+        task.activate();
         Thread.sleep(10L);
-        task.stop();
+        task.deactivate();
         Thread.sleep(10L);
         Assert.assertTrue(task.expendedTime() >= 10L && task.expendedTime() < 15L);
     }
 
     @Test
     public void multipleStartAndStops_withDuration() throws Exception {
-        task.start();
+        task.activate();
         Thread.sleep(10L);
-        task.stop();
-        task.start();
+        task.deactivate();
+        task.activate();
         Thread.sleep(10L);
-        task.stop();
+        task.deactivate();
         Assert.assertTrue(task.expendedTime() >= 20L && task.expendedTime() < 30L);
     }
 
     @Test
     public void deleteSession() {
         final Task task = new Task(UUID.randomUUID(), "", null, null);
-        task.start();
-        task.stop();
+        task.activate();
+        task.deactivate();
         Assert.assertTrue(task.finishedSessions().size() == 1);
         Assert.assertTrue(task.deleteSession(task.finishedSessions().get(0).id()));
     }

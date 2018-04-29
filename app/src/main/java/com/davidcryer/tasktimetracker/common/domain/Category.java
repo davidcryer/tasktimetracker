@@ -14,9 +14,9 @@ public class Category implements Task.OnChangeListener {
     private final UUID id;
     private String title;
     private String note;
-    private List<Task> tasks;
+    private List<ObservedTask> tasks;
 
-    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgResults.Exception {
+    private Category(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<ObservedTask> tasks) throws CategoryArgResults.Exception {
         new CategoryArgChecker().id(id).title(title).check();
         this.categoryStore = categoryStore;
         this.taskFactory = taskFactory;
@@ -32,7 +32,7 @@ public class Category implements Task.OnChangeListener {
         return category;
     }
 
-    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<Task> tasks) throws CategoryArgResults.Exception {
+    static Category inflate(CategoryStore categoryStore, TaskFactory taskFactory, UUID id, String title, String note, List<ObservedTask> tasks) throws CategoryArgResults.Exception {
         final Category category = new Category(categoryStore, taskFactory, id, title, note, tasks);
         category.listenToTaskChanges();
         return category;
@@ -64,15 +64,15 @@ public class Category implements Task.OnChangeListener {
         this.note = note;
     }
 
-    public List<Task> tasks() {
+    public List<ObservedTask> tasks() {
         return tasks == null ? new ArrayList<>() : new ArrayList<>(tasks);
     }
 
-    public Task newTask(final String title, final String note) {
+    public ObservedTask newTask(final String title, final String note) {
         if (tasks == null) {
             tasks = new LinkedList<>();
         }
-        final Task task = taskFactory.create(title, note);
+        final ObservedTask task = taskFactory.create(title, note);
         tasks.add(task);
         task.onChangeListener(this);
         save();
@@ -81,12 +81,12 @@ public class Category implements Task.OnChangeListener {
 
     public boolean deleteTask(final UUID taskId) {
         if (tasks != null) {
-            for (final Iterator<Task> itr = tasks.iterator(); itr.hasNext(); ) {
+            for (final Iterator<ObservedTask> itr = tasks.iterator(); itr.hasNext(); ) {
                 final Task task = itr.next();
                 if (task.id().equals(taskId)) {
                     task.onChangeListener(null);
-                    if (task.isOngoing()) {
-                        task.stop();
+                    if (task.isActive()) {
+                        task.deactivate();
                     }
                     itr.remove();
                     save();
@@ -121,7 +121,7 @@ public class Category implements Task.OnChangeListener {
     }
 
     DbCategory toDbCategory() {
-        return new DbCategory(id, title, note, DbMapper.dbTasks(tasks));
+        return new DbCategory(id, title, note, DbMapper.dbTasks(tasks.toArray(new ObservedTask[tasks.size()])));
     }
 
     public Writer writer() {

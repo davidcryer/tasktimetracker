@@ -6,16 +6,15 @@ import android.support.annotation.NonNull;
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.domain.CategoryArgResults;
 import com.davidcryer.tasktimetracker.common.domain.TaskArgResults;
-import com.davidcryer.tasktimetracker.common.domain.AlreadyStartedException;
-import com.davidcryer.tasktimetracker.common.domain.AlreadyStoppedException;
+import com.davidcryer.tasktimetracker.common.domain.AlreadyActiveException;
+import com.davidcryer.tasktimetracker.common.domain.AlreadyInactiveException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.DomainManager;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
 import java.util.UUID;
 
-public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel>
-        implements Task.OngoingStatusListener {
+public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> {
     private final DomainManager domainManager;
 
     private ManageCategoriesUiWrapper(@NonNull final ManageCategoriesUiModel uiModel, final DomainManager domainManager) {
@@ -60,20 +59,22 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             }
 
             @Override
-            public void onToggleActiveStatus(ManageCategoriesUi ui, UiTask uiTask, boolean isActive) {
+            public void onActivateTask(ManageCategoriesUi ui, UiTask uiTask) {
                 final Task task = uiModel().task(uiTask.getId());
-                if (isActive) {
-                    try {
-                        task.start();
-                    } catch (AlreadyStartedException e) {
-                        onStart(task);
-                    }
-                } else {
-                    try {
-                        task.stop();
-                    } catch (AlreadyStoppedException e) {
-                        onStop(task);
-                    }
+                try {
+                    task.activate();
+                } catch (AlreadyActiveException ignored) {
+                    uiTask.setActive(true);
+                }
+            }
+
+            @Override
+            public void onDeactivateTask(ManageCategoriesUi ui, UiTask uiTask) {
+                final Task task = uiModel().task(uiTask.getId());
+                try {
+                    task.deactivate();
+                } catch (AlreadyInactiveException ignored) {
+                    uiTask.setActive(false);
                 }
             }
 
@@ -114,21 +115,6 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
                 }
             }
 
-//            @Override
-//            public void onEditCategory(ManageCategoriesUi.InputPrompt prompt, UUID categoryId, String title, String note) {
-//                try {
-//                    final Category category = domainManager.get(categoryId);
-//                    if (category != null) {
-//                        category.writer().title(title).note(note).commit();
-//                        domainManager.save(category);
-//                        uiModel().updateCategory(category, ui());
-//                    }
-//                    prompt.dismiss();
-//                } catch (CategoryArgResults iae) {
-//                    showErrors(prompt, iae.results());
-//                }
-//            }
-
             @Override
             public void onRemoveCategory(ManageCategoriesUi ui, UiCategory category) {
                 uiModel().removeCategory(category.getId(), ui);
@@ -158,20 +144,10 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
     }
 
     @Override
-    public void onStart(Task task) {
-        uiModel().activate(task, ui());
-    }
-
-    @Override
-    public void onStop(Task task) {
-        uiModel().deactivate(task, ui());
-    }
-
-    @Override
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showCategories(domainManager.getAll(this), ui());
+            uiModel().showCategories(domainManager.getAll(), ui());
         }
     }
 }

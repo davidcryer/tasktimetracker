@@ -72,11 +72,11 @@ public class CategoryTests {
         final Task task2 = new Task("", null);
         category.newTask(task1);
         category.newTask(task2);
-        task1.start();
-        task2.start();
+        task1.activate();
+        task2.activate();
         Thread.sleep(10L);
-        task1.stop();
-        task2.stop();
+        task1.deactivate();
+        task2.deactivate();
         final Long expendedTime = category.expendedTime();
         Assert.assertTrue(expendedTime >= 20L && expendedTime < 30L);
     }

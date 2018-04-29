@@ -7,7 +7,7 @@ import java.util.Date;
 import static com.davidcryer.argrules.multiarg.ImmediateResult.forCheck;
 
 class OngoingSessionArgChecker extends ArgChecker<OngoingSessionArgResults.Exception, OngoingSessionArgResults> {
-    private final static String ERROR_START_NULL = "register cannot be null";
+    private final static String ERROR_START_NULL = "onActivate cannot be null";
     private final OngoingSessionArgResults.Builder resultsBuilder = new OngoingSessionArgResults.Builder();
 
     OngoingSessionArgChecker start(final Date start) {

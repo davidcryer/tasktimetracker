@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DomainManager {
-    Category get(UUID id, Task.OngoingStatusListener ongoingStatusListener);
-    List<Category> getAll(Task.OngoingStatusListener ongoingStatusListener);
+    Category get(UUID id);
+    List<Category> getAll();
     Category create(String title, String note) throws CategoryArgResults.Exception;
 }

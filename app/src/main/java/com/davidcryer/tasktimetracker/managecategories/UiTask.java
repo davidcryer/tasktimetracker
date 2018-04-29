@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.davidcryer.tasktimetracker.R;
+import com.davidcryer.tasktimetracker.common.TimeInterval;
+import com.davidcryer.tasktimetracker.common.Timer;
 
 import java.util.UUID;
 
@@ -15,6 +17,9 @@ class UiTask extends UiListItem {
     private long totalTimeActive;
     private boolean isActive;
     private final UUID categoryId;
+    private Long timeOfLastTick = System.currentTimeMillis();
+    private final Timer timer = new Timer();
+    private View view;
 
     UiTask(UUID id, String title, String note, long totalTimeActive, boolean isActive, UUID categoryId) {
         this.id = id;
@@ -41,20 +46,81 @@ class UiTask extends UiListItem {
         return totalTimeActive;
     }
 
-    boolean isActive() {
-        return isActive;
-    }
-
     UUID getCategoryId() {
         return categoryId;
     }
 
+    boolean isActive() {
+        return isActive;
+    }
+
     void setActive(final boolean isActive) {
+        if (this.isActive == isActive) {
+            return;
+        }
+        if (isActive) {
+            timeOfLastTick = System.currentTimeMillis();
+            if (view != null && view.isAttachedToWindow()) {
+                scheduleTimer();
+            }
+        } else {
+            incrementActiveTime();
+            cancelTimer();
+        }
+        if (view != null) {
+            view.totalTimeActive(totalTimeActive, isActive);
+        }
         this.isActive = isActive;
     }
 
-    void incrementActiveTime(final long time) {
-        totalTimeActive += time;
+    public void register(View view) {
+        this.view = view;
+        view.title(title);
+        view.totalTimeActive(totalTimeActive, isActive);
+        view.activationState(isActive);
+        if (view.isAttachedToWindow()) {
+            if (isActive()) {
+                incrementActiveTime();
+                scheduleTimer();
+            }
+        }
+    }
+
+    public void attachedToWindow(View view) {
+        this.view = view;
+        if (isActive) {
+            incrementActiveTime();
+            scheduleTimer();
+        }
+    }
+
+    private void scheduleTimer() {
+        timer.schedule(this::onTick, TimeInterval.MILLIS_IN_SECOND, TimeInterval.MILLIS_IN_SECOND);
+    }
+
+    private void onTick() {
+        incrementActiveTime();
+        if (view != null) {
+            view.totalTimeActive(getTotalTimeActive(), isActive());
+        }
+    }
+
+    private void incrementActiveTime() {
+        final long currentTimeMillis = System.currentTimeMillis();
+        totalTimeActive += currentTimeMillis - timeOfLastTick;
+        timeOfLastTick = currentTimeMillis;
+    }
+
+    public void detachedFromWindow(View view) {
+        if (this.view == view) {
+            cancelTimer();
+            this.view = null;
+        }
+    }
+    private void cancelTimer() {
+        if (timer.isRunning()) {
+            timer.cancel();
+        }
     }
 
     @Override
@@ -82,6 +148,8 @@ class UiTask extends UiListItem {
         static ViewHolder newInstance(final ViewGroup group) {
             return new ViewHolder((TaskLayout) LayoutInflater.from(group.getContext()).inflate(R.layout.holder_task, group, false));
         }
+
+
 
         @Override
         void task(final UiTask task, final Listener listener) {
@@ -131,4 +199,11 @@ class UiTask extends UiListItem {
             return new UiTask[size];
         }
     };
+
+    interface View {
+        void title(String title);
+        void totalTimeActive(long time, boolean isActive);
+        void activationState(boolean isActive);
+        boolean isAttachedToWindow();
+    }
 }

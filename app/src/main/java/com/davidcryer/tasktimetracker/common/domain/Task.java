@@ -2,54 +2,37 @@ package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-public class Task implements OngoingTaskRegister.Task {
-    private final OngoingTaskRegister ongoingTaskRegister;
+public class Task implements ActivatedTaskRegister.Task {
+    private final ActivatedTaskRegister activatedTaskRegister;
     private final UUID id;
     private String title;
     private String note;
     private OngoingSession ongoingSession;
     private List<FinishedSession> finishedSessions;
-    private final Set<WeakReference<OngoingStatusListener>> ongoingStatusListeners;
     private OnChangeListener onChangeListener;
 
-    private Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
+    Task(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final ActivatedTaskRegister activatedTaskRegister) throws TaskArgResults.Exception {
         new TaskArgChecker().id(id).title(title).ongoingSession(ongoingSession).check();
         this.id = id;
         this.title = title;
         this.note = note;
         this.ongoingSession = ongoingSession;
         this.finishedSessions = finishedSessions;
-        this.ongoingTaskRegister = ongoingTaskRegister;
-        ongoingStatusListeners = new HashSet<>();
+        this.activatedTaskRegister = activatedTaskRegister;
     }
 
-    static Task create(final String title, final String note, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
-        return new Task(UUID.randomUUID(), title, note, null, null, ongoingTaskRegister);
+    public void activate() throws AlreadyActiveException {
+        activatedTaskRegister.activate(this);
     }
 
-    static Task inflate(final UUID id, final String title, final String note, final OngoingSession ongoingSession, final List<FinishedSession> finishedSessions, final OngoingTaskRegister ongoingTaskRegister) throws TaskArgResults.Exception {
-        final Task task = new Task(id, title, note, ongoingSession, finishedSessions, ongoingTaskRegister);
-        if (task.isOngoing()) {
-            ongoingTaskRegister.setUp(task);
-        }
-        return task;
-    }
-
-    public void start() throws AlreadyStartedException {
-        ongoingTaskRegister.register(this);
-    }
-
-    public void stop() throws AlreadyStoppedException {
-        ongoingTaskRegister.unregister(this);
+    public void deactivate() throws AlreadyInactiveException {
+        activatedTaskRegister.deactivate(this);
     }
 
     private void addFinishedSession(final FinishedSession session) {
@@ -59,7 +42,7 @@ public class Task implements OngoingTaskRegister.Task {
         finishedSessions.add(session);
     }
 
-    public boolean isOngoing() {
+    public boolean isActive() {
         return ongoingSession != null;
     }
 
@@ -98,12 +81,6 @@ public class Task implements OngoingTaskRegister.Task {
         return finishedSessions == null ? new ArrayList<>() : new ArrayList<>(finishedSessions);
     }
 
-    void addOngoingStatusListener(final OngoingStatusListener listener) {
-        if (listener != null) {
-            ongoingStatusListeners.add(new WeakReference<>(listener));
-        }
-    }
-
     void onChangeListener(final OnChangeListener onChangeListener) {
         this.onChangeListener = onChangeListener;
     }
@@ -115,39 +92,22 @@ public class Task implements OngoingTaskRegister.Task {
     }
 
     @Override
-    public void onRegister() throws AlreadyStartedException {
-        if (isOngoing()) {
-            throw new AlreadyStartedException();
+    public void onActivate() throws AlreadyActiveException {
+        if (isActive()) {
+            throw new AlreadyActiveException();
         }
         ongoingSession = new OngoingSession();
-        notifyOngoingTaskListener(listener -> listener.onStart(this));
         notifyChanged();
     }
 
     @Override
-    public void onUnregister() throws AlreadyStoppedException {
-        if (!isOngoing()) {
-            throw new AlreadyStoppedException();
+    public void onDeactivate() throws AlreadyInactiveException {
+        if (!isActive()) {
+            throw new AlreadyInactiveException();
         }
         addFinishedSession(ongoingSession.stop());
         ongoingSession = null;
-        notifyOngoingTaskListener(listener -> listener.onStop(this));
         notifyChanged();
-    }
-
-    private void notifyOngoingTaskListener(final NotifyOngoingStatusListenerAction action) {
-        for (final Iterator<WeakReference<OngoingStatusListener>> itr = ongoingStatusListeners.iterator(); itr.hasNext();) {
-            final OngoingStatusListener listener = itr.next().get();
-            if (listener == null) {
-                itr.remove();
-            } else {
-                action.perform(listener);
-            }
-        }
-    }
-
-    private interface NotifyOngoingStatusListenerAction {
-        void perform(OngoingStatusListener listener);
     }
 
     DbTask toDbTask() {
@@ -166,7 +126,7 @@ public class Task implements OngoingTaskRegister.Task {
         return title;
     }
 
-    private void title(final String title) {
+    void title(final String title) {
         this.title = title;
     }
 
@@ -174,7 +134,7 @@ public class Task implements OngoingTaskRegister.Task {
         return note;
     }
 
-    private void note(final String note) {
+    void note(final String note) {
         this.note = note;
     }
 
@@ -241,11 +201,6 @@ public class Task implements OngoingTaskRegister.Task {
                 task.notifyChanged();
             }
         }
-    }
-
-    public interface OngoingStatusListener {
-        void onStart(Task task);
-        void onStop(Task task);
     }
 
     interface OnChangeListener {

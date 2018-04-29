@@ -18,7 +18,7 @@ public class OngoingSessionTests {
         ongoingSession.stop();
     }
 
-    @Test(expected = AlreadyStoppedException.class)
+    @Test(expected = AlreadyInactiveException.class)
     public void stop_alreadyStopped() {
         ongoingSession.stop();
         ongoingSession.stop();

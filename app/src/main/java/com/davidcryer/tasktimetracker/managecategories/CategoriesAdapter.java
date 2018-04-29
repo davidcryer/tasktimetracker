@@ -1,5 +1,6 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -36,11 +37,6 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
         notifyItemInserted(i);
     }
 
-    void set(final UiListItem item, final int i) {
-        items.set(i, item);
-        notifyItemChanged(i);
-    }
-
     void remove(final int i) {
         items.remove(i);
         notifyItemRemoved(i);
@@ -51,13 +47,14 @@ class CategoriesAdapter extends RecyclerView.Adapter<UiListItem.ViewHolder> impl
         notifyItemRangeRemoved(i, count);
     }
 
+    @NonNull
     @Override
-    public UiListItem.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UiListItem.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return ViewType.values()[viewType].viewHolder(parent);
     }
 
     @Override
-    public void onBindViewHolder(final UiListItem.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final UiListItem.ViewHolder holder, int position) {
         items.get(position).bind(holder, this);
     }
 

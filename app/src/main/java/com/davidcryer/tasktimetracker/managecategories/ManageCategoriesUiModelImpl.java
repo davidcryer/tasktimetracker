@@ -14,12 +14,10 @@ import java.util.UUID;
 
 class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
     private List<Category> categories;
-    private Date categoriesSet;
     private Integer filteredCategory;
 
-    ManageCategoriesUiModelImpl(final List<Category> categories, final Date categoriesSet, final Integer filteredCategory) {
+    ManageCategoriesUiModelImpl(final List<Category> categories, final Integer filteredCategory) {
         this.categories = categories == null ? null : new LinkedList<>(categories);
-        this.categoriesSet = categoriesSet == null ? null : new Date(categoriesSet.getTime());
         this.filteredCategory = filteredCategory;
     }
 
@@ -30,13 +28,11 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     @Override
     public void showCategories(List<Category> categories, ManageCategoriesUi ui) {
-        categoriesSet = new Date();
         CategoryUtils.sortAlphabetically(categories);
         if (ui != null) {
             showCategoriesAndFilters(categories, ui);
         }
         this.categories = categories;
-        categoriesSet = new Date();
     }
 
     private void showCategoriesAndFilters(final List<Category> categories, final ManageCategoriesUi ui) {
@@ -85,15 +81,6 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
             position += 1 + category.tasks().size();
         }
         return position;
-    }
-
-    @Override
-    public void updateCategory(Category category, ManageCategoriesUi ui) {
-        final int categoryIndex = position(category.id());
-        if (ui != null) {
-            ui.set(UiCategoryMapper.from(category), categoryIndex);
-        }
-        categories.set(categoryIndex, category);
     }
 
     @Override
@@ -173,82 +160,6 @@ class ManageCategoriesUiModelImpl implements ManageCategoriesUiModel {
 
     private int indexOf(final Category category) {
         return categories.indexOf(category);
-    }
-
-    @Override
-    public void activate(Task task, ManageCategoriesUi ui) {
-        if (ui != null) {
-            activateTaskInUi(task, ui);
-        }
-    }
-
-    private void activateTaskInUi(final Task activatedTask, ManageCategoriesUi ui) {
-        if (filteredCategory == null) {
-            int position = 0;
-            for (final Category category : categories) {
-                position++;
-                for (final Task task : category.tasks()) {
-                    if (task.id().equals(activatedTask.id())) {
-                        activateUiTask(UiTaskMapper.from(task, category), position, ui);
-                        break;
-                    }
-                    position++;
-                }
-            }
-        } else {
-            final Category category = categories.get(filteredCategory);
-            int position = 1;
-            for (final Task task : category.tasks()) {
-                if (task.id().equals(activatedTask.id())) {
-                    activateUiTask(UiTaskMapper.from(task, category), position, ui);
-                    break;
-                }
-                position++;
-            }
-        }
-    }
-
-    private void activateUiTask(final UiTask task, final int position, final ManageCategoriesUi ui) {
-        task.setActive(true);
-        ui.set(task, position);
-    }
-
-    @Override
-    public void deactivate(Task task, ManageCategoriesUi ui) {
-        if (ui != null) {
-            deactivateTaskInUi(task, ui);
-        }
-    }
-
-    private void deactivateTaskInUi(final Task deactivatedTask, ManageCategoriesUi ui) {
-        if (filteredCategory == null) {
-            int position = 0;
-            for (final Category category : categories) {
-                position++;
-                for (final Task task : category.tasks()) {
-                    if (task.id().equals(deactivatedTask.id())) {
-                        deactivateUiTask(UiTaskMapper.from(task, category), position, ui);
-                        break;
-                    }
-                    position++;
-                }
-            }
-        } else {
-            final Category category = categories.get(filteredCategory);
-            int position = 1;
-            for (final Task task : category.tasks()) {
-                if (task.id().equals(deactivatedTask.id())) {
-                    deactivateUiTask(UiTaskMapper.from(task, category), position, ui);
-                    break;
-                }
-                position++;
-            }
-        }
-    }
-
-    private void deactivateUiTask(final UiTask task, final int position, final ManageCategoriesUi ui) {
-        task.setActive(false);
-        ui.set(task, position);
     }
 
     @Override
