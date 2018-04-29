@@ -43,12 +43,9 @@ class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
         final UiTask task = tasks.get(position);
         final ItemLayout layout = holder.layout;
         layout.task(task);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onClickTaskListener != null) {
-                    onClickTaskListener.onClick(task);
-                }
+        layout.setOnClickListener(view -> {
+            if (onClickTaskListener != null) {
+                onClickTaskListener.onClick(task);
             }
         });
     }

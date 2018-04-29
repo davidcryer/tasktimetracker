@@ -6,4 +6,13 @@
     <string name="prompt.remove_task.title">Delete Task</string>
     <string name="prompt.remove_task.message">Would you like to delete the task %1$s for the category %2$s</string>
     <string name="prompt.button.delete">Delete</string>
+
+    <string name="input.title">Title</string>
+    <string name="input.description">Description</string>
+
+    <string name="menu.manage_category.filter">Filter</string>
+
+    <string name="manage_activity.fab.content_description">Add category or task</string>
+
+    <string name="category_layout.image.add.content_description">Add task</string>
 </resources>

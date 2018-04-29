@@ -34,6 +34,6 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="@android:color/white"
-        android:contentDescription="Add category or task" />
+        android:contentDescription="@string/manage_activity.fab.content_description" />
 
 </android.support.design.widget.CoordinatorLayout>

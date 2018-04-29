@@ -9,9 +9,9 @@ import java.util.UUID;
 
 class DbCategory implements Serializable, Parcelable {
     private final UUID id;
-    private String title;
-    private String note;
-    private List<DbTask> tasks;
+    private final String title;
+    private final String note;
+    private final List<DbTask> tasks;
 
     DbCategory(UUID id, String title, String note, List<DbTask> tasks) {
         this.id = id;

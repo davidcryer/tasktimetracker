@@ -44,7 +44,7 @@ public class ManageCategoriesUiModelTests {
     @Test
     public void addCategory() {
         final ManageCategoriesUiModel uiModel = new ManageCategoriesUiModelImpl(null);
-        final TestUi ui = new TestUi(new ArrayList<UiCategory>());
+        final TestUi ui = new TestUi(new ArrayList<>());
         uiModel.addCategory(uiCategory(), ui);
         Assert.assertTrue(uiModel.isPopulated());
         Assert.assertTrue(ui.categories != null && !ui.categories.isEmpty());

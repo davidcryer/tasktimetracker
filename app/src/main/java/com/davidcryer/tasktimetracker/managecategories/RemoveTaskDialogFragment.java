@@ -36,20 +36,16 @@ public class RemoveTaskDialogFragment extends DialogFragment {
         if (task == null || category == null) {
             throw new IllegalStateException("ArgRules must contain UiTask for ARGS_UI_TASK key and UiCategory for ARGS_UI_CATEGORY key");
         }
-        return new AlertDialog.Builder(getContext())
+        final Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Creating dialog with null context");
+        }
+        return new AlertDialog.Builder(context)
                 .setTitle(R.string.prompt_remove_task_title)
                 .setMessage(String.format(getString(R.string.prompt_remove_task_message), task.getTitle(), category.getTitle()))
-                .setPositiveButton(R.string.prompt_button_delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        onClickDelete(task, category);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setPositiveButton(R.string.prompt_button_delete, (dialogInterface, i) -> onClickDelete(task, category))
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
 
-                    }
                 })
                 .show();
     }

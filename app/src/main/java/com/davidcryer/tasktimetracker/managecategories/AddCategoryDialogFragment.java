@@ -2,12 +2,10 @@ package com.davidcryer.tasktimetracker.managecategories;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -20,8 +18,12 @@ public class AddCategoryDialogFragment extends DialogFragment implements ManageC
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        categoryLayout = new CategoryLayout(getContext());
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
+        final Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Creating dialog with null context");
+        }
+        categoryLayout = new CategoryLayout(context);
+        final AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(categoryLayout)
                 .setTitle("Add category")
                 .setPositiveButton("Add", null)

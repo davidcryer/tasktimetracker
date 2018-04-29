@@ -8,7 +8,7 @@ import java.util.Date;
 
 class DbOngoingSession implements Serializable, Parcelable {
     private final Date start;
-    private Date stop;
+    private final Date stop;
 
     DbOngoingSession(Date start, Date stop) {
         this.start = start;

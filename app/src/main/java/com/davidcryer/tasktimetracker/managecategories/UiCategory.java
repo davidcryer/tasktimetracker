@@ -1,7 +1,6 @@
 package com.davidcryer.tasktimetracker.managecategories;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,18 +108,8 @@ class UiCategory extends UiListItem {
         @Override
         void category(final UiCategory category, final Listener listener) {
             layout.category(category);
-            layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onClickCategory(category, ViewHolder.this.getAdapterPosition());
-                }
-            });
-            layout.setOnClickAddTaskListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClickAddTask(category.id);
-                }
-            });
+            layout.setOnClickListener(view -> listener.onClickCategory(category, ViewHolder.this.getAdapterPosition()));
+            layout.setOnClickAddTaskListener(v -> listener.onClickAddTask(category.id));
             setUpDivider();
         }
 

@@ -2,12 +2,10 @@ package com.davidcryer.tasktimetracker.managecategories;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -39,8 +37,12 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
         if (categoryId == null) {
             throw new IllegalStateException("ArgRules must contain UUID for ARGS_CATEGORY_ID key");
         }
-        taskLayout = new TaskLayout(getContext());
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
+        final Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Creating dialog with null context");
+        }
+        taskLayout = new TaskLayout(context);
+        final AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(taskLayout)
                 .setTitle("Add task")
                 .setPositiveButton("Add", null)

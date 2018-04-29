@@ -87,9 +87,7 @@ class UiTask extends UiListItem {
         void task(final UiTask task, final Listener listener) {
             layout.task(task);
             layout.setOnClickListener(view -> listener.onClickTask(task));
-            layout.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                listener.onToggleActiveStatus(task, isChecked);
-            });
+            layout.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onToggleActiveStatus(task, isChecked));
         }
     }
 

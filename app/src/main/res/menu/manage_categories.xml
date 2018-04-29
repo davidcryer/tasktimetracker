@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/spinner"
-        android:title="Filter"
+        android:title="@string/menu.manage_category.filter"
         app:showAsAction="always"
         app:actionViewClass="android.widget.Spinner" />
 

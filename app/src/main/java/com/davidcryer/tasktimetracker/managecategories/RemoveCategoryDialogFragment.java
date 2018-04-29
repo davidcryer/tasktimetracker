@@ -33,20 +33,16 @@ public class RemoveCategoryDialogFragment extends DialogFragment {
         if (category == null) {
             throw new IllegalStateException("Args must contain UiCategory for ARGS_UI_CATEGORY key");
         }
-        return new AlertDialog.Builder(getContext())
+        final Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Creating dialog with null context");
+        }
+        return new AlertDialog.Builder(context)
                 .setTitle(R.string.prompt_remove_category_title)
                 .setMessage(String.format(getString(R.string.prompt_remove_category_message), category.getTitle()))
-                .setPositiveButton(R.string.prompt_button_delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        onClickDelete(category);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setPositiveButton(R.string.prompt_button_delete, (dialogInterface, i) -> onClickDelete(category))
+                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
 
-                    }
                 })
                 .show();
     }

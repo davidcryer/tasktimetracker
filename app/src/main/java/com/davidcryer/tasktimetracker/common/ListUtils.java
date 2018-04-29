@@ -11,6 +11,6 @@ public class ListUtils {
 
     @NonNull
     public static <T> List<T> newList(final List<T> list) {
-        return list == null ? new ArrayList<T>() : new ArrayList<>(list);
+        return list == null ? new ArrayList<>() : new ArrayList<>(list);
     }
 }

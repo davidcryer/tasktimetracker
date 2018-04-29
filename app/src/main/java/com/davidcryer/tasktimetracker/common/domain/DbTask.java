@@ -9,10 +9,10 @@ import java.util.UUID;
 
 class DbTask implements Serializable, Parcelable {
     private final UUID id;
-    private String title;
-    private String note;
-    private DbOngoingSession ongoingSession;
-    private List<DbFinishedSession> finishedSessions;
+    private final String title;
+    private final String note;
+    private final DbOngoingSession ongoingSession;
+    private final List<DbFinishedSession> finishedSessions;
 
     DbTask(UUID id, String title, String note, DbOngoingSession ongoingSession, List<DbFinishedSession> finishedSessions) {
         this.id = id;
