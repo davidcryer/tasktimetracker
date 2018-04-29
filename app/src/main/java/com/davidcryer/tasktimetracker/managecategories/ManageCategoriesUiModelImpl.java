@@ -7,7 +7,6 @@ import com.davidcryer.tasktimetracker.common.domain.Category;
 import com.davidcryer.tasktimetracker.common.domain.CategoryUtils;
 import com.davidcryer.tasktimetracker.common.domain.Task;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
