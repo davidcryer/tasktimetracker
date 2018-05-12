@@ -17,7 +17,7 @@ class UiTask extends UiListItem {
     private long totalTimeActive;
     private boolean isActive;
     private final UUID categoryId;
-    private Long timeOfLastTick = System.currentTimeMillis();
+    private Long timeOfLastTick;
     private final Timer timer = new Timer();
     private View view;
 
@@ -28,6 +28,7 @@ class UiTask extends UiListItem {
         this.totalTimeActive = totalTimeActive;
         this.isActive = isActive;
         this.categoryId = categoryId;
+        this.timeOfLastTick = System.currentTimeMillis();
     }
 
     UUID getId() {
@@ -165,18 +166,25 @@ class UiTask extends UiListItem {
     }
 
     @Override
+    UiListItemFactory factory() {
+        return UiListItemFactory.TASK;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeSerializable(this.id);
         dest.writeString(this.title);
         dest.writeString(this.note);
         dest.writeLong(this.totalTimeActive);
         dest.writeByte(this.isActive ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.categoryId);
+        dest.writeLong(this.timeOfLastTick);
     }
 
     private UiTask(Parcel in) {
@@ -186,11 +194,12 @@ class UiTask extends UiListItem {
         this.totalTimeActive = in.readLong();
         this.isActive = in.readByte() != 0;
         this.categoryId = (UUID) in.readSerializable();
+        this.timeOfLastTick = in.readLong();
     }
 
-    public static final Creator<UiTask> CREATOR = new Creator<UiTask>() {
+    public static final Creator<UiListItem> CREATOR = new Creator<UiListItem>() {
         @Override
-        public UiTask createFromParcel(Parcel source) {
+        public UiListItem createFromParcel(Parcel source) {
             return new UiTask(source);
         }
 

@@ -14,7 +14,7 @@ class CategoryFactory {
         return Category.create(categoryStore, taskFactory, title, note);
     }
 
-    Category inflate(final CategoryStore categoryStore, final UUID id, final String title, final String note, final List<DbTask> tasks, final Task.OngoingStatusListener ongoingStatusListener) throws CategoryArgResults.Exception {
-        return Category.inflate(categoryStore, taskFactory, id, title, note, DbMapper.tasks(tasks, taskFactory, ongoingStatusListener));
+    Category inflate(final CategoryStore categoryStore, final UUID id, final String title, final String note, final List<DbTask> tasks) throws CategoryArgResults.Exception {
+        return Category.inflate(categoryStore, taskFactory, id, title, note, DbMapper.tasks(tasks, taskFactory));
     }
 }

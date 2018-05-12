@@ -7,11 +7,10 @@ import java.util.UUID;
 
 public interface ManageCategoriesUi {
     void show(List<UiListItem> items);
-    void add(UiListItem item);
-    void insert(UiListItem item, int i);
+    void add(UiListItem item, int i);
+    void add(List<UiListItem> items, int i);
     void remove(int i);
     void remove(int i, int count);
-    void showFilterOptions(List<String> options);
     void showFilterOptions(List<String> options, int selected);
     void showAddCategoryPrompt();
     void showAddTaskPrompt(UUID categoryId);

@@ -20,8 +20,8 @@ class DbCategory implements Serializable, Parcelable {
         this.tasks = tasks;
     }
 
-    Category toCategory(final CategoryStore categoryStore, final CategoryFactory factory, final Task.OngoingStatusListener ongoingStatusListener) {
-        return factory.inflate(categoryStore, id, title, note, tasks, ongoingStatusListener);
+    Category toCategory(final CategoryStore categoryStore, final CategoryFactory factory) {
+        return factory.inflate(categoryStore, id, title, note, tasks);
     }
 
     @Override

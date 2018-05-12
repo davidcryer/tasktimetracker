@@ -18,14 +18,13 @@ class UiCategory extends UiListItem {
     private final String title;
     private final String note;
     private boolean expanded;
-    private final List<UiTask> tasks;
+    private Listener listener;
 
-    public UiCategory(UUID id, String title, String note, boolean expanded, List<UiTask> tasks) {
+    public UiCategory(UUID id, String title, String note, boolean expanded) {
         this.id = id;
         this.title = title;
         this.note = note;
         this.expanded = expanded;
-        this.tasks = tasks == null ? new ArrayList<>() : ListUtils.newList(tasks);
     }
 
     UUID getId() {
@@ -40,43 +39,21 @@ class UiCategory extends UiListItem {
         return note;
     }
 
-    int taskCount() {
-        return tasks.size();
-    }
-
-    UiTask task(int i) {
-        return tasks.get(i);
-    }
-
-    int taskIndex(final UUID taskId) {
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).getId().equals(taskId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    void addTask(final UiTask task) {
-        tasks.add(task);
-    }
-
-    boolean removeTask(final UUID taskId) {
-        for (final Iterator<UiTask> itr = tasks.iterator(); itr.hasNext();) {
-            if (itr.next().getId().equals(taskId)) {
-                itr.remove();
-                return true;
-            }
-        }
-        return false;
-    }
-
     void expand() {
         expanded = true;
+
     }
 
     void condense() {
         expanded = false;
+    }
+
+    boolean isExpanded() {
+        return expanded;
+    }
+
+    void setListener(final Listener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -85,12 +62,12 @@ class UiCategory extends UiListItem {
     }
 
     @Override
-    void bind(UiListItem.ViewHolder holder, UiListItem.Listener listener) {
-        bind((ViewHolder) holder, (Listener) listener);
+    void bind(UiListItem.ViewHolder holder) {
+        bind((ViewHolder) holder);
     }
 
-    private void bind(ViewHolder holder, Listener listener) {
-        holder.category(this, listener);
+    private void bind(ViewHolder holder) {
+        holder.category(this);
     }
 
     static class ViewHolder extends UiListItem.ViewHolder {
@@ -106,10 +83,10 @@ class UiCategory extends UiListItem {
         }
 
         @Override
-        void category(final UiCategory category, final Listener listener) {
+        void category(final UiCategory category) {
             layout.category(category);
-            layout.setOnClickListener(view -> listener.onClickCategory(category, ViewHolder.this.getAdapterPosition()));
-            layout.setOnClickAddTaskListener(v -> listener.onClickAddTask(category.id));
+            layout.setOnClickListener(view -> category.listener.onClickCategory(category, ViewHolder.this.getAdapterPosition()));
+            layout.setOnClickAddTaskListener(v -> category.listener.onClickAddTask(category.id));
             setUpDivider();
         }
 
@@ -122,9 +99,15 @@ class UiCategory extends UiListItem {
         }
     }
 
-    interface Listener extends UiListItem.Listener {
+    interface Listener {
         void onClickCategory(UiCategory category, int i);
         void onClickAddTask(UUID categoryId);
+        void onClickExpand(UUID categoryId);
+    }
+
+    @Override
+    UiListItemFactory factory() {
+        return UiListItemFactory.CATEGORY;
     }
 
     @Override
@@ -134,11 +117,11 @@ class UiCategory extends UiListItem {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeSerializable(this.id);
         dest.writeString(this.title);
         dest.writeString(this.note);
         dest.writeByte(this.expanded ? (byte) 1 : (byte) 0);
-        dest.writeTypedList(this.tasks);
     }
 
     private UiCategory(Parcel in) {
@@ -146,17 +129,16 @@ class UiCategory extends UiListItem {
         this.title = in.readString();
         this.note = in.readString();
         this.expanded = in.readByte() != 0;
-        this.tasks = in.createTypedArrayList(UiTask.CREATOR);
     }
 
-    public static final Creator<UiCategory> CREATOR = new Creator<UiCategory>() {
+    public static final Creator<UiListItem> CREATOR = new Creator<UiListItem>() {
         @Override
-        public UiCategory createFromParcel(Parcel source) {
+        public UiListItem createFromParcel(Parcel source) {
             return new UiCategory(source);
         }
 
         @Override
-        public UiCategory[] newArray(int size) {
+        public UiListItem[] newArray(int size) {
             return new UiCategory[size];
         }
     };

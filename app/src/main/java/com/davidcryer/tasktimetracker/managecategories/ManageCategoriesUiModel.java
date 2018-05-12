@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ManageCategoriesUiModel extends UiModel<ManageCategoriesUi> {
-    void showCategories(List<Category> categories, ManageCategoriesUi ui);
-    void addCategory(Category category, ManageCategoriesUi ui);
-    void removeCategory(UUID categoryId, ManageCategoriesUi ui);
-    void addTask(Task task, Category category, ManageCategoriesUi ui);
-    void removeTask(UUID taskId, UUID categoryId, ManageCategoriesUi ui);
-    void removeFilter(ManageCategoriesUi ui);
-    void updateFilter(int selected, ManageCategoriesUi ui);
+    void setItems(List<UiListItem> items, ManageCategoriesUi ui);
+    void setItems(List<UiListItem> items, CategoryFilters filters, ManageCategoriesUi ui);
+    void addItem(UiListItem item, int i, ManageCategoriesUi ui);
+    void addItems(List<UiListItem> items, int i, ManageCategoriesUi ui);
+    void removeItem(int i, ManageCategoriesUi ui);
+    void removeItems(int i, int count, ManageCategoriesUi ui);
     boolean isPopulated();
-    Category category(UUID id);
-    Task task(UUID id);
+    CategoryFilters filters();
 }

@@ -2,7 +2,7 @@ package com.davidcryer.tasktimetracker;
 
 import android.content.Context;
 
-import com.davidcryer.tasktimetracker.common.domain.DomainManager;
+import com.davidcryer.tasktimetracker.common.domain.CategoryRepository;
 import com.davidcryer.tasktimetracker.common.domain.PrePopulatedCategorySharedPreferences;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 import com.google.gson.Gson;
@@ -17,7 +17,7 @@ class ApplicationDependencyProvider {
         return new UiWrapperFactory(domainManager(context));
     }
 
-    private static DomainManager domainManager(final Context context) {
+    private static CategoryRepository domainManager(final Context context) {
         return new PrePopulatedCategorySharedPreferences(context, new Gson(), categoryFactory());
     }
 }

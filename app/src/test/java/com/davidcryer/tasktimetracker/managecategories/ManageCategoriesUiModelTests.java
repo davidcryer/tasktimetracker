@@ -27,7 +27,7 @@ public class ManageCategoriesUiModelTests {
     public void showCategories() {
         final ManageCategoriesUiModel uiModel = new ManageCategoriesUiModelImpl(null);
         final TestUi ui = new TestUi();
-        uiModel.showCategories(new ArrayList<UiCategory>(), ui);
+        uiModel.setItems(new ArrayList<UiCategory>(), ui);
         Assert.assertTrue(uiModel.isPopulated());
         Assert.assertTrue(ui.categories != null && ui.categories.isEmpty());
     }
@@ -36,7 +36,7 @@ public class ManageCategoriesUiModelTests {
     public void showCategories_nullList() {
         final ManageCategoriesUiModel uiModel = new ManageCategoriesUiModelImpl(null);
         final TestUi ui = new TestUi();
-        uiModel.showCategories(null, ui);
+        uiModel.setItems(null, ui);
         Assert.assertFalse(uiModel.isPopulated());
         Assert.assertTrue(ui.categories != null && ui.categories.isEmpty());
     }
@@ -45,7 +45,7 @@ public class ManageCategoriesUiModelTests {
     public void addCategory() {
         final ManageCategoriesUiModel uiModel = new ManageCategoriesUiModelImpl(null);
         final TestUi ui = new TestUi(new ArrayList<>());
-        uiModel.addCategory(uiCategory(), ui);
+        uiModel.addItem(uiCategory(), ui);
         Assert.assertTrue(uiModel.isPopulated());
         Assert.assertTrue(ui.categories != null && !ui.categories.isEmpty());
     }
@@ -64,7 +64,7 @@ public class ManageCategoriesUiModelTests {
         final List<UiCategory> initialCategories = Collections.singletonList(uiCategory());
         final ManageCategoriesUiModel uiModel = new ManageCategoriesUiModelImpl(initialCategories);
         final TestUi ui = new TestUi(initialCategories);
-        uiModel.removeCategory(initialCategories.get(0).getId(), ui);
+        uiModel.removeItem(initialCategories.get(0).getId(), ui);
         Assert.assertTrue(ui.categories != null && ui.categories.isEmpty());
     }
 

@@ -32,31 +32,6 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
 
     public ManageCategoriesFragment() {
         categoriesAdapter = new CategoriesAdapter();
-        categoriesAdapter.onClickCategoryListener(new CategoriesAdapter.Listener() {
-            @Override
-            public void onClick(UiCategory category, int i) {
-                listener().onClickCategory(ui(), category, i);
-            }
-
-            @Override
-            public void onClick(UiTask task) {
-                listener().onClickTask(ui(), task);
-            }
-
-            @Override
-            public void onToggleActiveStatus(UiTask task, boolean isActive) {
-                if (isActive) {
-                    listener().onActivateTask(ui(), task);
-                } else {
-                    listener().onDeactivateTask(ui(), task);
-                }
-            }
-
-            @Override
-            public void onClickAddTask(UUID categoryId) {
-                listener().onClickAddTask(ui(), categoryId);
-            }
-        });
     }
 
     @Override
@@ -148,13 +123,13 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
             }
 
             @Override
-            public void add(final UiListItem item) {
-                categoriesAdapter.add(item);
+            public void add(final UiListItem item, final int i) {
+                categoriesAdapter.add(item, i);
             }
 
             @Override
-            public void insert(final UiListItem item, final int i) {
-                categoriesAdapter.insert(item, i);
+            public void add(List<UiListItem> items, int i) {
+                categoriesAdapter.add(items, i);
             }
 
             @Override
@@ -165,11 +140,6 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
             @Override
             public void remove(int i, int count) {
                 categoriesAdapter.remove(i, count);
-            }
-
-            @Override
-            public void showFilterOptions(List<String> options) {
-                categoriesFilter.populate(options, filterSpinner);
             }
 
             @Override

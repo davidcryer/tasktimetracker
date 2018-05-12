@@ -9,30 +9,45 @@ import com.davidcryer.tasktimetracker.common.domain.TaskArgResults;
 import com.davidcryer.tasktimetracker.common.domain.AlreadyActiveException;
 import com.davidcryer.tasktimetracker.common.domain.AlreadyInactiveException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
-import com.davidcryer.tasktimetracker.common.domain.DomainManager;
+import com.davidcryer.tasktimetracker.common.domain.CategoryRepository;
 import com.davidcryer.tasktimetracker.common.domain.Task;
+import com.davidcryer.tasktimetracker.common.domain.TaskRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ManageCategoriesUiModel> {
-    private final DomainManager domainManager;
+    private final CategoryRepository categoryRepository;
+    private final TaskRepository taskRepository;
 
-    private ManageCategoriesUiWrapper(@NonNull final ManageCategoriesUiModel uiModel, final DomainManager domainManager) {
+    private ManageCategoriesUiWrapper(
+            @NonNull final ManageCategoriesUiModel uiModel,
+            final CategoryRepository categoryRepository,
+            final TaskRepository taskRepository
+    ) {
         super(uiModel);
-        this.domainManager = domainManager;
+        this.categoryRepository = categoryRepository;
+        this.taskRepository = taskRepository;
     }
 
-    public static ManageCategoriesUiWrapper newInstance(final ManageCategoriesUiModelFactory modelFactory, final DomainManager domainManager) {
-        return new ManageCategoriesUiWrapper(modelFactory.create(), domainManager);
+    public static ManageCategoriesUiWrapper newInstance(
+            final ManageCategoriesUiModelFactory modelFactory,
+            final CategoryRepository categoryRepository,
+            final TaskRepository taskRepository
+    ) {
+        return new ManageCategoriesUiWrapper(modelFactory.create(), categoryRepository, taskRepository);
     }
 
     public static ManageCategoriesUiWrapper savedElseNewInstance(
             @NonNull final Bundle savedInstanceState,
             final ManageCategoriesUiModelFactory modelFactory,
-            final DomainManager domainManager
+            final CategoryRepository categoryRepository,
+            final TaskRepository taskRepository
     ) {
         final ManageCategoriesUiModel savedModel = savedUiModel(savedInstanceState);
-        return savedModel == null ? newInstance(modelFactory, domainManager) : new ManageCategoriesUiWrapper(savedModel, domainManager);
+        return savedModel == null
+                ? newInstance(modelFactory, categoryRepository, taskRepository)
+                : new ManageCategoriesUiWrapper(savedModel, categoryRepository, taskRepository);
     }
 
     @Override
@@ -60,7 +75,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
 
             @Override
             public void onActivateTask(ManageCategoriesUi ui, UiTask uiTask) {
-                final Task task = uiModel().task(uiTask.getId());
+                final Task task = taskRepository.get(uiTask.getId(), uiTask.getCategoryId());
                 try {
                     task.activate();
                 } catch (AlreadyActiveException ignored) {
@@ -70,7 +85,7 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
 
             @Override
             public void onDeactivateTask(ManageCategoriesUi ui, UiTask uiTask) {
-                final Task task = uiModel().task(uiTask.getId());
+                final Task task = taskRepository.get(uiTask.getId(), uiTask.getCategoryId());
                 try {
                     task.deactivate();
                 } catch (AlreadyInactiveException ignored) {
@@ -81,8 +96,8 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             @Override
             public void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
                 try {
-                    final Category category = domainManager.create(title, note);
-                    uiModel().addCategory(category, ui());
+                    final Category category = categoryRepository.create(title, note);
+                    uiModel().addItem(items(category), , ui());//TODO
                     prompt.dismiss();
                 } catch (CategoryArgResults.Exception e) {
                     showErrors(prompt, e.results());
@@ -98,11 +113,12 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             @Override
             public void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
                 try {
-                    final Category category = uiModel().category(categoryId);
+                    final Category category = categoryRepository.get(categoryId);
                     if (category == null) {
                         throw new IllegalStateException(String.format("Category not found for %1$s", categoryId.toString()));
                     }
-                    uiModel().addTask(category.newTask(title, note), category, ui());
+                    final Task task = category.newTask(title, note);
+                    uiModel().addItem();//TODO
                     prompt.dismiss();
                 } catch (TaskArgResults.Exception e) {
                     showErrors(prompt, e.results());
@@ -116,29 +132,40 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             }
 
             @Override
-            public void onRemoveCategory(ManageCategoriesUi ui, UiCategory category) {
-                uiModel().removeCategory(category.getId(), ui);
+            public void onRemoveCategory(ManageCategoriesUi ui, UiCategory uiCategory) {
+                final Category category = categoryRepository.get(uiCategory.getId());
+                category.delete();
+                final int categoryIndex = uiCategory.index();
+                if (uiCategory.isExpanded()) {
+                    uiModel().removeItems(categoryIndex, category.tasks().size(), ui);
+                } else {
+                    uiModel().removeItem(categoryIndex, ui);
+                }
             }
 
             @Override
             public void onRemoveTask(ManageCategoriesUi ui, UiTask task, UiCategory uiCategory) {
-                final Category category = uiModel().category(uiCategory.getId());
+                final Category category = categoryRepository.get(uiCategory.getId());
                 if (category == null) {
                     throw new IllegalStateException(String.format("Category not found for %1$s", uiCategory.getId().toString()));
                 }
                 if (category.deleteTask(task.getId())) {
-                    uiModel().removeTask(task.getId(), uiCategory.getId(), ui);
+                    uiModel().removeItem(task.index(), ui);
                 }
             }
 
             @Override
             public void onFilterRemoved(ManageCategoriesUi ui) {
-                uiModel().removeFilter(ui);
+                final CategoryFilters filters = uiModel().filters();
+                filters.select(CategoryFilters.DELELECTED);
+                uiModel().setItems(items(categoryRepository.getAll()), filters, ui);
             }
 
             @Override
             public void onFilterSelected(ManageCategoriesUi ui, int i) {
-                uiModel().updateFilter(i, ui);
+                final CategoryFilters filters = uiModel().filters();
+                final CategoryFilter filter = filters.select(i);
+                uiModel().setItems(items(categoryRepository.get(filter.getId())), filters, ui);
             }
         };
     }
@@ -147,7 +174,15 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
     protected void registerResources() {
         super.registerResources();
         if (!uiModel().isPopulated()) {
-            uiModel().showCategories(domainManager.getAll(), ui());
+            uiModel().setItems(items(categoryRepository.getAll()), ui());
         }
+    }
+
+    private List<UiListItem> items(final List<Category> categories) {
+        return UiCategoryMapper.from(categories);
+    }
+
+    private List<UiListItem> items(final Category category) {
+        return UiCategoryMapper.from(category);
     }
 }
