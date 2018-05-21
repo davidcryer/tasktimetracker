@@ -18,7 +18,7 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
     private final static String ARGS_CATEGORY_ID = "category id";
     private TaskLayout taskLayout;
 
-    static AddTaskDialogFragment newInstance(final UUID categoryId) {
+    public static AddTaskDialogFragment newInstance(final UUID categoryId) {
         final AddTaskDialogFragment fragment = new AddTaskDialogFragment();
         final Bundle args = new Bundle();
         args.putSerializable(ARGS_CATEGORY_ID, categoryId);
