@@ -1,5 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.domain.exceptions.CategoryArgResults;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

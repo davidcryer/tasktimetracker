@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.davidc.uiwrapper.UiWrapper;
-import com.davidcryer.tasktimetracker.common.domain.CategoryArgResults;
-import com.davidcryer.tasktimetracker.common.domain.TaskArgResults;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.CategoryArgResults;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.TaskArgResults;
 import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyActiveException;
 import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyInactiveException;
 import com.davidcryer.tasktimetracker.common.domain.Category;

@@ -1,5 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.domain.exceptions.FinishedSessionArgResults;
+
 import org.junit.Test;
 
 import java.util.Date;

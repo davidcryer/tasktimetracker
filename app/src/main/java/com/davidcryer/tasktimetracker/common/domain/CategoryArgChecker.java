@@ -2,6 +2,7 @@ package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.argrules.multiarg.ArgChecker;
 import com.davidcryer.argrules.multiarg.ResultChain;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.CategoryArgResults;
 
 import java.util.UUID;
 

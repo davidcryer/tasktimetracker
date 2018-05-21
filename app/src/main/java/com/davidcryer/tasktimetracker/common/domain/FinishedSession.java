@@ -1,6 +1,7 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.DateUtils;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.FinishedSessionArgResults;
 
 import java.util.Date;
 import java.util.UUID;
