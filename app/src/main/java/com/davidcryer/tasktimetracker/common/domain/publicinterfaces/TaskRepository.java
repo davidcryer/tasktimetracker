@@ -1,4 +1,6 @@
-package com.davidcryer.tasktimetracker.common.domain;
+package com.davidcryer.tasktimetracker.common.domain.publicinterfaces;
+
+import com.davidcryer.tasktimetracker.common.domain.ObservedTask;
 
 import java.util.List;
 import java.util.UUID;

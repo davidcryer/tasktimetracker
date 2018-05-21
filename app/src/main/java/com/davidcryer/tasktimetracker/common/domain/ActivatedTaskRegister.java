@@ -1,6 +1,9 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
-public class ActivatedTaskRegister {
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyActiveException;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyInactiveException;
+
+class ActivatedTaskRegister {
     private Task activatedTask;
 
     void setUp(final Task task) {

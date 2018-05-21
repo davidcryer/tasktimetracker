@@ -1,5 +1,8 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.CategoryRepository;
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.TaskRepository;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;

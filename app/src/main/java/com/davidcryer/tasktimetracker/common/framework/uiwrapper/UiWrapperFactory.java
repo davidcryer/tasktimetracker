@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidc.uiwrapper.UiWrapperInitializer;
-import com.davidcryer.tasktimetracker.common.domain.CategoryRepository;
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.CategoryRepository;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiModel;
 import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUiModelFactory;

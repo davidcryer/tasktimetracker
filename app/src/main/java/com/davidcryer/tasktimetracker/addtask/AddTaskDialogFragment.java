@@ -1,4 +1,4 @@
-package com.davidcryer.tasktimetracker.managecategories;
+package com.davidcryer.tasktimetracker.addtask;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,12 +10,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.davidcryer.tasktimetracker.R;
+import com.davidcryer.tasktimetracker.managecategories.ManageCategoriesUi;
 
 import java.util.UUID;
 
 public class AddTaskDialogFragment extends DialogFragment implements ManageCategoriesUi.InputPrompt {
     private final static String ARGS_CATEGORY_ID = "category id";
-    private AddTaskNavigator navigator;
     private TaskLayout taskLayout;
 
     static AddTaskDialogFragment newInstance(final UUID categoryId) {
@@ -53,12 +53,6 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
         return dialog;
     }
 
-    private void onClickAdd(final UUID categoryId) {
-        if (navigator != null) {
-            navigator.onClickAddTask(this, taskLayout.title(), taskLayout.note(), categoryId);
-        }
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -77,18 +71,6 @@ public class AddTaskDialogFragment extends DialogFragment implements ManageCateg
         if (taskLayout != null) {
             taskLayout.showNoteError(message);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        navigator = (AddTaskNavigator) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        navigator = null;
     }
 
     private static class TaskLayout extends LinearLayout {

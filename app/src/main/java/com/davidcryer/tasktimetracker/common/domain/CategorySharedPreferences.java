@@ -3,6 +3,7 @@ package com.davidcryer.tasktimetracker.common.domain;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.CategoryRepository;
 import com.google.gson.Gson;
 
 import java.util.LinkedList;

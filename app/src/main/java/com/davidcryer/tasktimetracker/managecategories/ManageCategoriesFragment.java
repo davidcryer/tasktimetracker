@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidc.uiwrapper.UiWrapperFactoryFragment;
 import com.davidcryer.tasktimetracker.R;
+import com.davidcryer.tasktimetracker.addcategory.AddCategoryDialogFragment;
+import com.davidcryer.tasktimetracker.addtask.AddTaskDialogFragment;
 import com.davidcryer.tasktimetracker.common.framework.FabListener;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 import com.davidcryer.tasktimetracker.managetask.ManageTaskIntentModel;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCategoriesUi, ManageCategoriesUi.Listener, UiWrapperFactory>
-        implements ManageCategoriesNavigator.Callback, RemoveCategoryListener, RemoveTaskListener, FabListener {
+        implements FabListener {
     private final CategoriesAdapter categoriesAdapter;
     private CategoriesFilter categoriesFilter;
     private Spinner filterSpinner;
@@ -89,33 +91,14 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
     }
 
     @Override
-    public void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note) {
-        listener().onAddCategory(prompt, title, note);
-    }
-
-    @Override
-    public void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId) {
-        listener().onAddTask(prompt, title, note, categoryId);
-    }
-
-    @Override
-    public void onClickDelete(UiCategory category) {
-        listener().onRemoveCategory(ui(), category);
-    }
-
-    @Override
-    public void onClickDelete(UiTask task, UiCategory category) {
-        listener().onRemoveTask(ui(), task, category);
-    }
-
-    @Override
     public boolean onFabClicked() {
         listener().onClickAddCategory(ui());
         return true;
     }
 
+    @NonNull
     @Override
-    protected ManageCategoriesUi ui() {
+    public ManageCategoriesUi ui() {
         return new ManageCategoriesUi() {
             @Override
             public void show(List<UiListItem> items) {
@@ -170,8 +153,9 @@ public class ManageCategoriesFragment extends UiWrapperFactoryFragment<ManageCat
         };
     }
 
+    @NonNull
     @Override
-    protected UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ?> uiWrapper(UiWrapperFactory uiWrapperFactory, @Nullable Bundle savedState) {
+    public UiWrapper<ManageCategoriesUi, ManageCategoriesUi.Listener, ?> uiWrapper(@NonNull UiWrapperFactory uiWrapperFactory, @Nullable Bundle savedState) {
         return uiWrapperFactory.createManageCategoriesUiWrapper(savedState);
     }
 }

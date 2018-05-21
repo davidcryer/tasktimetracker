@@ -6,12 +6,12 @@ import android.support.annotation.NonNull;
 import com.davidc.uiwrapper.UiWrapper;
 import com.davidcryer.tasktimetracker.common.domain.CategoryArgResults;
 import com.davidcryer.tasktimetracker.common.domain.TaskArgResults;
-import com.davidcryer.tasktimetracker.common.domain.AlreadyActiveException;
-import com.davidcryer.tasktimetracker.common.domain.AlreadyInactiveException;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyActiveException;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyInactiveException;
 import com.davidcryer.tasktimetracker.common.domain.Category;
-import com.davidcryer.tasktimetracker.common.domain.CategoryRepository;
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.CategoryRepository;
 import com.davidcryer.tasktimetracker.common.domain.Task;
-import com.davidcryer.tasktimetracker.common.domain.TaskRepository;
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.TaskRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -128,29 +128,6 @@ public class ManageCategoriesUiWrapper extends UiWrapper<ManageCategoriesUi, Man
             private void showErrors(final ManageCategoriesUi.InputPrompt prompt, final TaskArgResults args) {
                 if (args.hasTitleError()) {
                     prompt.showTitleError(args.title().note());
-                }
-            }
-
-            @Override
-            public void onRemoveCategory(ManageCategoriesUi ui, UiCategory uiCategory) {
-                final Category category = categoryRepository.get(uiCategory.getId());
-                category.delete();
-                final int categoryIndex = uiCategory.index();
-                if (uiCategory.isExpanded()) {
-                    uiModel().removeItems(categoryIndex, category.tasks().size(), ui);
-                } else {
-                    uiModel().removeItem(categoryIndex, ui);
-                }
-            }
-
-            @Override
-            public void onRemoveTask(ManageCategoriesUi ui, UiTask task, UiCategory uiCategory) {
-                final Category category = categoryRepository.get(uiCategory.getId());
-                if (category == null) {
-                    throw new IllegalStateException(String.format("Category not found for %1$s", uiCategory.getId().toString()));
-                }
-                if (category.deleteTask(task.getId())) {
-                    uiModel().removeItem(task.index(), ui);
                 }
             }
 

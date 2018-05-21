@@ -11,9 +11,4 @@ public interface ManageCategoriesNavigator {
     void showAddTaskPrompt(DialogFragmentFactory factory);
     void showRemoveCategoryPrompt(DialogFragmentFactory factory);
     void showRemoveTaskPrompt(DialogFragmentFactory factory);
-
-    interface Callback {
-        void onAddCategory(ManageCategoriesUi.InputPrompt prompt, String title, String note);
-        void onAddTask(ManageCategoriesUi.InputPrompt prompt, String title, String note, UUID categoryId);
-    }
 }

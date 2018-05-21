@@ -23,17 +23,14 @@ public interface ManageCategoriesUi {
     }
 
     interface Listener {
-        void onClickCategory(ManageCategoriesUi ui, UiCategory category, int pos);
-        void onClickTask(ManageCategoriesUi ui, UiTask task);
         void onClickAddCategory(ManageCategoriesUi ui);
-        void onClickAddTask(ManageCategoriesUi ui, UUID categoryId);
-        void onActivateTask(ManageCategoriesUi ui, UiTask task);
-        void onDeactivateTask(ManageCategoriesUi ui, UiTask task);
-        void onAddCategory(InputPrompt prompt, String title, String note);
-        void onAddTask(InputPrompt prompt, String title, String note, UUID categoryId);
-        void onRemoveCategory(ManageCategoriesUi ui, UiCategory category);
-        void onRemoveTask(ManageCategoriesUi ui, UiTask task, UiCategory category);
         void onFilterRemoved(ManageCategoriesUi ui);
         void onFilterSelected(ManageCategoriesUi ui, int i);
+    }
+
+    interface ListItemListener {
+        void onClickCategory(ManageCategoriesUi ui, UiCategory category, int pos);
+        void onClickTask(ManageCategoriesUi ui, UiTask task);
+        void onClickAddTask(ManageCategoriesUi ui, UUID categoryId);
     }
 }

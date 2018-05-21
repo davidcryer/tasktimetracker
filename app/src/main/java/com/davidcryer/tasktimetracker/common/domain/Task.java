@@ -1,6 +1,8 @@
 package com.davidcryer.tasktimetracker.common.domain;
 
 import com.davidcryer.tasktimetracker.common.ObjectUtils;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyActiveException;
+import com.davidcryer.tasktimetracker.common.domain.exceptions.AlreadyInactiveException;
 
 import java.util.ArrayList;
 import java.util.Iterator;

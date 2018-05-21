@@ -2,7 +2,7 @@ package com.davidcryer.tasktimetracker;
 
 import android.content.Context;
 
-import com.davidcryer.tasktimetracker.common.domain.CategoryRepository;
+import com.davidcryer.tasktimetracker.common.domain.publicinterfaces.CategoryRepository;
 import com.davidcryer.tasktimetracker.common.domain.PrePopulatedCategorySharedPreferences;
 import com.davidcryer.tasktimetracker.common.framework.uiwrapper.UiWrapperFactory;
 import com.google.gson.Gson;

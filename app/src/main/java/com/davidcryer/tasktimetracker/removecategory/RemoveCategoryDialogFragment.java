@@ -1,8 +1,7 @@
-package com.davidcryer.tasktimetracker.managecategories;
+package com.davidcryer.tasktimetracker.removecategory;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,7 +11,6 @@ import com.davidcryer.tasktimetracker.R;
 
 public class RemoveCategoryDialogFragment extends DialogFragment {
     private final static String ARGS_UI_CATEGORY = "ui category";
-    private RemoveCategoryNavigator navigator;
 
     public static RemoveCategoryDialogFragment newInstance(final UiCategory category) {
         final RemoveCategoryDialogFragment fragment = new RemoveCategoryDialogFragment();
@@ -45,26 +43,5 @@ public class RemoveCategoryDialogFragment extends DialogFragment {
 
                 })
                 .show();
-    }
-
-    private void onClickDelete(final UiCategory category) {
-        if (navigator != null) {
-            final RemoveCategoryListener listener = navigator.removeCategoryListener();
-            if (listener != null) {
-                listener.onClickDelete(category);
-            }
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        navigator = (RemoveCategoryNavigator) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        navigator = null;
     }
 }
