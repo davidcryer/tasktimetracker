@@ -15,20 +15,13 @@ class UiTask extends UiListItem {
     private final String title;
     private final String note;
     private long totalTimeActive;
-    private boolean isActive;
-    private final UUID categoryId;
-    private Long timeOfLastTick;
-    private final Timer timer = new Timer();
     private View view;
 
-    UiTask(UUID id, String title, String note, long totalTimeActive, boolean isActive, UUID categoryId) {
+    UiTask(UUID id, String title, String note, long totalTimeActive, boolean isActive) {
         this.id = id;
         this.title = title;
         this.note = note;
         this.totalTimeActive = totalTimeActive;
-        this.isActive = isActive;
-        this.categoryId = categoryId;
-        this.timeOfLastTick = System.currentTimeMillis();
     }
 
     UUID getId() {
@@ -45,10 +38,6 @@ class UiTask extends UiListItem {
 
     long getTotalTimeActive() {
         return totalTimeActive;
-    }
-
-    UUID getCategoryId() {
-        return categoryId;
     }
 
     boolean isActive() {
